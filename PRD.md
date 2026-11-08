@@ -48,9 +48,36 @@ The system runs queues and registration for one polyclinic in one clinic: five d
 | Doctor or nurse | Clinical staff | Call, recall, skip and finish visits; mark self unavailable; doctor approves referrals; nurse refers under set criteria | Master data, accounts, reports beyond own visits |
 | Super Admin (IT Admin) | IT staff | Master data, accounts, schedule delegation, duplicate merge, backups, audit log, all reports | Routine clinical actions; any medical-note access is logged |
 
+## Login and access
+
+Each role signs in through its own page, but the account decides the role, never the page. Every check is enforced by the server and the database, not by the screen.
+
+| Role | Sign-in page | Credentials | Extra protection | Session |
+| --- | --- | --- | --- | --- |
+| Guest | None | None | Read-only public pages. The TV page shows numbers only | None |
+| Patient | /login, public | Email and password. Email verified at registration | Rate limit. Account locks for 15 minutes after 5 failed tries. Reset by email link | Signed in for up to 14 days on the same device |
+| Front desk | /staff, not linked from public pages | Email and password. Account created by the Super Admin | One account per person, no shared logins. Second factor recommended | Signs out after 10 minutes idle. No "remember me" |
+| Doctor or nurse | /staff, same page as front desk | Same as front desk | Same as front desk | Signs out after 5 minutes idle on the tablet |
+| Super Admin (IT Admin) | /admin, separate page | Email and password. First account created by hand in the database | Second factor required. Recovery codes kept offline | Signs out after 15 minutes idle |
+
+**Rules**
+
+- **Role comes from the account.** It is stored on the server and the user cannot edit it. Opening another role's page shows "Access denied".
+- **No self-registration for staff.** Only the Super Admin creates, changes or deactivates staff accounts. A leaver is deactivated the same day.
+- **Generic errors:** a failed sign-in says "Email or password is wrong" and never which one.
+- **Passwords:** at least 8 characters for patients and 12 for staff. Common passwords are blocked where the platform allows it.
+- **Lockout:** 5 failed sign-ins lock the account for 15 minutes, and every failed attempt is logged.
+- **Shared devices:** the front-desk PC and tablets end the session when idle and show a clear Sign out button.
+- **Secrets:** the admin key never reaches the browser. Session tokens use secure, HttpOnly cookies over HTTPS only.
+- **Audit log:** every sign-in, failed sign-in, sign-out, password reset, role change and deactivation is logged with time and device. The Super Admin reviews it.
+- **Patients without email:** the front desk registers them as walk-ins. They need no login to be seen.
+- **Hidden pages are not security.** The staff and admin pages are kept out of public links and search results, but the rules above protect them even if someone finds the address.
+
+To confirm: a free email service for verification and reset emails, because the platform's built-in sender is heavily limited; second-factor support on the free plan; and the idle times above, which are proposals.
+
 ## Main workflow
 
-1. Patient registers or logs in with phone number and OTP.
+1. Patient registers or logs in with email and password. Registration needs email verification.
 2. Patient chooses a doctor, a date and a time slot, and gets an appointment code and web reminders.
 3. On the day, the patient checks in by QR code, app tap or at the front desk. The system issues a queue number, for example A-012.
 4. The queue updates in under 2 seconds on the front-desk PC, nurse tablet and waiting-room TVs.
@@ -71,8 +98,8 @@ The system runs queues and registration for one polyclinic in one clinic: five d
 
 ## Accounts and duplicates
 
-- **Registration:** phone number and OTP. Name and date of birth required. NIK optional but recommended.
-- **Login and reset:** phone number and OTP. Password reset by OTP.
+- **Registration:** email and password, with email verification. Phone number, name and date of birth required. NIK optional but recommended.
+- **Login and reset:** email and password. Password reset by a link sent to the email.
 - **Families:** one account can hold several patient profiles, such as a child and a parent.
 - **Prevention:** phone and NIK must be unique. Before saving, the system shows likely matches with "Is this you?"
 - **Walk-in search:** staff search by phone, NIK, or name and date of birth before "Create patient" appears.
@@ -172,7 +199,7 @@ Free-tier limits and terms change. Recheck them before go-live.
 
 ## Release criteria
 
-1. A patient registers with OTP, logs in, and books, cancels and reschedules.
+1. A patient registers with email verification, logs in, and books, cancels and reschedules.
 2. Check-in issues numbers by the rules, and walk-ins join the same queue.
 3. Queue changes reach the nurse tablet, front desk and TVs in under 2 seconds.
 4. An urgent patient appears at the top within 2 seconds. Quick registration takes under 60 seconds. Only staff can set Urgent.
@@ -183,6 +210,10 @@ Free-tier limits and terms change. Recheck them before go-live.
 9. One backup is made and one restore from the encrypted file is tested.
 10. Under overload, the queue page returns an HTTP error, and TVs keep showing the last numbers.
 11. The front desk, a doctor and the IT Admin sign off user acceptance testing.
+12. Each role signs in only with its own account and reaches only its own pages. A page for another role shows "Access denied".
+13. Five failed sign-ins lock the account for 15 minutes, and each attempt is logged.
+14. Idle sessions end at the set times, and the front-desk PC and tablets show a Sign out button.
+15. Staff accounts exist only if the Super Admin created them. Super Admin sign-in needs a second factor.
 
 ## Open items
 
@@ -203,5 +234,8 @@ These must be settled before build or go-live. Each has an owner.
 | Consultation length per doctor | Queue timing | Doctor | Open |
 | Doctor schedule delegation rules | Who edits what | Owner | Decided. Confirm rules |
 | Queue structure: one line per doctor | Numbering and display | Owner | Proposed. Confirm |
+| Free email service for verification and reset emails | Patients cannot register or reset a password without it | IT Admin | Open |
+| Second factor on the free plan, and where recovery codes are kept | Protects the Super Admin account | IT Admin | Open |
+| Idle sign-out times: 10, 5 and 15 minutes | Security against daily convenience | Owner and front desk | Proposed. Confirm |
 
 Sources: the planning figures come from the research report, Indonesian polyclinic patient volume, delivered in this conversation.
