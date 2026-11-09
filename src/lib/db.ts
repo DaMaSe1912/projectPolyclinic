@@ -25,8 +25,13 @@ export interface DatabaseSchema {
   mailLog: DevEmail[];
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
+const isVercel = process.env.VERCEL === '1' || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
+const LOCAL_DATA_DIR = path.join(process.cwd(), 'data');
+const LOCAL_DB_FILE = path.join(LOCAL_DATA_DIR, 'db.json');
+const DATA_DIR = isVercel ? '/tmp/polyclinic_data' : LOCAL_DATA_DIR;
+const DB_FILE = isVercel ? '/tmp/polyclinic_data/db.json' : LOCAL_DB_FILE;
+
+let memoryDb: DatabaseSchema | null = null;
 
 const INITIAL_SETTINGS: ClinicSettings = {
   id: 'clinic-utama-01',
@@ -455,24 +460,64 @@ const INITIAL_AUDIT_LOGS: AuditLog[] = [
 
 function ensureDataDir(): void {
   if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+    try {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    } catch {
+      // Ignored if cannot create (e.g. read-only fallback)
+    }
   }
 }
 
 export function getDb(): DatabaseSchema {
+  if (memoryDb) {
+    return memoryDb;
+  }
   ensureDataDir();
+
+  // On Vercel, copy initial seeded data from local workspace to writable /tmp
+  if (isVercel && !fs.existsSync(DB_FILE) && fs.existsSync(LOCAL_DB_FILE)) {
+    try {
+      fs.copyFileSync(LOCAL_DB_FILE, DB_FILE);
+    } catch (e) {
+      console.warn('[DB] Could not copy initial DB to /tmp, will initialize from memory:', e);
+    }
+  }
+
   if (!fs.existsSync(DB_FILE)) {
-    const initialData: DatabaseSchema = {
-      settings: INITIAL_SETTINGS,
-      doctors: INITIAL_DOCTORS,
-      users: INITIAL_USERS,
-      queue: INITIAL_QUEUE,
-      referrals: INITIAL_REFERRALS,
-      auditLogs: INITIAL_AUDIT_LOGS,
-      sessions: [],
-      mailLog: [],
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2), 'utf-8');
+    let initialData: DatabaseSchema;
+    if (fs.existsSync(LOCAL_DB_FILE)) {
+      try {
+        initialData = JSON.parse(fs.readFileSync(LOCAL_DB_FILE, 'utf-8'));
+      } catch {
+        initialData = {
+          settings: INITIAL_SETTINGS,
+          doctors: INITIAL_DOCTORS,
+          users: INITIAL_USERS,
+          queue: INITIAL_QUEUE,
+          referrals: INITIAL_REFERRALS,
+          auditLogs: INITIAL_AUDIT_LOGS,
+          sessions: [],
+          mailLog: [],
+        };
+      }
+    } else {
+      initialData = {
+        settings: INITIAL_SETTINGS,
+        doctors: INITIAL_DOCTORS,
+        users: INITIAL_USERS,
+        queue: INITIAL_QUEUE,
+        referrals: INITIAL_REFERRALS,
+        auditLogs: INITIAL_AUDIT_LOGS,
+        sessions: [],
+        mailLog: [],
+      };
+    }
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2), 'utf-8');
+    } catch (err: any) {
+      console.warn('[DB] Could not write initial DB to disk:', err.message);
+    }
+    memoryDb = initialData;
     return initialData;
   }
   try {
@@ -513,6 +558,7 @@ export function getDb(): DatabaseSchema {
     if (modified) {
       saveDb(data);
     }
+    memoryDb = data;
     return data;
   } catch (err) {
     console.error('Error reading DB, re-initializing:', err);
@@ -526,14 +572,24 @@ export function getDb(): DatabaseSchema {
       sessions: [],
       mailLog: [],
     };
-    fs.writeFileSync(DB_FILE, JSON.stringify(fallback, null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(fallback, null, 2), 'utf-8');
+    } catch (e: any) {
+      console.warn('[DB] Could not write fallback to disk:', e.message);
+    }
+    memoryDb = fallback;
     return fallback;
   }
 }
 
 export function saveDb(data: DatabaseSchema): void {
-  ensureDataDir();
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  memoryDb = data;
+  try {
+    ensureDataDir();
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err: any) {
+    console.warn('[DB] Write to disk suppressed (serverless read-only mode):', err.message);
+  }
   if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
     syncToSupabaseAsync(data).catch((err) => {
       console.error('[DB] Supabase async sync error:', err);
