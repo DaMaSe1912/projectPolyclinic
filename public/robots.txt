@@ -1,0 +1,9 @@
+# robots.txt for Klinik Pratama Sehat Utama
+User-agent: *
+Allow: /
+Allow: /pasien
+Allow: /login
+Disallow: /admin
+Disallow: /staff
+Disallow: /api/admin/
+

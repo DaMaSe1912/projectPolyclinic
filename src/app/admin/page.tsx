@@ -34,6 +34,8 @@ import {
   Clock,
   ArrowRight,
   RefreshCw,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -43,6 +45,7 @@ export default function AdminPage() {
   // Admin Login States
   const [adminEmail, setAdminEmail] = useState('admin@poliklinik.id');
   const [adminPassword, setAdminPassword] = useState('AdminUtama2026!#');
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
   const [loginStep, setLoginStep] = useState<'credentials' | '2fa'>('credentials');
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [isRecoveryCode, setIsRecoveryCode] = useState(false);
@@ -511,15 +514,25 @@ export default function AdminPage() {
                   </label>
                   <div className="relative">
                     <input
-                      type="password"
+                      type={showAdminPassword ? 'text' : 'password'}
                       value={adminPassword}
                       onChange={(e) => setAdminPassword(e.target.value)}
                       placeholder="••••••••••••"
                       required
                       disabled={loginLoading || isLocked}
-                      className="w-full px-3 py-2.5 pl-9 rounded-[8px] bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#CA8A04] transition-all disabled:opacity-50"
+                      className="w-full px-3 py-2.5 pl-9 pr-10 rounded-[8px] bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#CA8A04] transition-all disabled:opacity-50"
                     />
                     <Lock size={16} className="absolute left-3 top-3 text-slate-500" />
+                    <button
+                      type="button"
+                      onClick={() => setShowAdminPassword(!showAdminPassword)}
+                      disabled={loginLoading || isLocked}
+                      className="absolute right-3 top-3 text-slate-400 hover:text-white transition-colors p-0.5 rounded focus:outline-none"
+                      title={showAdminPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                      aria-label={showAdminPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                    >
+                      {showAdminPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 

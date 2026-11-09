@@ -18,6 +18,7 @@ export async function POST() {
 
     const response = NextResponse.json({ success: true });
     response.cookies.delete(SESSION_COOKIE_NAME);
+    response.cookies.delete('admin_gate_pass');
     return response;
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
