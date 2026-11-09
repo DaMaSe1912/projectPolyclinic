@@ -18,6 +18,8 @@ import {
   ShieldAlert,
   KeyRound,
   Sparkles,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -29,6 +31,7 @@ export default function LoginPage() {
   // Patient Login State
   const [loginEmail, setLoginEmail] = useState('bambang.wijaya@gmail.com');
   const [loginPassword, setLoginPassword] = useState('PasienBambang123');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [isLocked, setIsLocked] = useState(false);
@@ -39,6 +42,9 @@ export default function LoginPage() {
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState('');
+  const [showRegPassword, setShowRegPassword] = useState(false);
+  const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
   const [regPhone, setRegPhone] = useState('');
   const [regNik, setRegNik] = useState('');
   const [regDob, setRegDob] = useState('1992-05-18');
@@ -123,10 +129,21 @@ export default function LoginPage() {
   // Submit Register
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setRegLoading(true);
     setRegError('');
     setRegSuccessMessage('');
     setDuplicateWarning(null);
+
+    if (regPassword !== regConfirmPassword) {
+      setRegError('Konfirmasi kata sandi tidak cocok. Harap periksa kembali.');
+      return;
+    }
+
+    if (regPassword.length < 8) {
+      setRegError('Kata sandi minimal harus terdiri dari 8 karakter.');
+      return;
+    }
+
+    setRegLoading(true);
 
     try {
       const res = await fetch('/api/auth/register', {
@@ -306,15 +323,25 @@ export default function LoginPage() {
                 </div>
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showLoginPassword ? 'text' : 'password'}
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     placeholder="••••••••"
                     required
                     disabled={loginLoading || isLocked}
-                    className="w-full px-3 py-2 pl-9 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all disabled:bg-slate-100"
+                    className="w-full px-3 py-2 pl-9 pr-10 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488] focus:border-transparent transition-all disabled:bg-slate-100"
                   />
                   <Lock size={16} className="absolute left-3 top-2.5 text-[#94A3B8]" />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    disabled={loginLoading || isLocked}
+                    className="absolute right-3 top-2.5 text-[#94A3B8] hover:text-[#0F172A] transition-colors p-0.5 rounded focus:outline-none"
+                    title={showLoginPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                    aria-label={showLoginPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  >
+                    {showLoginPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
               </div>
 
@@ -426,19 +453,70 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-[#334155] mb-1">
-                    Kata Sandi (Minimal 8 Karakter) *
-                  </label>
-                  <input
-                    type="password"
-                    value={regPassword}
-                    onChange={(e) => setRegPassword(e.target.value)}
-                    placeholder="Minimal 8 karakter..."
-                    required
-                    className="w-full px-3 py-2 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#334155] mb-1">
+                      Kata Sandi (Min. 8 Karakter) *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showRegPassword ? 'text' : 'password'}
+                        value={regPassword}
+                        onChange={(e) => setRegPassword(e.target.value)}
+                        placeholder="Minimal 8 karakter..."
+                        required
+                        className="w-full px-3 py-2 pl-9 pr-10 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                      />
+                      <Lock size={16} className="absolute left-3 top-2.5 text-[#94A3B8]" />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegPassword(!showRegPassword)}
+                        className="absolute right-3 top-2.5 text-[#94A3B8] hover:text-[#0F172A] transition-colors p-0.5 rounded focus:outline-none"
+                        title={showRegPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                        aria-label={showRegPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                      >
+                        {showRegPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#334155] mb-1">
+                      Konfirmasi Kata Sandi *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showRegConfirmPassword ? 'text' : 'password'}
+                        value={regConfirmPassword}
+                        onChange={(e) => setRegConfirmPassword(e.target.value)}
+                        placeholder="Ulangi kata sandi..."
+                        required
+                        className="w-full px-3 py-2 pl-9 pr-10 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                      />
+                      <Lock size={16} className="absolute left-3 top-2.5 text-[#94A3B8]" />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
+                        className="absolute right-3 top-2.5 text-[#94A3B8] hover:text-[#0F172A] transition-colors p-0.5 rounded focus:outline-none"
+                        title={showRegConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'}
+                        aria-label={showRegConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'}
+                      >
+                        {showRegConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
                 </div>
+
+                {regConfirmPassword && regPassword !== regConfirmPassword && (
+                  <p className="text-[11px] text-red-600 font-medium">
+                    ⚠️ Konfirmasi kata sandi belum cocok dengan kata sandi di atas.
+                  </p>
+                )}
+                {regConfirmPassword && regPassword === regConfirmPassword && (
+                  <p className="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                    <CheckCircle2 size={13} /> Kata sandi dan konfirmasi cocok
+                  </p>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>

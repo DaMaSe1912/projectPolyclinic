@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { KeyRound, CheckCircle2, AlertTriangle, ArrowRight, Lock } from 'lucide-react';
+import { KeyRound, CheckCircle2, AlertTriangle, ArrowRight, Lock, Eye, EyeOff } from 'lucide-react';
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -12,6 +12,8 @@ function ResetPasswordContent() {
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -104,14 +106,23 @@ function ResetPasswordContent() {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showNewPassword ? 'text' : 'password'}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Minimal 8 karakter..."
                   required
-                  className="w-full px-3 py-2 pl-9 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
+                  className="w-full px-3 py-2 pl-9 pr-10 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488] focus:border-transparent transition-all"
                 />
                 <Lock size={15} className="absolute left-3 top-3 text-[#94A3B8]" />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-2.5 text-[#94A3B8] hover:text-[#0F172A] transition-colors p-0.5 rounded focus:outline-none"
+                  title={showNewPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  aria-label={showNewPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                >
+                  {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
               <p className="text-[11px] text-[#94A3B8] mt-1">
                 Minimal 8 karakter untuk pasien, 12 karakter untuk staf.
@@ -124,14 +135,23 @@ function ResetPasswordContent() {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Ketik ulang kata sandi..."
                   required
-                  className="w-full px-3 py-2 pl-9 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
+                  className="w-full px-3 py-2 pl-9 pr-10 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488] focus:border-transparent transition-all"
                 />
                 <Lock size={15} className="absolute left-3 top-3 text-[#94A3B8]" />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-2.5 text-[#94A3B8] hover:text-[#0F172A] transition-colors p-0.5 rounded focus:outline-none"
+                  title={showConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'}
+                  aria-label={showConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'}
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 

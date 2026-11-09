@@ -15,6 +15,8 @@ import {
   ShieldAlert,
   Clock,
   Sparkles,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export default function StaffLoginPage() {
@@ -23,6 +25,7 @@ export default function StaffLoginPage() {
 
   const [email, setEmail] = useState('resepsionis@poliklinik.id');
   const [password, setPassword] = useState('StafFrontDesk2026!');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isLocked, setIsLocked] = useState(false);
@@ -184,15 +187,25 @@ export default function StaffLoginPage() {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   required
                   disabled={loading || isLocked}
-                  className="w-full px-3 py-2.5 pl-9 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all disabled:bg-slate-100"
+                  className="w-full px-3 py-2.5 pl-9 pr-10 rounded-[8px] border border-[#CBD5E1] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488] focus:border-transparent transition-all disabled:bg-slate-100"
                 />
                 <Lock size={16} className="absolute left-3 top-3 text-[#94A3B8]" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading || isLocked}
+                  className="absolute right-3 top-3 text-[#94A3B8] hover:text-[#0F172A] transition-colors p-0.5 rounded focus:outline-none"
+                  title={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 
