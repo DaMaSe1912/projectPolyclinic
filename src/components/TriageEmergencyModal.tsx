@@ -26,7 +26,11 @@ export const TriageEmergencyModal: React.FC<TriageEmergencyModalProps> = ({
   const [gender, setGender] = useState<'L' | 'P'>('L');
   const [complaint, setComplaint] = useState('Demam tinggi akut (> 39°C) / Sesak napas akut');
   const [companionPhone, setCompanionPhone] = useState('');
-  const [doctorId, setDoctorId] = useState(doctors.find((d) => d.isOnDuty)?.id || doctors[0]?.id || '');
+  const [doctorId, setDoctorId] = useState(
+    doctors.find((d) => d.isOnDuty && d.isAvailable)?.id ||
+    doctors.find((d) => d.isAvailable)?.id ||
+    doctors[0]?.id || ''
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -228,8 +232,8 @@ export const TriageEmergencyModal: React.FC<TriageEmergencyModalProps> = ({
               className="w-full h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-[8px] text-sm text-[#0F172A] outline-none focus:border-[#0F172A]"
             >
               {doctors.map((doc) => (
-                <option key={doc.id} value={doc.id}>
-                  {doc.name} ({doc.room}) {doc.isOnDuty ? '• SEDANG PIKET' : '• OFF'}
+                <option key={doc.id} value={doc.id} disabled={!doc.isAvailable}>
+                  {doc.name} ({doc.room}) {!doc.isAvailable ? '• BERHALANGAN (TIDAK TERSEDIA)' : doc.isOnDuty ? '• SEDANG PIKET' : '• OFF'}
                 </option>
               ))}
             </select>
@@ -242,7 +246,13 @@ export const TriageEmergencyModal: React.FC<TriageEmergencyModalProps> = ({
           <Button variant="secondary" type="button" onClick={onClose}>
             Batal
           </Button>
-          <Button variant="destructive" type="submit" isLoading={isSubmitting} className="gap-1.5">
+          <Button
+            variant="destructive"
+            type="submit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting || !doctors.find((d) => d.id === doctorId)?.isAvailable}
+            className="gap-1.5"
+          >
             <Zap size={16} />
             Terbitkan Antrean Darurat Langsung
           </Button>

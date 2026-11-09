@@ -1382,9 +1382,14 @@ export default function AdminPage() {
                     </h3>
                     <p className="text-xs text-[#059669] font-medium">{doc.specialty}</p>
                   </div>
-                  <Chip variant={doc.isOnDuty ? 'success' : 'filter-active'}>
-                    {doc.isOnDuty ? 'On Duty' : 'Off Duty'}
-                  </Chip>
+                  <div className="flex flex-col items-end gap-1.5">
+                    <Chip variant={doc.isOnDuty ? 'success' : 'filter-active'}>
+                      {doc.isOnDuty ? 'Piket Aktif' : 'Off Duty'}
+                    </Chip>
+                    <Chip variant={doc.isAvailable ? 'success' : 'error'}>
+                      {doc.isAvailable ? 'Tersedia' : 'Berhalangan'}
+                    </Chip>
+                  </div>
                 </div>
 
                 <div className="text-xs text-[#64748B] space-y-1 bg-[#F8FAFC] p-2.5 rounded">
@@ -1394,7 +1399,7 @@ export default function AdminPage() {
                   <div>Durasi Periksa: <strong>{doc.consultationMinutes} Menit / Pasien</strong></div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-2 border-t border-[#F1F5F9]">
+                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#F1F5F9]">
                   <Button
                     variant={doc.isOnDuty ? 'destructive' : 'primary'}
                     size="sm"
@@ -1402,6 +1407,14 @@ export default function AdminPage() {
                     className="flex-1 text-xs"
                   >
                     {doc.isOnDuty ? 'Tandai Off Duty' : 'Set Jadi On Duty'}
+                  </Button>
+                  <Button
+                    variant={doc.isAvailable ? 'secondary' : 'sage'}
+                    size="sm"
+                    onClick={() => handleDoctorToggle(doc.id, 'isAvailable', doc.isAvailable)}
+                    className={`flex-1 text-xs ${!doc.isAvailable ? 'border-amber-400 bg-amber-50 text-amber-900 font-bold' : ''}`}
+                  >
+                    {doc.isAvailable ? 'Tandai Berhalangan' : 'Tandai Tersedia Kembali'}
                   </Button>
                 </div>
               </Card>

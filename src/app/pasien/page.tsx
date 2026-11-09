@@ -80,8 +80,11 @@ export default function PatientPage() {
       if (docData.success) {
         setDoctors(docData.data);
         if (docData.data.length > 0 && !selectedDoctorId) {
-          const onDuty = docData.data.find((d: Doctor) => d.isOnDuty) || docData.data[0];
-          setSelectedDoctorId(onDuty.id);
+          const availableDoc =
+            docData.data.find((d: Doctor) => d.isOnDuty && d.isAvailable) ||
+            docData.data.find((d: Doctor) => d.isAvailable) ||
+            docData.data[0];
+          setSelectedDoctorId(availableDoc.id);
         }
       }
     } catch (e) {
@@ -618,13 +621,26 @@ export default function PatientPage() {
                 className="w-full h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-[8px] text-sm text-[#0F172A] outline-none focus:border-[#0F172A]"
               >
                 {doctors.map((doc) => (
-                  <option key={doc.id} value={doc.id}>
-                    {doc.name} ({doc.code}) {doc.isOnDuty ? '• PIKET HARI INI' : ''}
+                  <option key={doc.id} value={doc.id} disabled={!doc.isAvailable}>
+                    {doc.name} ({doc.code}) {!doc.isAvailable ? '• BERHALANGAN (TIDAK DAPAT DIPILIH)' : doc.isOnDuty ? '• PIKET HARI INI' : ''}
                   </option>
                 ))}
               </select>
             </div>
           </div>
+
+          {/* Alert if selected doctor is unavailable */}
+          {(() => {
+            const currentSelectedDoc = doctors.find((d) => d.id === selectedDoctorId);
+            if (currentSelectedDoc && !currentSelectedDoc.isAvailable) {
+              return (
+                <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+                  ⚠️ <strong>Dokter Berhalangan:</strong> {currentSelectedDoc.name} sedang menandai dirinya tidak tersedia / berhalangan untuk melayani pasien hari ini. Harap pilih dokter lain yang sedang bertugas.
+                </div>
+              );
+            }
+            return null;
+          })()}
 
           <div>
             <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
@@ -660,7 +676,13 @@ export default function PatientPage() {
             >
               Batal
             </Button>
-            <Button variant="sage" type="submit" isLoading={bookLoading} className="gap-2">
+            <Button
+              variant="sage"
+              type="submit"
+              isLoading={bookLoading}
+              disabled={bookLoading || !doctors.find((d) => d.id === selectedDoctorId)?.isAvailable}
+              className="gap-2"
+            >
               <CheckCircle size={16} />
               Konfirmasi & Dapatkan Kode Janji
             </Button>

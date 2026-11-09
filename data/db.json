@@ -57,7 +57,7 @@
       "specialty": "Spesialis Jantung & Pembuluh Darah (Kardiovaskular)",
       "room": "Ruang Poli Umum 1",
       "isOnDuty": true,
-      "isAvailable": true,
+      "isAvailable": false,
       "scheduleDays": [
         "Selasa",
         "Kamis"
@@ -448,6 +448,132 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud-1794253260485-625",
+      "timestamp": "2026-11-09T19:41:00.485Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794253227893-692",
+      "timestamp": "2026-11-09T19:40:27.893Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
+    {
+      "id": "aud-1794253132667-461",
+      "timestamp": "2026-11-09T19:38:52.667Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794253085023-950",
+      "timestamp": "2026-11-09T19:38:05.023Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=false"
+    },
+    {
+      "id": "aud-1794253082575-645",
+      "timestamp": "2026-11-09T19:38:02.575Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794253059172-928",
+      "timestamp": "2026-11-09T19:37:39.172Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=false"
+    },
+    {
+      "id": "aud-1794253055688-844",
+      "timestamp": "2026-11-09T19:37:35.688Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794253051421-25",
+      "timestamp": "2026-11-09T19:37:31.421Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai doctor"
+    },
+    {
+      "id": "aud-1794253046905-85",
+      "timestamp": "2026-11-09T19:37:26.905Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai front_desk"
+    },
+    {
+      "id": "aud-1794252515239-793",
+      "timestamp": "2026-11-09T19:28:35.239Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "SESSION_EXPIRED_IDLE",
+      "targetType": "system",
+      "details": "Sesi otomatis berakhir karena idle (> 5 menit)"
+    },
+    {
+      "id": "aud-1794252219409-920",
+      "timestamp": "2026-11-09T19:23:39.409Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=false"
+    },
+    {
+      "id": "aud-1794252217582-978",
+      "timestamp": "2026-11-09T19:23:37.582Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794252170933-53",
+      "timestamp": "2026-11-09T19:22:50.933Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=false"
+    },
+    {
+      "id": "aud-1794252160100-633",
+      "timestamp": "2026-11-09T19:22:40.100Z",
+      "actorName": "dr. Hendra Wijaya, Sp.JP",
+      "actorRole": "doctor",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai doctor"
+    },
     {
       "id": "aud-1794250708728-156",
       "timestamp": "2026-11-09T18:58:28.728Z",
@@ -1008,8 +1134,19 @@
       "email": "resepsionis@poliklinik.id",
       "name": "Dewi Lestari (Resepsionis)",
       "createdAt": "2026-11-09T18:58:28.726Z",
-      "expiresAt": "2026-11-09T19:10:57.979Z",
-      "lastActiveAt": "2026-11-09T19:00:57.979Z",
+      "expiresAt": "2026-11-09T19:31:14.622Z",
+      "lastActiveAt": "2026-11-09T19:21:14.622Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-a39a7a7a182bbe9303d236ec6941987eefe4b2dbe6c12477",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-09T19:37:26.904Z",
+      "expiresAt": "2026-11-09T19:47:26.904Z",
+      "lastActiveAt": "2026-11-09T19:37:26.904Z",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     }
   ],

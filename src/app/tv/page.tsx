@@ -141,8 +141,9 @@ export default function WaitingRoomTvPage() {
     }
   };
 
-  // Strictly filter only doctors who are on duty. Off-duty doctors and their schedules are never displayed.
-  const onDutyDoctors = doctors.filter((d) => d.isOnDuty);
+  // Strictly filter only doctors who are on duty AND available.
+  // Doctors who are off-duty OR have marked themselves unavailable (berhalangan) MUST NOT appear on TV.
+  const onDutyDoctors = doctors.filter((d) => d.isOnDuty && d.isAvailable);
 
   const onDutyDoctorSchedules = onDutyDoctors
     .map((doc) => `${doc.name} (${doc.room} • Shift ${doc.shiftHours})`)
@@ -280,10 +281,10 @@ export default function WaitingRoomTvPage() {
               }`}
             >
               <p className="text-2xl font-headline font-bold">
-                Layanan Poliklinik Umum Sedang Tutup
+                Layanan Antrean Poliklinik Sedang Tidak Aktif
               </p>
-              <p className={`text-sm mt-2 ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>
-                Tidak ada dokter yang sedang bertugas saat ini. Jam operasional buka kembali pukul 08:00 WIB.
+              <p className={`text-sm mt-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                Tidak ada dokter yang sedang bertugas atau dokter sedang berhalangan. Layanan antrean akan otomatis aktif kembali saat dokter menandai dirinya tersedia.
               </p>
             </div>
           ) : (
@@ -481,8 +482,8 @@ export default function WaitingRoomTvPage() {
             }`}
           >
             {onDutyDoctorSchedules
-              ? `🩺 Jadwal Dokter Bertugas Hari Ini: ${onDutyDoctorSchedules} • `
-              : 'Layanan konsultasi poliklinik sedang tidak aktif saat ini • '}
+              ? `🩺 Jadwal Dokter Bertugas & Tersedia Hari Ini: ${onDutyDoctorSchedules} • `
+              : 'Layanan konsultasi poliklinik sedang tidak aktif atau seluruh dokter sedang berhalangan • '}
             Selamat datang di Poliklinik Umum Klinik Pratama Sehat Utama • Harap persiapkan tiket antrean atau kartu identitas saat nomor Anda dipanggil • Pasien lansia dan kondisi darurat mendapatkan prioritas pelayanan • Registrasi online dapat dilakukan melalui website resmi kami.
           </div>
         </div>

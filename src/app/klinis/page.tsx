@@ -258,7 +258,7 @@ export default function ClinicalPage() {
           >
             {doctors.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name} ({d.code}) {d.isOnDuty ? '• Sedang Bertugas' : ''}
+                {d.name} ({d.code}) {!d.isAvailable ? '• BERHALANGAN' : d.isOnDuty ? '• Sedang Bertugas' : ''}
               </option>
             ))}
           </select>
@@ -420,18 +420,35 @@ export default function ClinicalPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex justify-center">
+                <div className="flex flex-col items-center">
+                  {!currentDoctor?.isAvailable && (
+                    <div className="w-full max-w-md bg-rose-50 border border-rose-200 text-rose-800 p-3.5 rounded-xl text-center mb-4 shadow-xs">
+                      <div className="font-bold text-xs flex items-center justify-center gap-1.5 text-rose-700">
+                        <AlertTriangle size={15} />
+                        Status: Dokter Sedang Ditandai Berhalangan (Tidak Tersedia)
+                      </div>
+                      <p className="text-[11px] text-rose-600 mt-1">
+                        Panggilan antrean ditangguhkan dan profil Anda disembunyikan dari sistem antrean & layar TV ruang tunggu sampai Anda menekan tombol <strong>&quot;Tandai Tersedia&quot;</strong> di atas.
+                      </p>
+                    </div>
+                  )}
+
                   <Button
                     variant="sage"
                     size="lg"
+                    disabled={!currentDoctor?.isAvailable}
                     onClick={() => {
+                      if (!currentDoctor?.isAvailable) {
+                        alert('Anda sedang berhalangan. Silakan klik tombol "Tandai Tersedia" di atas terlebih dahulu.');
+                        return;
+                      }
                       if (waitingPatients.length > 0) {
                         handleQueueAction(waitingPatients[0], 'call');
                       } else {
                         alert('Tidak ada pasien yang sedang menunggu di ruang tunggu.');
                       }
                     }}
-                    className="w-full sm:w-80 min-h-[52px] text-base gap-2 font-headline font-bold shadow-md"
+                    className="w-full sm:w-80 min-h-[52px] text-base gap-2 font-headline font-bold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <PhoneCall size={20} />
                     Panggil Pasien Berikutnya ({waitingPatients.length})

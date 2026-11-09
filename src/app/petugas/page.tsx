@@ -82,8 +82,11 @@ export default function FrontDeskPage() {
       if (docData.success) {
         setDoctors(docData.data);
         if (!walkinDoctorId && docData.data.length > 0) {
-          const onDuty = docData.data.find((d: Doctor) => d.isOnDuty) || docData.data[0];
-          setWalkinDoctorId(onDuty.id);
+          const availableDoc =
+            docData.data.find((d: Doctor) => d.isOnDuty && d.isAvailable) ||
+            docData.data.find((d: Doctor) => d.isAvailable) ||
+            docData.data[0];
+          setWalkinDoctorId(availableDoc.id);
         }
       }
       if (refData.success) setReferrals(refData.data);
@@ -321,7 +324,7 @@ export default function FrontDeskPage() {
             <option value="all">Semua Dokter Poliklinik</option>
             {doctors.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name} ({d.code}) {d.isOnDuty ? '• Piket' : ''}
+                {d.name} ({d.code}) {!d.isAvailable ? '• Berhalangan' : d.isOnDuty ? '• Piket' : ''}
               </option>
             ))}
           </select>
@@ -632,12 +635,25 @@ export default function FrontDeskPage() {
               className="w-full h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-[8px] text-sm text-[#0F172A]"
             >
               {doctors.map((doc) => (
-                <option key={doc.id} value={doc.id}>
-                  {doc.name} ({doc.code}) {doc.isOnDuty ? '• PIKET HARI INI' : '• OFF'}
+                <option key={doc.id} value={doc.id} disabled={!doc.isAvailable}>
+                  {doc.name} ({doc.code}) {!doc.isAvailable ? '• BERHALANGAN (TIDAK TERSEDIA)' : doc.isOnDuty ? '• PIKET HARI INI' : '• OFF'}
                 </option>
               ))}
             </select>
           </div>
+
+          {/* Alert if chosen doctor is unavailable */}
+          {(() => {
+            const currentDoc = doctors.find((d) => d.id === walkinDoctorId);
+            if (currentDoc && !currentDoc.isAvailable) {
+              return (
+                <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+                  ⚠️ <strong>Dokter Berhalangan:</strong> {currentDoc.name} sedang menandai dirinya tidak tersedia / berhalangan untuk melayani pasien hari ini. Harap pilih dokter lain yang sedang bertugas.
+                </div>
+              );
+            }
+            return null;
+          })()}
 
           {/* Priority Flag Checkbox */}
           <div className="pt-2 border-t border-slate-100">
@@ -678,7 +694,12 @@ export default function FrontDeskPage() {
             >
               Batal
             </Button>
-            <Button variant="primary" type="submit" isLoading={walkinLoading}>
+            <Button
+              variant="primary"
+              type="submit"
+              isLoading={walkinLoading}
+              disabled={walkinLoading || !doctors.find((d) => d.id === walkinDoctorId)?.isAvailable}
+            >
               Daftarkan & Terbitkan Nomor Antrean
             </Button>
           </div>

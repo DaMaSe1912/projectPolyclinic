@@ -60,8 +60,8 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  const onDutyDoctors = doctors.filter((d) => d.isOnDuty);
-  const offDutyDoctors = doctors.filter((d) => !d.isOnDuty);
+  const onDutyDoctors = doctors.filter((d) => d.isOnDuty && d.isAvailable);
+  const offDutyDoctors = doctors.filter((d) => !d.isOnDuty || !d.isAvailable);
 
   const faqs = [
     {
@@ -217,8 +217,8 @@ export default function HomePage() {
           {onDutyDoctors.length === 0 ? (
             <div className="col-span-2 text-center p-12 bg-white border border-slate-200/80 rounded-3xl text-slate-500 shadow-sm">
               <Stethoscope size={36} className="mx-auto text-slate-400 mb-3" />
-              <p className="font-semibold text-base text-slate-700">Tidak ada dokter yang sedang bertugas saat ini.</p>
-              <p className="text-xs text-slate-500 mt-1">Poliklinik beroperasi mulai pukul 08:00 WIB.</p>
+              <p className="font-semibold text-base text-slate-700">Tidak ada dokter yang sedang bertugas atau dokter sedang berhalangan saat ini.</p>
+              <p className="text-xs text-slate-500 mt-1">Layanan panggilan antrean akan aktif kembali saat dokter telah tersedia.</p>
             </div>
           ) : (
             onDutyDoctors.map((doc) => {
@@ -361,7 +361,11 @@ export default function HomePage() {
                     <td className="py-4 px-5 font-mono text-slate-700">{doc.shiftHours}</td>
                     <td className="py-4 px-5 text-center">
                       {doc.isOnDuty ? (
-                        <Chip variant="success">PIKET AKTIF</Chip>
+                        doc.isAvailable ? (
+                          <Chip variant="success">PIKET AKTIF</Chip>
+                        ) : (
+                          <Chip variant="error">BERHALANGAN</Chip>
+                        )
                       ) : (
                         <Chip variant="neutral">LIBUR / OFF</Chip>
                       )}
