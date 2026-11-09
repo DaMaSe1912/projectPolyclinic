@@ -114,27 +114,27 @@ export default function StaffLoginPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-[#F1F5F9]">
+    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-gradient-to-b from-[#F0FDFA]/50 via-[#F8FAFC] to-slate-100">
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex w-12 h-12 rounded-[12px] bg-[#0F172A] text-white items-center justify-center font-bold text-xl mb-3 shadow-md border border-slate-700">
-            <ClipboardList size={22} className="text-[#059669]" />
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-700 to-slate-900 text-white items-center justify-center font-bold text-xl mb-3 shadow-md border border-teal-600/30">
+            <ClipboardList size={22} className="text-emerald-300" />
           </div>
-          <h1 className="text-2xl font-headline font-bold text-[#0F172A]">
+          <h1 className="text-2xl font-headline font-extrabold text-[#0F172A]">
             Portal Staf Poliklinik
           </h1>
           <p className="text-xs text-[#64748B] mt-1">
             Khusus Resepsionis Front Desk & Tenaga Medis (Dokter / Perawat)
           </p>
-          <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[11px]">
-            <Clock size={12} />
+          <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/80 text-slate-700 text-xs font-medium">
+            <Clock size={13} className="text-teal-700" />
             <span>Sesi berakhir otomatis saat perangkat idle</span>
           </div>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white p-6 sm:p-8 rounded-[16px] shadow-sm border border-[#CBD5E1]">
+        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div

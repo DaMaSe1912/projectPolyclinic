@@ -372,6 +372,60 @@
   ],
   "auditLogs": [
     {
+      "id": "aud-1794237574427-760",
+      "timestamp": "2026-11-09T15:19:34.427Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai front_desk"
+    },
+    {
+      "id": "aud-1794145384617-784",
+      "timestamp": "2026-11-08T13:43:04.617Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "2FA_FAILED",
+      "targetType": "system",
+      "details": "Kode TOTP yang dimasukkan salah"
+    },
+    {
+      "id": "aud-1794145366610-452",
+      "timestamp": "2026-11-08T13:42:46.610Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794145328104-156",
+      "timestamp": "2026-11-08T13:42:08.104Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk Super Admin setelah verifikasi 2FA"
+    },
+    {
+      "id": "aud-1794145293566-69",
+      "timestamp": "2026-11-08T13:41:33.566Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794145277508-531",
+      "timestamp": "2026-11-08T13:41:17.508Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai front_desk"
+    },
+    {
       "id": "aud-1794139948890-441",
       "timestamp": "2026-11-08T12:12:28.890Z",
       "actorName": "Bambang Wijaya",
@@ -444,6 +498,18 @@
       "details": "Menyetujui surat rujukan pasien Hendra Gunawan ke RSUD Tarakan"
     }
   ],
-  "sessions": [],
+  "sessions": [
+    {
+      "id": "sess-43ec50c2a72bef2e93b6cd3c12b9894eef07e5c2d1e8269d",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-09T15:19:34.425Z",
+      "expiresAt": "2026-11-09T15:29:34.425Z",
+      "lastActiveAt": "2026-11-09T15:19:34.425Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  ],
   "mailLog": []
 }

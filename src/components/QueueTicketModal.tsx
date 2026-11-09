@@ -18,12 +18,12 @@ export const QueueTicketModal: React.FC<QueueTicketModalProps> = ({ item, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-[12px] shadow-2xl max-w-sm w-full overflow-hidden border border-[#E2E8F0]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden border border-slate-200/80">
         {/* Modal Controls - Hidden when printing */}
-        <div className="no-print p-4 bg-[#0F172A] text-white flex items-center justify-between">
+        <div className="no-print p-4 sm:p-5 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex items-center justify-between border-b border-slate-800">
           <span className="font-headline font-semibold text-sm">Cetak Tiket Antrean</span>
-          <button onClick={onClose} className="p-1 hover:text-slate-300">
+          <button onClick={onClose} className="p-1 hover:text-slate-300 rounded-full hover:bg-white/10 transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -34,23 +34,23 @@ export const QueueTicketModal: React.FC<QueueTicketModalProps> = ({ item, onClos
             <h4 className="font-headline font-bold text-base text-[#0F172A] uppercase tracking-wide">
               Klinik Pratama Sehat Utama
             </h4>
-            <p className="text-xs text-[#64748B] mt-0.5">
-              Poliklinik Gigi & Mulut
+            <p className="text-xs text-[#0D9488] font-medium mt-0.5">
+              Poliklinik Gigi & Mulut (Dental Care)
             </p>
             <p className="text-[11px] text-[#94A3B8]">
               Jl. Kesehatan Raya No. 128, Jakarta Pusat
             </p>
           </div>
 
-          <div className="my-4 py-2 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0]">
+          <div className="my-4 py-3 bg-gradient-to-br from-teal-50/50 via-white to-slate-50 rounded-2xl border border-teal-100/80 shadow-sm">
             <p className="text-xs uppercase tracking-wider text-[#64748B] font-medium">
               Nomor Antrean Anda
             </p>
-            <div className="text-5xl font-mono font-bold text-[#0F172A] tracking-wider my-2">
+            <div className="text-5xl font-mono font-extrabold text-[#0F172A] tracking-wider my-2">
               {item.queueNumber}
             </div>
             {item.isPriority && (
-              <span className="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase">
+              <span className="inline-block px-3 py-1 bg-amber-100 text-amber-900 text-[11px] font-bold rounded-full uppercase border border-amber-200">
                 Prioritas: {item.priorityReason || 'Khusus'}
               </span>
             )}

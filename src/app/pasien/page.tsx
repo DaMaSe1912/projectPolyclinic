@@ -312,8 +312,8 @@ export default function PatientPage() {
       </div>
 
       {/* Emergency Notice */}
-      <div className="bg-red-500/10 border border-red-200 rounded-lg p-3 text-xs text-red-900 flex items-center gap-2 mb-8">
-        <AlertTriangle size={16} className="text-red-600 shrink-0" />
+      <div className="bg-gradient-to-r from-red-500/10 via-amber-500/10 to-red-500/10 border border-red-200/80 rounded-2xl p-4 text-xs text-red-950 flex items-center gap-2.5 mb-8 shadow-sm">
+        <AlertTriangle size={17} className="text-red-600 shrink-0" />
         <span>
           Jika Anda atau keluarga mengalami kondisi darurat gigi akut (perdarahan hebat, cedera rahang berat), segera menuju IGD atau konsultasikan ke front desk untuk triase darurat cepat.
         </span>
@@ -323,19 +323,19 @@ export default function PatientPage() {
       <section className="mb-10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-headline font-bold text-[#0F172A] flex items-center gap-2">
-            <BellRing size={18} className="text-[#059669]" />
+            <BellRing size={18} className="text-[#0D9488]" />
             Antrean Aktif Hari Ini
           </h2>
           <span className="text-xs text-[#64748B]">Auto-update real-time (&lt; 2 detik)</span>
         </div>
 
         {activeVisits.length === 0 ? (
-          <div className="bg-white border border-[#E2E8F0] rounded-[8px] p-8 text-center text-[#64748B]">
-            <p className="font-medium text-[#0F172A]">Belum Ada Antrean Aktif</p>
-            <p className="text-xs mt-1">Klik tombol &quot;Daftar Antrean Baru&quot; di atas untuk membuat jadwal periksa.</p>
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-10 text-center text-[#64748B] shadow-sm">
+            <p className="font-semibold text-base text-[#0F172A]">Belum Ada Antrean Aktif</p>
+            <p className="text-xs text-slate-500 mt-1">Klik tombol &quot;Daftar Antrean Baru&quot; di atas untuk membuat jadwal periksa yang nyaman.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {activeVisits.map((item) => {
               const isCheckedIn = item.status === 'checked_in' || item.status === 'waiting' || item.status === 'called' || item.status === 'in_consultation';
               const isCalled = item.status === 'called';
@@ -346,23 +346,23 @@ export default function PatientPage() {
                 <Card
                   key={item.id}
                   variant="elevated"
-                  className={`border-l-4 ${
+                  className={`rounded-3xl border transition-all duration-300 shadow-cozy hover:shadow-floating ${
                     isCalled
-                      ? 'border-l-[#059669] ring-2 ring-[#05966930]'
+                      ? 'border-emerald-400 ring-4 ring-emerald-500/10 bg-emerald-50/10'
                       : isDocUnavailable
-                      ? 'border-l-[#EF4444]'
-                      : 'border-l-[#0F172A]'
+                      ? 'border-red-300 bg-red-50/10'
+                      : 'border-teal-100/90'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <span className="text-xs font-semibold text-[#64748B]">
-                        Untuk Pasien: <strong className="text-[#0F172A]">{item.patientName}</strong>
+                      <span className="text-xs font-semibold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200/50">
+                        Pasien: <strong className="text-teal-900">{item.patientName}</strong>
                       </span>
-                      <h3 className="text-base font-headline font-bold text-[#0F172A] mt-0.5">
+                      <h3 className="text-base font-headline font-bold text-[#0F172A] mt-2">
                         {item.doctorName}
                       </h3>
-                      <p className="text-xs text-[#64748B]">{item.doctorCode === 'A' ? 'Ruang Poli Gigi 1' : 'Ruang Poli Gigi 2'}</p>
+                      <p className="text-xs text-[#64748B] mt-0.5">{item.doctorCode === 'A' ? 'Ruang Poli Gigi 1' : 'Ruang Poli Gigi 2'}</p>
                     </div>
 
                     <div className="text-right">
@@ -376,26 +376,26 @@ export default function PatientPage() {
                   </div>
 
                   {/* Main Queue Number & Booking Code */}
-                  <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-4 my-3 flex items-center justify-between">
+                  <div className="bg-gradient-to-br from-teal-50/40 via-white to-slate-50 border border-teal-100/80 rounded-2xl p-4 my-3.5 flex items-center justify-between shadow-sm">
                     <div>
                       <span className="text-[11px] uppercase tracking-wider text-[#64748B] block font-medium">
                         Nomor Antrean
                       </span>
-                      <span className="text-3xl font-mono font-bold text-[#0F172A]">
+                      <span className="text-3xl font-mono font-extrabold text-[#0F172A]">
                         {item.queueNumber.startsWith('PENDING-') ? 'Belum Terbit' : item.queueNumber}
                       </span>
                       <p className="text-[11px] text-[#64748B] mt-0.5">
                         {item.queueNumber.startsWith('PENDING-')
-                          ? 'Diterbitkan saat Anda tiba di klinik & check-in'
+                          ? 'Diterbitkan saat tiba di klinik & check-in'
                           : `Panggilan ke-${item.callCount} dari maksimal 3`}
                       </p>
                     </div>
 
-                    <div className="text-right border-l border-[#E2E8F0] pl-4">
+                    <div className="text-right border-l border-slate-200/80 pl-4">
                       <span className="text-[11px] uppercase tracking-wider text-[#64748B] block font-medium">
                         Kode Janji Temu
                       </span>
-                      <span className="text-sm font-mono font-bold text-[#059669]">
+                      <span className="text-sm font-mono font-bold text-[#0D9488]">
                         {item.bookingCode || 'WALK-IN'}
                       </span>
                       {item.slotTime && (

@@ -35,7 +35,7 @@ export const Chip: React.FC<ChipProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-[12px] py-[4px] rounded-[4px] text-[12px] font-medium uppercase tracking-[0.5px] select-none ${variantStyles[variant]} ${interactiveStyles} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide select-none transition-all ${variantStyles[variant]} ${interactiveStyles} ${className}`}
       {...props}
     >
       {children}

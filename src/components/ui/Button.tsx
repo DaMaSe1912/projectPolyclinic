@@ -16,19 +16,19 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium font-body transition-colors rounded-[8px] focus:outline-none focus:ring-2 focus:ring-offset-2 min-h-[44px] cursor-pointer select-none';
+    'inline-flex items-center justify-center font-medium font-body transition-all duration-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 min-h-[44px] cursor-pointer select-none active:scale-[0.98]';
 
   const variantStyles = {
     primary:
-      'bg-[#0F172A] text-white hover:bg-[#020617] focus:ring-[#0F172A] border-none shadow-sm',
+      'bg-[#0F172A] text-white hover:bg-[#1E293B] hover:shadow-md focus:ring-[#0F172A] border-none shadow-sm',
     secondary:
-      'bg-transparent text-[#0F172A] border border-[#0F172A] hover:bg-[#0F172A0A] focus:ring-[#0F172A]',
+      'bg-white text-[#0F172A] border border-slate-200 hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-300 shadow-sm',
     ghost:
-      'bg-transparent text-[#475569] hover:bg-[#F1F5F9] focus:ring-[#64748B] border-none',
+      'bg-transparent text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A] focus:ring-[#64748B] border-none',
     destructive:
-      'bg-[#EF4444] text-white hover:bg-[#DC2626] focus:ring-[#EF4444] border-none shadow-sm',
+      'bg-[#EF4444] text-white hover:bg-[#DC2626] hover:shadow-md focus:ring-[#EF4444] border-none shadow-sm',
     sage:
-      'bg-[#059669] text-white hover:bg-[#047857] focus:ring-[#059669] border-none shadow-sm',
+      'bg-[#0D9488] text-white hover:bg-[#0F766E] hover:shadow-md focus:ring-[#0D9488] border-none shadow-sm',
   };
 
   const sizeStyles = {

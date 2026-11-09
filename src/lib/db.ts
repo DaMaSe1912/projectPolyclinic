@@ -12,6 +12,7 @@ import {
   SessionRecord,
   DevEmail,
 } from '@/types';
+import { syncToSupabaseAsync } from './supabaseSync';
 
 export interface DatabaseSchema {
   settings: ClinicSettings;
@@ -482,6 +483,11 @@ export function getDb(): DatabaseSchema {
 export function saveDb(data: DatabaseSchema): void {
   ensureDataDir();
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    syncToSupabaseAsync(data).catch((err) => {
+      console.error('[DB] Supabase async sync error:', err);
+    });
+  }
 }
 
 export function logAudit(

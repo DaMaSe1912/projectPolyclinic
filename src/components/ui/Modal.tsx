@@ -40,17 +40,17 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
       <div
-        className={`w-full ${widthClasses[maxWidth]} bg-white rounded-[12px] shadow-[0_8px_32px_rgba(15,23,42,0.10)] overflow-hidden border border-[#E2E8F0] transform transition-all`}
+        className={`w-full ${widthClasses[maxWidth]} bg-white rounded-2xl sm:rounded-[24px] shadow-[0_20px_50px_rgba(15,23,42,0.15)] overflow-hidden border border-slate-200/80 transform transition-all`}
         role="dialog"
         aria-modal="true"
       >
-        <div className="px-6 py-4 bg-[#0F172A] text-white flex items-center justify-between">
+        <div className="px-6 sm:px-7 py-4 sm:py-5 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex items-center justify-between border-b border-slate-800">
           <h3 className="font-headline font-semibold text-lg">{title}</h3>
           <button
             onClick={onClose}
-            className="text-slate-300 hover:text-white p-1 rounded-md transition-colors"
+            className="text-slate-400 hover:text-white p-1.5 rounded-full hover:bg-white/10 transition-colors"
             aria-label="Tutup"
           >
             <X size={20} />

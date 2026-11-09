@@ -27,32 +27,32 @@ export const Navbar: React.FC = () => {
   const currentRoleInfo = roleLabelMap[role] || { label: 'Tamu', variant: 'filter-active' };
 
   return (
-    <header className="no-print sticky top-0 z-40 bg-white border-b border-[#E2E8F0] shadow-sm">
+    <header className="no-print sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Clinic Branding */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-[8px] bg-[#0F172A] text-white flex items-center justify-center font-headline font-bold text-lg group-hover:bg-[#020617] transition-colors">
-              <span className="text-[#059669]">✦</span>V
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-800 text-white flex items-center justify-center font-headline font-bold text-lg shadow-sm group-hover:scale-105 transition-all">
+              <span className="text-emerald-300">✦</span>V
             </div>
             <div>
-              <div className="font-headline font-bold text-[16px] text-[#0F172A] leading-tight">
+              <div className="font-headline font-bold text-[16px] text-[#0F172A] leading-tight group-hover:text-teal-700 transition-colors">
                 Klinik Pratama Sehat Utama
               </div>
-              <div className="font-body text-[12px] text-[#059669] font-medium leading-tight">
+              <div className="font-body text-[12px] text-[#0D9488] font-medium leading-tight">
                 Poliklinik Gigi & Mulut (Dental Care)
               </div>
             </div>
           </Link>
 
           {/* Navigation Links based on role (Desktop & Tablet Landscape) */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1.5">
             <Link
               href="/"
-              className={`px-3 py-2 rounded-[6px] text-[14px] font-medium transition-colors ${
+              className={`px-3.5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
                 pathname === '/'
-                  ? 'bg-[#F1F5F9] text-[#0F172A]'
-                  : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC]'
+                  ? 'bg-teal-50 text-teal-800 font-semibold'
+                  : 'text-[#475569] hover:text-[#0F172A] hover:bg-slate-50'
               }`}
             >
               Beranda & Jadwal
@@ -61,19 +61,19 @@ export const Navbar: React.FC = () => {
             <Link
               href="/tv"
               target="_blank"
-              className="px-3 py-2 rounded-[6px] text-[14px] font-medium text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded-xl text-[14px] font-medium text-[#475569] hover:text-[#0F172A] hover:bg-slate-50 flex items-center gap-1.5"
             >
-              <Monitor size={15} className="text-[#059669]" />
+              <Monitor size={15} className="text-[#0D9488]" />
               Layar TV Antrean
             </Link>
 
             {role === 'patient' && (
               <Link
                 href="/pasien"
-                className={`px-3 py-2 rounded-[6px] text-[14px] font-medium transition-colors ${
+                className={`px-3.5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
                   pathname === '/pasien'
-                    ? 'bg-[#F1F5F9] text-[#0F172A]'
-                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC]'
+                    ? 'bg-teal-50 text-teal-800 font-semibold'
+                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-slate-50'
                 }`}
               >
                 Antrean Saya
@@ -83,10 +83,10 @@ export const Navbar: React.FC = () => {
             {role === 'front_desk' && (
               <Link
                 href="/petugas"
-                className={`px-3 py-2 rounded-[6px] text-[14px] font-medium flex items-center gap-1.5 transition-colors ${
+                className={`px-3.5 py-2 rounded-xl text-[14px] font-medium flex items-center gap-1.5 transition-colors ${
                   pathname === '/petugas'
-                    ? 'bg-[#F1F5F9] text-[#0F172A]'
-                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC]'
+                    ? 'bg-teal-50 text-teal-800 font-semibold'
+                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-slate-50'
                 }`}
               >
                 <ClipboardList size={16} />
@@ -97,7 +97,7 @@ export const Navbar: React.FC = () => {
             {(role === 'doctor' || role === 'nurse') && (
               <Link
                 href="/klinis"
-                className={`px-3 py-2 rounded-[6px] text-[14px] font-medium flex items-center gap-1.5 transition-colors ${
+                className={`px-3.5 py-2 rounded-xl text-[14px] font-medium flex items-center gap-1.5 transition-colors ${
                   pathname === '/klinis'
                     ? 'bg-[#F1F5F9] text-[#0F172A]'
                     : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC]'

@@ -185,14 +185,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-[#F8FAFC]">
+    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-gradient-to-b from-[#F0FDFA]/60 via-[#FAFBFC] to-white">
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex w-12 h-12 rounded-[12px] bg-[#0F172A] text-white items-center justify-center font-headline font-bold text-xl mb-3 shadow-md">
-            <span className="text-[#059669]">✦</span>V
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-800 text-white items-center justify-center font-headline font-bold text-xl mb-3 shadow-md">
+            <span className="text-emerald-300">✦</span>V
           </div>
-          <h1 className="text-2xl font-headline font-bold text-[#0F172A]">
+          <h1 className="text-2xl font-headline font-extrabold text-[#0F172A]">
             Portal Pasien Poliklinik
           </h1>
           <p className="text-xs text-[#64748B] mt-1">
@@ -201,13 +201,13 @@ export default function LoginPage() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex bg-[#F1F5F9] p-1 rounded-[10px] border border-[#E2E8F0]">
+        <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/80 shadow-sm">
           <button
             type="button"
             onClick={() => setActiveTab('login')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-[8px] transition-all ${
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
               activeTab === 'login'
-                ? 'bg-white text-[#0F172A] shadow-xs'
+                ? 'bg-white text-teal-900 shadow-sm font-bold'
                 : 'text-[#64748B] hover:text-[#0F172A]'
             }`}
           >
@@ -216,20 +216,20 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setActiveTab('register')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-[8px] transition-all ${
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
               activeTab === 'register'
-                ? 'bg-white text-[#0F172A] shadow-xs'
+                ? 'bg-white text-teal-900 shadow-sm font-bold'
                 : 'text-[#64748B] hover:text-[#0F172A]'
             }`}
           >
-            Daftar Pasien Baru
+            Daftar Baru
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('forgot')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-[8px] transition-all ${
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
               activeTab === 'forgot'
-                ? 'bg-white text-[#0F172A] shadow-xs'
+                ? 'bg-white text-teal-900 shadow-sm font-bold'
                 : 'text-[#64748B] hover:text-[#0F172A]'
             }`}
           >
@@ -239,7 +239,7 @@ export default function LoginPage() {
 
         {/* TAB 1: LOGIN */}
         {activeTab === 'login' && (
-          <div className="bg-white p-6 sm:p-8 rounded-[16px] shadow-sm border border-[#E2E8F0] space-y-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80 space-y-4">
             <form onSubmit={handleLogin} className="space-y-4">
               {loginError && (
                 <div
@@ -336,7 +336,7 @@ export default function LoginPage() {
 
         {/* TAB 2: REGISTER */}
         {activeTab === 'register' && (
-          <div className="bg-white p-6 sm:p-8 rounded-[16px] shadow-sm border border-[#E2E8F0] space-y-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80 space-y-4">
             {regSuccessMessage ? (
               <div className="text-center py-6 space-y-4">
                 <div className="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
@@ -501,7 +501,7 @@ export default function LoginPage() {
 
         {/* TAB 3: FORGOT PASSWORD */}
         {activeTab === 'forgot' && (
-          <div className="bg-white p-6 sm:p-8 rounded-[16px] shadow-sm border border-[#E2E8F0] space-y-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80 space-y-4">
             <div className="text-center">
               <div className="w-10 h-10 mx-auto rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold mb-2">
                 <KeyRound size={20} />
