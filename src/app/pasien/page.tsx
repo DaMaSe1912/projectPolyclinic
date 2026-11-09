@@ -312,10 +312,10 @@ export default function PatientPage() {
       </div>
 
       {/* Emergency Notice */}
-      <div className="bg-gradient-to-r from-red-500/10 via-amber-500/10 to-red-500/10 border border-red-200/80 rounded-2xl p-4 text-xs text-red-950 flex items-center gap-2.5 mb-8 shadow-sm">
-        <AlertTriangle size={17} className="text-red-600 shrink-0" />
+      <div className="bg-rose-50 border border-rose-200/90 rounded-2xl p-4 text-xs text-rose-950 flex items-center gap-2.5 mb-8 shadow-sm">
+        <AlertTriangle size={17} className="text-rose-600 shrink-0" />
         <span>
-          Jika Anda atau keluarga mengalami kondisi darurat gigi akut (perdarahan hebat, cedera rahang berat), segera menuju IGD atau konsultasikan ke front desk untuk triase darurat cepat.
+          Jika Anda atau keluarga mengalami kondisi medis darurat akut (sesak napas berat, nyeri dada mendadak, kejang, cedera trauma), segera menuju IGD terdekat atau hubungi front desk untuk triase darurat cepat.
         </span>
       </div>
 
@@ -362,11 +362,11 @@ export default function PatientPage() {
                       <h3 className="text-base font-headline font-bold text-[#0F172A] mt-2">
                         {item.doctorName}
                       </h3>
-                      <p className="text-xs text-[#64748B] mt-0.5">{item.doctorCode === 'A' ? 'Ruang Poli Gigi 1' : 'Ruang Poli Gigi 2'}</p>
+                      <p className="text-xs text-[#64748B] mt-0.5">{item.doctorCode === 'A' ? 'Ruang Poli Umum 1' : 'Ruang Poli Umum 2'}</p>
                     </div>
 
                     <div className="text-right">
-                      {isCalled && <Chip variant="success" className="animate-pulse">GILIRAN ANDA DIPANGGIL</Chip>}
+                      {isCalled && <Chip variant="success">GILIRAN ANDA DIPANGGIL</Chip>}
                       {isInRoom && <Chip variant="info">SEDANG KONSULTASI</Chip>}
                       {item.status === 'waiting' && <Chip variant="warning">DALAM ANTREAN</Chip>}
                       {item.status === 'checked_in' && <Chip variant="info">SUDAH CHECK-IN</Chip>}
@@ -376,7 +376,7 @@ export default function PatientPage() {
                   </div>
 
                   {/* Main Queue Number & Booking Code */}
-                  <div className="bg-gradient-to-br from-teal-50/40 via-white to-slate-50 border border-teal-100/80 rounded-2xl p-4 my-3.5 flex items-center justify-between shadow-sm">
+                  <div className="bg-slate-50/80 border border-slate-200/90 rounded-2xl p-4 my-3.5 flex items-center justify-between shadow-sm">
                     <div>
                       <span className="text-[11px] uppercase tracking-wider text-[#64748B] block font-medium">
                         Nomor Antrean
@@ -538,7 +538,7 @@ export default function PatientPage() {
                   <th className="py-3 px-4">Tanggal</th>
                   <th className="py-3 px-4">Nomor / Kode</th>
                   <th className="py-3 px-4">Pasien</th>
-                  <th className="py-3 px-4">Dokter Gigi</th>
+                  <th className="py-3 px-4">Dokter Poliklinik</th>
                   <th className="py-3 px-4">Status Kunjungan</th>
                 </tr>
               </thead>
@@ -571,7 +571,7 @@ export default function PatientPage() {
       >
         <form onSubmit={handleCreateBooking} className="space-y-4 font-body">
           <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#E2E8F0] text-xs text-[#475569]">
-            Pilih pasien keluarga yang akan berobat, tentukan dokter gigi spesialis serta waktu slot. Nomor antrean fisik (seperti A-001) akan langsung terbit saat check-in pada hari pemeriksaan.
+            Pilih pasien keluarga yang akan berobat, tentukan dokter umum/spesialis serta waktu slot. Nomor antrean fisik (seperti A-001) akan langsung terbit saat check-in pada hari pemeriksaan.
           </div>
 
           <div>
@@ -610,7 +610,7 @@ export default function PatientPage() {
 
             <div>
               <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
-                3. Pilih Dokter Gigi Spesialis
+                3. Pilih Dokter Poliklinik Umum
               </label>
               <select
                 value={selectedDoctorId}

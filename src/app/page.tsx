@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 import { Doctor, QueueItem } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { Chip } from '@/components/ui/Chip';
@@ -25,11 +26,14 @@ import {
 } from 'lucide-react';
 
 export default function HomePage() {
+  const { role, user } = useAuth();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const isStaff = role === 'front_desk' || role === 'doctor' || role === 'nurse' || role === 'admin';
 
   const fetchLiveStatus = async () => {
     try {
@@ -62,7 +66,7 @@ export default function HomePage() {
   const faqs = [
     {
       q: 'Bagaimana cara melakukan pendaftaran antrean online?',
-      a: 'Pasien mendaftar atau masuk dengan email dan kata sandi (disertai verifikasi email). Pilih dokter gigi spesialis, pilih tanggal periksa serta sesi jam yang diinginkan, kemudian Anda akan menerima Kode Booking.',
+      a: 'Pasien mendaftar atau masuk dengan email dan kata sandi (disertai verifikasi email). Pilih dokter spesialis atau dokter umum, pilih tanggal periksa serta sesi jam yang diinginkan, kemudian Anda akan menerima Kode Booking.',
     },
     {
       q: 'Kapan batas waktu check-in di klinik?',
@@ -81,61 +85,59 @@ export default function HomePage() {
   return (
     <div className="flex-1 pb-20 font-body bg-[#FAFBFC]">
       {/* Reassuring Care Banner */}
-      <div className="bg-gradient-to-r from-amber-500/10 via-amber-400/10 to-amber-500/10 border-b border-amber-200/60 text-amber-950 px-4 py-2.5 text-xs text-center font-medium flex items-center justify-center gap-2">
+      <div className="bg-amber-50 border-b border-amber-200/70 text-amber-950 px-4 py-2.5 text-xs text-center font-medium flex items-center justify-center gap-2">
         <AlertTriangle size={15} className="text-amber-600 shrink-0" />
         <span>
-          <strong>Perhatian Medis:</strong> Jika mengalami perdarahan hebat pasca-tindakan, pembengkakan rahang luas mendadak, atau trauma darurat, segera hubungi <strong>119</strong> atau IGD RS terdekat.
+          <strong>Perhatian Medis:</strong> Jika mengalami kondisi gawat darurat medis (sesak napas akut, nyeri dada mendadak, penurunan kesadaran, atau trauma parah), segera hubungi <strong>119</strong> atau IGD Rumah Sakit terdekat.
         </span>
       </div>
 
       {/* Hero Section with Cozy Aesthetic */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F0FDFA] via-[#FAFBFC] to-white border-b border-slate-200/70 pt-12 pb-16 px-4 sm:px-6 lg:px-8">
-        {/* Soft Ambient Glows */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-10 left-10 w-72 h-72 bg-emerald-100/30 rounded-full blur-2xl pointer-events-none"></div>
-
+      <section className="relative overflow-hidden bg-[#FAFBFC] border-b border-slate-200/70 pt-12 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="relative max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/70 text-teal-800 text-xs font-semibold tracking-wide mb-4 shadow-sm">
-              <Sparkles size={14} className="text-teal-600" />
-              <span>SISTEM ANTREAN RESMI POLIKLINIK</span>
+              <Sparkles size={14} className="text-[#0D9488]" />
+              <span>SISTEM ANTREAN RESMI POLIKLINIK UMUM</span>
             </div>
             
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-headline font-extrabold text-[#0F172A] tracking-tight leading-[1.15]">
-              Perawatan Gigi Nyaman, <br />
+              Pelayanan Kesehatan Nyaman, <br />
               <span className="text-[#0D9488]">Ramah & Terpercaya</span>
             </h1>
 
             <p className="mt-4 text-base sm:text-lg text-[#475569] leading-relaxed">
-              Pantau antrean secara langsung dari rumah atau gadget Anda. Daftarkan diri Anda dan keluarga secara online tanpa perlu cemas menunggu lama di ruang tunggu klinik.
+              Pantau antrean secara langsung dari rumah atau gadget Anda. Daftarkan diri Anda dan keluarga ke poliklinik umum secara online tanpa perlu cemas menunggu lama di ruang tunggu klinik.
             </p>
 
             {/* Quick Feature Badges */}
             <div className="mt-5 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600">
-              <span className="flex items-center gap-1.5 bg-white/80 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                <CheckCircle2 size={15} className="text-emerald-500" /> Transparan & Real-time
+              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <CheckCircle2 size={15} className="text-[#0D9488]" /> Transparan & Real-time
               </span>
-              <span className="flex items-center gap-1.5 bg-white/80 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                <ShieldCheck size={15} className="text-teal-600" /> Dokter Spesialis Berizin Resmi
+              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <ShieldCheck size={15} className="text-[#0D9488]" /> Dokter Umum & Spesialis Berizin
               </span>
-              <span className="flex items-center gap-1.5 bg-white/80 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                <UserCheck size={15} className="text-sky-600" /> Ruang Periksa Higienis
+              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <UserCheck size={15} className="text-sky-600" /> Ruang Periksa Bersih & Ramah
               </span>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3.5">
-              <Link href="/login">
+              <Link href={user ? (role === 'patient' ? '/pasien' : isStaff ? '/klinis' : '/') : '/login'}>
                 <Button variant="sage" size="lg" className="gap-2.5 rounded-2xl shadow-cozy hover:shadow-floating">
                   <Calendar size={18} />
-                  Daftar / Masuk Akun Pasien
+                  {user ? (role === 'patient' ? 'Lihat Antrean Saya' : 'Portal Pelayanan') : 'Daftar / Masuk Akun Pasien'}
                 </Button>
               </Link>
-              <Link href="/tv" target="_blank">
-                <Button variant="secondary" size="lg" className="gap-2 rounded-2xl">
-                  <Monitor size={18} className="text-teal-600" />
-                  Buka Layar TV Ruang Tunggu
-                </Button>
-              </Link>
+              {isStaff && (
+                <Link href="/tv" target="_blank">
+                  <Button variant="secondary" size="lg" className="gap-2 rounded-2xl">
+                    <Monitor size={18} className="text-teal-600" />
+                    Buka Layar TV Ruang Tunggu
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -148,8 +150,8 @@ export default function HomePage() {
                 </div>
                 <span className="font-headline font-bold text-[#0F172A] text-sm">Informasi Pelayanan</span>
               </div>
-              <span className="inline-flex items-center gap-1.5 text-xs text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-full">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Buka Hari Ini
+              <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-3 py-1 rounded-full">
+                Buka Hari Ini
               </span>
             </div>
 
@@ -169,9 +171,9 @@ export default function HomePage() {
                 <MapPin size={15} />
               </div>
               <div>
-                <p className="font-semibold text-[#0F172A]">Lokasi Poli Gigi</p>
+                <p className="font-semibold text-[#0F172A]">Lokasi Poli Umum</p>
                 <p className="text-slate-600 mt-0.5">Jl. Kesehatan Raya No. 128, Lantai 1</p>
-                <p className="text-slate-400">Ruang Poli Gigi 1 & 2</p>
+                <p className="text-slate-400">Ruang Poli Umum 1 & 2</p>
               </div>
             </div>
 
@@ -233,7 +235,7 @@ export default function HomePage() {
                   {/* Doctor Header */}
                   <div className="flex items-start justify-between border-b border-slate-100 pb-5">
                     <div className="flex items-start gap-3.5">
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-100 text-teal-800 flex items-center justify-center font-headline font-bold text-lg border border-teal-200/60 shrink-0">
+                      <div className="w-12 h-12 rounded-2xl bg-teal-50 text-[#0D9488] flex items-center justify-center font-headline font-bold text-lg border border-teal-200/60 shrink-0">
                         {doc.code}
                       </div>
                       <div>
@@ -255,20 +257,17 @@ export default function HomePage() {
                     </Chip>
                   </div>
 
-                  {/* Calling & Next Display with Softer, Welcoming Colors */}
+                  {/* Calling & Next Display with Cozy Green (#0D9488) */}
                   <div className="my-6 grid grid-cols-2 gap-4 text-center">
-                    {/* Active Calling Box */}
-                    <div className="relative overflow-hidden bg-gradient-to-br from-teal-900 via-slate-900 to-slate-950 text-white p-5 rounded-2xl shadow-md border border-teal-700/30 flex flex-col justify-center">
-                      <div className="absolute -right-6 -top-6 w-20 h-20 bg-teal-500/15 rounded-full blur-xl pointer-events-none"></div>
-                      
-                      <span className="text-[11px] font-mono tracking-wider uppercase text-teal-200/90 font-medium">
+                    {/* Active Calling Box: Solid Cozy Green palette matching "Ramah & Terpercaya" (#0D9488) */}
+                    <div className="bg-[#0D9488] text-white p-5 rounded-2xl shadow-md flex flex-col justify-center">
+                      <span className="text-[11px] font-mono tracking-wider uppercase text-teal-100 font-semibold">
                         SEDANG DIPANGGIL
                       </span>
-                      <span className="text-4xl sm:text-5xl font-mono font-extrabold text-white tracking-widest my-1.5 drop-shadow-sm">
+                      <span className="text-4xl sm:text-5xl font-mono font-extrabold text-white tracking-widest my-1.5">
                         {currentCalled ? currentCalled.queueNumber : '---'}
                       </span>
-                      <span className="inline-flex items-center justify-center gap-1.5 text-[11px] text-emerald-300 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                      <span className="inline-flex items-center justify-center text-xs text-teal-50 font-medium bg-teal-700/40 px-3 py-1 rounded-full self-center">
                         {currentCalled?.status === 'in_consultation'
                           ? 'Sedang Konsultasi'
                           : currentCalled
@@ -277,8 +276,8 @@ export default function HomePage() {
                       </span>
                     </div>
 
-                    {/* Next In Line Box */}
-                    <div className="bg-gradient-to-br from-teal-50/40 via-white to-slate-50 border border-teal-100/70 p-5 rounded-2xl flex flex-col justify-center shadow-sm">
+                    {/* Next In Line Box: Soft clean porcelain surface without dark contrast */}
+                    <div className="bg-slate-50 border border-slate-200/90 p-5 rounded-2xl flex flex-col justify-center shadow-sm">
                       <span className="text-[11px] font-mono tracking-wider uppercase text-slate-500 font-medium">
                         NOMOR BERIKUTNYA
                       </span>
@@ -286,7 +285,7 @@ export default function HomePage() {
                         {waitingList.length > 0 ? waitingList[0].queueNumber : '---'}
                       </span>
                       <span className="text-xs text-slate-500">
-                        <strong className="text-teal-700">{waitingList.length}</strong> pasien menunggu
+                        <strong className="text-[#0D9488]">{waitingList.length}</strong> pasien menunggu
                       </span>
                     </div>
                   </div>
@@ -321,17 +320,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Dentist Master Schedule Section */}
+      {/* Doctor Master Schedule Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
         <div className="mb-6">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 uppercase tracking-wider mb-1">
-            <span className="w-2 h-2 rounded-full bg-teal-500"></span> Tim Medis Kami
+            <span className="w-2 h-2 rounded-full bg-teal-500"></span> Tim Medis Poliklinik
           </div>
           <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
-            Jadwal Praktik 5 Dokter Gigi Poliklinik
+            Jadwal Praktik 5 Dokter Poliklinik Umum
           </h2>
           <p className="text-sm text-[#64748B] mt-1">
-            Sesuai ketentuan standar pelayanan klinik, maksimal 2 dokter gigi berpiket secara simultan per hari kerja.
+            Sesuai ketentuan standar pelayanan klinik, maksimal 2 dokter berpiket secara simultan per hari kerja.
           </p>
         </div>
 
@@ -341,8 +340,8 @@ export default function HomePage() {
               <thead className="bg-[#0F172A] text-white font-headline text-xs uppercase tracking-wider">
                 <tr>
                   <th className="py-4 px-5">Kode</th>
-                  <th className="py-4 px-5">Nama Dokter Gigi</th>
-                  <th className="py-4 px-5">Bidang Spesialisasi</th>
+                  <th className="py-4 px-5">Nama Dokter</th>
+                  <th className="py-4 px-5">Bidang Spesialisasi / Layanan</th>
                   <th className="py-4 px-5">Hari Praktik</th>
                   <th className="py-4 px-5">Jam Sesi</th>
                   <th className="py-4 px-5 text-center">Status Hari Ini</th>
@@ -375,41 +374,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section with Soft Curves */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 uppercase tracking-wider mb-1">
-            <span className="w-2 h-2 rounded-full bg-teal-500"></span> Bantuan Pasien
+      {/* FAQ Section with Soft Curves & Clean Margins */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-16">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 uppercase tracking-wider mb-2">
+            <span>Bantuan Pasien</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
             Pertanyaan yang Sering Diajukan (FAQ)
           </h2>
-          <p className="text-sm text-[#64748B] mt-1">
+          <p className="text-sm text-[#64748B] mt-1.5">
             Panduan lengkap alur pendaftaran, check-in, dan pembatalan layanan poliklinik
           </p>
         </div>
 
-        <div className="space-y-3.5">
+        <div className="space-y-6">
           {faqs.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
               <div
                 key={idx}
-                className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm transition-all duration-200 hover:border-teal-200"
+                className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm transition-all duration-200 hover:border-teal-200 hover:shadow-md my-4"
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full text-left px-6 py-4.5 flex items-center justify-between font-headline font-semibold text-sm text-[#0F172A] hover:bg-slate-50/60 transition-colors"
+                  className="w-full text-left px-6 sm:px-8 py-5 sm:py-6 flex items-center justify-between font-headline font-semibold text-sm sm:text-base text-[#0F172A] hover:bg-slate-50/60 transition-colors"
                 >
-                  <span>{faq.q}</span>
+                  <span className="pr-4">{faq.q}</span>
                   {isOpen ? (
-                    <ChevronUp size={18} className="text-[#0D9488] shrink-0 ml-3" />
+                    <ChevronUp size={20} className="text-[#0D9488] shrink-0" />
                   ) : (
-                    <ChevronDown size={18} className="text-slate-400 shrink-0 ml-3" />
+                    <ChevronDown size={20} className="text-slate-400 shrink-0" />
                   )}
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-5 text-xs sm:text-sm text-[#475569] leading-relaxed border-t border-slate-100 pt-3.5 bg-slate-50/30">
+                  <div className="px-6 sm:px-8 pb-6 text-sm text-[#475569] leading-relaxed border-t border-slate-100 pt-4 bg-slate-50/40">
                     {faq.a}
                   </div>
                 )}

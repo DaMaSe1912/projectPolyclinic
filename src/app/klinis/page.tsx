@@ -315,7 +315,6 @@ export default function ClinicalPage() {
                 {currentActiveVisit ? (
                   <Chip
                     variant={currentActiveVisit.status === 'in_consultation' ? 'info' : 'success'}
-                    className="animate-pulse"
                   >
                     {currentActiveVisit.status === 'in_consultation'
                       ? 'KONSULTASI BERLANGSUNG'

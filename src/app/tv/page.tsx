@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import { Doctor, QueueItem } from '@/types';
 import {
   Volume2,
@@ -13,6 +15,9 @@ import {
 } from 'lucide-react';
 
 export default function WaitingRoomTvPage() {
+  const router = useRouter();
+  const { role, isLoading: authLoading } = useAuth();
+
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -21,6 +26,17 @@ export default function WaitingRoomTvPage() {
   const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(true);
   const [lastCalledNumber, setLastCalledNumber] = useState<string>('');
   const [flashCall, setFlashCall] = useState<boolean>(false);
+
+  // Restrict access: only authorized clinic staff can access TV display page
+  useEffect(() => {
+    if (!authLoading) {
+      if (role === 'patient') {
+        router.push('/access-denied');
+      } else if (role === 'guest') {
+        router.push('/staff');
+      }
+    }
+  }, [role, authLoading, router]);
 
   // Digital clock update
   useEffect(() => {
@@ -112,7 +128,7 @@ export default function WaitingRoomTvPage() {
     <div className="min-h-screen w-full bg-[#0F172A] text-white flex flex-col justify-between font-body select-none overflow-hidden">
       {/* Offline / Reconnecting Banner per PRD */}
       {!isOnline && (
-        <div className="bg-amber-600 text-white text-center py-2 px-4 font-headline font-bold text-sm flex items-center justify-center gap-2 animate-pulse">
+        <div className="bg-amber-600 text-white text-center py-2 px-4 font-headline font-bold text-sm flex items-center justify-center gap-2">
           <WifiOff size={18} />
           <span>Sedang menyambungkan ulang ke server antrean klinik (Reconnecting... Menampilkan data tersimpan)</span>
         </div>
@@ -208,8 +224,7 @@ export default function WaitingRoomTvPage() {
 
                     <div className="text-right">
                       <span className="text-xs text-slate-400 block">Status Dokter</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                      <span className="inline-flex items-center text-xs font-bold text-emerald-400">
                         MELAYANI
                       </span>
                     </div>

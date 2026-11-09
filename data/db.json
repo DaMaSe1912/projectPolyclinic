@@ -2,7 +2,7 @@
   "settings": {
     "id": "clinic-utama-01",
     "name": "Klinik Pratama Sehat Utama",
-    "polyclinicName": "Poliklinik Gigi & Mulut (Dental Care)",
+    "polyclinicName": "Poliklinik Umum (General Clinic)",
     "address": "Jl. Kesehatan Raya No. 128, Jakarta Pusat",
     "phone": "021-5550192",
     "openTime": "08:00",
@@ -12,15 +12,15 @@
     "cancellationCutoffHours": 2,
     "rescheduleHoldSlotHours": 24,
     "maxBookingHorizonDays": 30,
-    "lastBackupAt": "2026-10-30T12:44:13.783Z"
+    "lastBackupAt": "2026-11-09T16:46:20.042Z"
   },
   "doctors": [
     {
       "id": "doc-a",
       "code": "A",
-      "name": "drg. Budi Santoso, Sp.KG",
-      "specialty": "Spesialis Konservasi Gigi (Tambal & Perawatan Saluran Akar)",
-      "room": "Ruang Poli Gigi 1",
+      "name": "dr. Budi Santoso, Sp.PD",
+      "specialty": "Spesialis Penyakit Dalam (Konsultasi Medis Lanjut)",
+      "room": "Ruang Poli Umum 1",
       "isOnDuty": true,
       "isAvailable": true,
       "scheduleDays": [
@@ -36,9 +36,9 @@
     {
       "id": "doc-b",
       "code": "B",
-      "name": "drg. Siti Rahma, Sp.Ort",
-      "specialty": "Spesialis Ortodonsia (Kawat Gigi & Estetika)",
-      "room": "Ruang Poli Gigi 2",
+      "name": "dr. Siti Rahma, Sp.A",
+      "specialty": "Spesialis Anak & Tumbuh Kembang Keluarga",
+      "room": "Ruang Poli Umum 2",
       "isOnDuty": true,
       "isAvailable": true,
       "scheduleDays": [
@@ -53,9 +53,9 @@
     {
       "id": "doc-c",
       "code": "C",
-      "name": "drg. Hendra Wijaya, Sp.BM",
-      "specialty": "Spesialis Bedah Mulut & Maksilofasial (Odontektomi / Cabut Gigi Bungsu)",
-      "room": "Ruang Poli Gigi 1",
+      "name": "dr. Hendra Wijaya, Sp.JP",
+      "specialty": "Spesialis Jantung & Pembuluh Darah (Kardiovaskular)",
+      "room": "Ruang Poli Umum 1",
       "isOnDuty": false,
       "isAvailable": true,
       "scheduleDays": [
@@ -68,9 +68,9 @@
     {
       "id": "doc-d",
       "code": "D",
-      "name": "drg. Anita Kusuma, Sp.Perio",
-      "specialty": "Spesialis Periodonsia (Gusi & Jaringan Penyangga)",
-      "room": "Ruang Poli Gigi 2",
+      "name": "dr. Anita Kusuma",
+      "specialty": "Dokter Umum & Pemeriksaan Kesehatan (MCU)",
+      "room": "Ruang Poli Umum 2",
       "isOnDuty": false,
       "isAvailable": true,
       "scheduleDays": [
@@ -83,9 +83,9 @@
     {
       "id": "doc-e",
       "code": "E",
-      "name": "drg. Farhan Ramadhan",
-      "specialty": "Dokter Gigi Umum (Pembersihan Karang Gigi & Perawatan Dasar)",
-      "room": "Ruang Poli Gigi 1",
+      "name": "dr. Farhan Ramadhan",
+      "specialty": "Dokter Umum & Layanan Primer Keluarga",
+      "room": "Ruang Poli Umum 1",
       "isOnDuty": false,
       "isAvailable": true,
       "scheduleDays": [
@@ -139,12 +139,12 @@
     },
     {
       "id": "usr-doc-a",
-      "name": "drg. Budi Santoso, Sp.KG",
+      "name": "dr. Budi Santoso, Sp.PD",
       "phone": "08333333333",
       "role": "doctor",
       "doctorId": "doc-a",
       "username": "dr_budi",
-      "password": "DokterGigiBudi2026!",
+      "password": "DokterBudi2026!",
       "createdAt": "2026-10-30T12:44:13.783Z",
       "email": "dr.budi@poliklinik.id",
       "passwordSalt": "2b13d6058434462a998df62ecca2a2d4",
@@ -156,12 +156,12 @@
     },
     {
       "id": "usr-doc-b",
-      "name": "drg. Siti Rahma, Sp.Ort",
+      "name": "dr. Siti Rahma, Sp.A",
       "phone": "08444444444",
       "role": "doctor",
       "doctorId": "doc-b",
       "username": "dr_siti",
-      "password": "DokterGigiSiti2026!",
+      "password": "DokterSiti2026!",
       "createdAt": "2026-10-30T12:44:13.783Z",
       "email": "dr.siti@poliklinik.id",
       "passwordSalt": "1ea81a05b252ad9bb1fcbb8dd6861a85",
@@ -250,6 +250,32 @@
       "failedLoginAttempts": 0,
       "lockedUntil": null,
       "isActive": true
+    },
+    {
+      "id": "usr-pat-1794240395409",
+      "name": "09 Mada",
+      "email": "mada19virgo@gmail.com",
+      "phone": "082298890005",
+      "dob": "1992-05-18",
+      "gender": "L",
+      "role": "patient",
+      "password": "KURANGTAHU",
+      "passwordHash": "03f18cdddbb14b90b8b38f8b96793d648e42bf3a6c80425174dd51e60c5c14f0fb2b30553b4bd3117ebf17989fae96cd908ee1f64f80eab3d1866a43dbc1ffcf",
+      "passwordSalt": "8a04c8f799e77932d1266fe946429973",
+      "emailVerified": true,
+      "failedLoginAttempts": 0,
+      "lockedUntil": null,
+      "isActive": true,
+      "familyMembers": [
+        {
+          "id": "fam-1794240395409-self",
+          "name": "09 Mada",
+          "dob": "1992-05-18",
+          "gender": "L",
+          "relationship": "Diri Sendiri"
+        }
+      ],
+      "createdAt": "2026-11-09T16:06:35.409Z"
     }
   ],
   "queue": [
@@ -259,7 +285,7 @@
       "clinicId": "clinic-utama-01",
       "doctorId": "doc-a",
       "doctorCode": "A",
-      "doctorName": "drg. Budi Santoso, Sp.KG",
+      "doctorName": "dr. Budi Santoso, Sp.PD",
       "patientId": "usr-patient-1",
       "patientName": "Bambang Wijaya",
       "patientPhone": "081234567890",
@@ -284,7 +310,7 @@
       "clinicId": "clinic-utama-01",
       "doctorId": "doc-a",
       "doctorCode": "A",
-      "doctorName": "drg. Budi Santoso, Sp.KG",
+      "doctorName": "dr. Budi Santoso, Sp.PD",
       "patientId": "usr-patient-2",
       "patientName": "Ibu Ratna Kumala",
       "patientPhone": "087812345678",
@@ -306,7 +332,7 @@
       "clinicId": "clinic-utama-01",
       "doctorId": "doc-a",
       "doctorCode": "A",
-      "doctorName": "drg. Budi Santoso, Sp.KG",
+      "doctorName": "dr. Budi Santoso, Sp.PD",
       "patientId": "usr-patient-3",
       "patientName": "Dimas Satria",
       "patientPhone": "081399887766",
@@ -329,7 +355,7 @@
       "clinicId": "clinic-utama-01",
       "doctorId": "doc-b",
       "doctorCode": "B",
-      "doctorName": "drg. Siti Rahma, Sp.Ort",
+      "doctorName": "dr. Siti Rahma, Sp.A",
       "patientId": "usr-patient-4",
       "patientName": "Clara Veronica",
       "patientPhone": "081912344321",
@@ -357,20 +383,146 @@
       "patientGender": "L",
       "patientPhone": "081298765432",
       "allergies": "Alergi Penisilin",
-      "relevantMedicalRecord": "Impaksi Molar 3 Bawah Kanan posisi horizontal, disertai perikoronitis akut dan pembengkakan submandibular luas.",
-      "reason": "Memerlukan tindakan Odontektomi kompleks dengan anestesi umum & penanganan spesialis bedah mulut rawat inap.",
+      "relevantMedicalRecord": "Hipertensi urgensi dengan tekanan darah 180/110 mmHg disertai pusing berputar dan riwayat diabetes melitus.",
+      "reason": "Memerlukan penanganan spesialis penyakit dalam rawat inap dan pemantauan kardiovaskular lanjutan.",
       "destinationHospital": "RSUD Tarakan Jakarta Pusat",
       "initiatedBy": "nurse",
       "nurseName": "Ns. Maya Putri, S.Kep",
       "status": "approved",
       "approvingDoctorId": "doc-a",
-      "approvingDoctorName": "drg. Budi Santoso, Sp.KG",
+      "approvingDoctorName": "dr. Budi Santoso, Sp.PD",
       "createdAt": "2026-10-30T10:44:13.783Z",
       "approvedAt": "2026-10-30T10:47:33.783Z",
       "printedAt": "2026-10-30T10:49:13.783Z"
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud-1794243158222-155",
+      "timestamp": "2026-11-09T16:52:38.222Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794242862673-350",
+      "timestamp": "2026-11-09T16:47:42.673Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai front_desk"
+    },
+    {
+      "id": "aud-1794242854628-421",
+      "timestamp": "2026-11-09T16:47:34.628Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794242747972-940",
+      "timestamp": "2026-11-09T16:45:47.972Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk Super Admin setelah verifikasi 2FA"
+    },
+    {
+      "id": "aud-1794242744897-972",
+      "timestamp": "2026-11-09T16:45:44.897Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "2FA_CHALLENGE",
+      "targetType": "system",
+      "details": "Menunggu verifikasi faktor kedua (TOTP/Recovery Code)"
+    },
+    {
+      "id": "aud-1794242737123-5",
+      "timestamp": "2026-11-09T16:45:37.123Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794242714431-994",
+      "timestamp": "2026-11-09T16:45:14.431Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
+    {
+      "id": "aud-1794241097687-469",
+      "timestamp": "2026-11-09T16:18:17.687Z",
+      "actorName": "09 Mada",
+      "actorRole": "patient",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794240422511-112",
+      "timestamp": "2026-11-09T16:07:02.511Z",
+      "actorName": "09 Mada",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
+    {
+      "id": "aud-1794240406897-269",
+      "timestamp": "2026-11-09T16:06:46.897Z",
+      "actorName": "09 Mada",
+      "actorRole": "patient",
+      "action": "EMAIL_VERIFIED",
+      "targetType": "patient",
+      "details": "Verifikasi email berhasil untuk mada19virgo@gmail.com"
+    },
+    {
+      "id": "aud-1794240395414-212",
+      "timestamp": "2026-11-09T16:06:35.414Z",
+      "actorName": "09 Mada",
+      "actorRole": "patient",
+      "action": "PATIENT_REGISTERED",
+      "targetType": "patient",
+      "details": "Pasien baru terdaftar: 09 Mada (mada19virgo@gmail.com). Tautan verifikasi email dikirim."
+    },
+    {
+      "id": "aud-1794240335900-72",
+      "timestamp": "2026-11-09T16:05:35.900Z",
+      "actorName": "mada19virgo@gmail.com",
+      "actorRole": "guest",
+      "action": "PASSWORD_RESET_ATTEMPT_UNKNOWN",
+      "targetType": "system",
+      "details": "Permintaan reset password untuk email tidak dikenal: mada19virgo@gmail.com"
+    },
+    {
+      "id": "aud-1794240313353-771",
+      "timestamp": "2026-11-09T16:05:13.353Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
+    {
+      "id": "aud-1794240257068-676",
+      "timestamp": "2026-11-09T16:04:17.068Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "SESSION_EXPIRED_IDLE",
+      "targetType": "system",
+      "details": "Sesi otomatis berakhir karena idle (> 10 menit)"
+    },
     {
       "id": "aud-1794237574427-760",
       "timestamp": "2026-11-09T15:19:34.427Z",
@@ -486,12 +638,12 @@
       "actorRole": "admin",
       "action": "SYSTEM_INIT",
       "targetType": "system",
-      "details": "Inisialisasi sistem antrean Poliklinik Gigi & Mulut versi 1.0"
+      "details": "Inisialisasi sistem antrean Poliklinik Umum versi 1.0"
     },
     {
       "id": "aud-002",
       "timestamp": "2026-10-30T10:47:33.783Z",
-      "actorName": "drg. Budi Santoso, Sp.KG",
+      "actorName": "dr. Budi Santoso, Sp.PD",
       "actorRole": "doctor",
       "action": "REFERRAL_APPROVED",
       "targetType": "referral",
@@ -500,16 +652,27 @@
   ],
   "sessions": [
     {
-      "id": "sess-43ec50c2a72bef2e93b6cd3c12b9894eef07e5c2d1e8269d",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-09T15:19:34.425Z",
-      "expiresAt": "2026-11-09T15:29:34.425Z",
-      "lastActiveAt": "2026-11-09T15:19:34.425Z",
+      "id": "sess-50cdf8528b7e9eadafd2f3733c45b4d8d23c377f8f6f7da0",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-09T16:05:13.352Z",
+      "expiresAt": "2026-11-23T16:05:13.352Z",
+      "lastActiveAt": "2026-11-09T16:05:13.352Z",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     }
   ],
-  "mailLog": []
+  "mailLog": [
+    {
+      "id": "mail-1794240395411-170",
+      "to": "mada19virgo@gmail.com",
+      "subject": "Verifikasi Akun Email Pasien - Klinik Pratama Sehat Utama",
+      "title": "Verifikasi Alamat Email Anda",
+      "body": "Halo 09 Mada,\n\nTerima kasih telah mendaftar di Sistem Antrean Poliklinik Umum Klinik Pratama Sehat Utama. Untuk mengaktifkan akun Anda dan mulai melakukan reservasi antrean online, silakan klik tautan verifikasi di bawah ini:",
+      "link": "http://localhost:3000/verify-email?token=933557e0f875d43a6298d599d7a8bccc3fdfbd77f489293fc9e44774ebebcdbd",
+      "type": "verification",
+      "sentAt": "2026-11-09T16:06:35.411Z"
+    }
+  ]
 }
