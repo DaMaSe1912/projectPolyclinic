@@ -1247,10 +1247,11 @@ export default function AdminPage() {
                     ))
                   ) : (
                     <>
-                      <option value="A">Poli A - dr. Sarah Sp.PD</option>
-                      <option value="B">Poli B - dr. Budi Sp.A</option>
-                      <option value="C">Poli C - dr. Siti Sp.JP</option>
-                      <option value="D">Poli D - dr. Hendra Umum</option>
+                      <option value="A">Poli A - dr. Budi Santoso, Sp.PD</option>
+                      <option value="B">Poli B - dr. Siti Rahma, Sp.A</option>
+                      <option value="C">Poli C - dr. Hendra Wijaya, Sp.JP</option>
+                      <option value="D">Poli D - dr. Anita Kusuma</option>
+                      <option value="E">Poli E - dr. Farhan Ramadhan</option>
                     </>
                   )}
                 </select>

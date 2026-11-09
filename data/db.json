@@ -56,7 +56,7 @@
       "name": "dr. Hendra Wijaya, Sp.JP",
       "specialty": "Spesialis Jantung & Pembuluh Darah (Kardiovaskular)",
       "room": "Ruang Poli Umum 1",
-      "isOnDuty": false,
+      "isOnDuty": true,
       "isAvailable": true,
       "scheduleDays": [
         "Selasa",
@@ -71,7 +71,7 @@
       "name": "dr. Anita Kusuma",
       "specialty": "Dokter Umum & Pemeriksaan Kesehatan (MCU)",
       "room": "Ruang Poli Umum 2",
-      "isOnDuty": false,
+      "isOnDuty": true,
       "isAvailable": true,
       "scheduleDays": [
         "Selasa",
@@ -86,7 +86,7 @@
       "name": "dr. Farhan Ramadhan",
       "specialty": "Dokter Umum & Layanan Primer Keluarga",
       "room": "Ruang Poli Umum 1",
-      "isOnDuty": false,
+      "isOnDuty": true,
       "isAvailable": true,
       "scheduleDays": [
         "Sabtu",
@@ -166,6 +166,57 @@
       "email": "dr.siti@poliklinik.id",
       "passwordSalt": "1ea81a05b252ad9bb1fcbb8dd6861a85",
       "passwordHash": "7cba39b5e34bf28c280f855a180d9b742751fddd9199babb045c5b021e6cec37393f46cf7141dc29227654eee7ce243fa79b2e6b51e47984fb25b06e7fea1bda",
+      "emailVerified": true,
+      "failedLoginAttempts": 5,
+      "lockedUntil": "2026-11-09T19:12:19.521Z",
+      "isActive": true
+    },
+    {
+      "id": "usr-doc-c",
+      "name": "dr. Hendra Wijaya, Sp.JP",
+      "phone": "08666666666",
+      "role": "doctor",
+      "doctorId": "doc-c",
+      "username": "dr_hendra",
+      "password": "DokterHendra2026!",
+      "createdAt": "2026-10-30T12:44:13.783Z",
+      "email": "dr.hendra@poliklinik.id",
+      "passwordSalt": "c23ffa5124690edaffded4eec3832ed2",
+      "passwordHash": "8703d27d58185a9b5d4d7fccc620eea14cff55d570c88b73c37b68423ad9c3414335b21d9af2b2d7009808b40c5000d6155a0217044a1f0971d97fc2d5f5923d",
+      "emailVerified": true,
+      "failedLoginAttempts": 0,
+      "lockedUntil": null,
+      "isActive": true
+    },
+    {
+      "id": "usr-doc-d",
+      "name": "dr. Anita Kusuma",
+      "phone": "08777777777",
+      "role": "doctor",
+      "doctorId": "doc-d",
+      "username": "dr_anita",
+      "password": "DokterAnita2026!",
+      "createdAt": "2026-10-30T12:44:13.783Z",
+      "email": "dr.anita@poliklinik.id",
+      "passwordSalt": "4cab8c1eda92dae89f48dd5753f84de1",
+      "passwordHash": "496f10a42712be3d4eb34aa6233a8eb5ab65103248b97410c2d741259dc8cb191915b41da7bc8368d9680907d85b31d01df56336d7a93c38d2cc60f4ab1d2d6b",
+      "emailVerified": true,
+      "failedLoginAttempts": 0,
+      "lockedUntil": null,
+      "isActive": true
+    },
+    {
+      "id": "usr-doc-e",
+      "name": "dr. Farhan Ramadhan",
+      "phone": "08888888888",
+      "role": "doctor",
+      "doctorId": "doc-e",
+      "username": "dr_farhan",
+      "password": "DokterFarhan2026!",
+      "createdAt": "2026-10-30T12:44:13.783Z",
+      "email": "dr.farhan@poliklinik.id",
+      "passwordSalt": "0149f1f782f09ba4b250777a1093a0e6",
+      "passwordHash": "c9215af0acaf9b607985a805d42bcd2d89de791ef501ecc18f4bcfc68ba5bc8545ab55e6628e99363f0218b8de86245ee512c70105047e7ce1cb59494a7d930f",
       "emailVerified": true,
       "failedLoginAttempts": 0,
       "lockedUntil": null,
@@ -393,10 +444,181 @@
       "approvingDoctorName": "dr. Budi Santoso, Sp.PD",
       "createdAt": "2026-10-30T10:44:13.783Z",
       "approvedAt": "2026-10-30T10:47:33.783Z",
-      "printedAt": "2026-10-30T10:49:13.783Z"
+      "printedAt": "2026-11-09T18:58:07.237Z"
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud-1794250708728-156",
+      "timestamp": "2026-11-09T18:58:28.728Z",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai front_desk"
+    },
+    {
+      "id": "aud-1794250693040-545",
+      "timestamp": "2026-11-09T18:58:13.040Z",
+      "actorName": "dr. Anita Kusuma",
+      "actorRole": "doctor",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794250659967-139",
+      "timestamp": "2026-11-09T18:57:39.967Z",
+      "actorName": "dr. Anita Kusuma",
+      "actorRole": "doctor",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai doctor"
+    },
+    {
+      "id": "aud-1794250624014-308",
+      "timestamp": "2026-11-09T18:57:04.014Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794250601461-396",
+      "timestamp": "2026-11-09T18:56:41.461Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794250601123-466",
+      "timestamp": "2026-11-09T18:56:41.123Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Anita Kusuma diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794250600403-722",
+      "timestamp": "2026-11-09T18:56:40.403Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Farhan Ramadhan diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794250599565-892",
+      "timestamp": "2026-11-09T18:56:39.565Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=false, available=true"
+    },
+    {
+      "id": "aud-1794250598540-898",
+      "timestamp": "2026-11-09T18:56:38.540Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Anita Kusuma diperbarui: duty=false, available=true"
+    },
+    {
+      "id": "aud-1794250597982-614",
+      "timestamp": "2026-11-09T18:56:37.982Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Farhan Ramadhan diperbarui: duty=false, available=true"
+    },
+    {
+      "id": "aud-1794250597381-900",
+      "timestamp": "2026-11-09T18:56:37.381Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Farhan Ramadhan diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794250596701-283",
+      "timestamp": "2026-11-09T18:56:36.701Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Anita Kusuma diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794250566799-330",
+      "timestamp": "2026-11-09T18:56:06.799Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "DOCTOR_STATUS_UPDATE",
+      "targetType": "doctor",
+      "details": "Status dr. Hendra Wijaya, Sp.JP diperbarui: duty=true, available=true"
+    },
+    {
+      "id": "aud-1794250195704-396",
+      "timestamp": "2026-11-09T18:49:55.704Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk Super Admin setelah verifikasi 2FA"
+    },
+    {
+      "id": "aud-1794250193804-477",
+      "timestamp": "2026-11-09T18:49:53.804Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "2FA_CHALLENGE",
+      "targetType": "system",
+      "details": "Menunggu verifikasi faktor kedua (TOTP/Recovery Code)"
+    },
+    {
+      "id": "aud-1794250070572-973",
+      "timestamp": "2026-11-09T18:47:50.572Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794250055477-334",
+      "timestamp": "2026-11-09T18:47:35.477Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
+    {
+      "id": "aud-1794250052018-256",
+      "timestamp": "2026-11-09T18:47:32.018Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
+      "id": "aud-1794250008831-373",
+      "timestamp": "2026-11-09T18:46:48.831Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
     {
       "id": "aud-1794249934444-436",
       "timestamp": "2026-11-09T18:45:34.444Z",
@@ -777,6 +999,17 @@
       "createdAt": "2026-11-09T16:05:13.352Z",
       "expiresAt": "2026-11-23T16:05:13.352Z",
       "lastActiveAt": "2026-11-09T16:05:13.352Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-96b25d4cd23bb0442816e3e72e70143ae6a548bb96316b58",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-09T18:58:28.726Z",
+      "expiresAt": "2026-11-09T19:10:57.979Z",
+      "lastActiveAt": "2026-11-09T19:00:57.979Z",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     }
   ],
