@@ -36,6 +36,9 @@ import {
   RefreshCw,
   Eye,
   EyeOff,
+  Search,
+  Filter,
+  ClipboardList,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -72,6 +75,8 @@ export default function AdminPage() {
   const [reportDate, setReportDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [reportData, setReportData] = useState<any>(null);
   const [reportLoading, setReportLoading] = useState(false);
+  const [patientSearchQuery, setPatientSearchQuery] = useState('');
+  const [patientDoctorFilter, setPatientDoctorFilter] = useState('all');
 
   // Doctors Master State
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -130,6 +135,56 @@ export default function AdminPage() {
     } finally {
       setReportLoading(false);
     }
+  };
+
+  // Filtered daily patients (Non-sensitive display)
+  const filteredDailyPatients = (reportData?.dailyPatients || []).filter((p: any) => {
+    const matchesDoctor = patientDoctorFilter === 'all' || p.doctorCode === patientDoctorFilter;
+    const matchesSearch =
+      !patientSearchQuery.trim() ||
+      p.patientName.toLowerCase().includes(patientSearchQuery.toLowerCase()) ||
+      p.complaint.toLowerCase().includes(patientSearchQuery.toLowerCase()) ||
+      p.queueNumber.toLowerCase().includes(patientSearchQuery.toLowerCase()) ||
+      p.doctorName.toLowerCase().includes(patientSearchQuery.toLowerCase());
+    return matchesDoctor && matchesSearch;
+  });
+
+  // Export Daily/Monthly Patient Data to Excel (Non-Sensitive)
+  const handleExportNonSensitiveExcel = () => {
+    if (!reportData?.dailyPatients || reportData.dailyPatients.length === 0) {
+      alert('Tidak ada data pasien untuk diekspor pada periode ini.');
+      return;
+    }
+
+    const exportRows = filteredDailyPatients.map((p: any, idx: number) => ({
+      No: idx + 1,
+      'No. Antrean': p.queueNumber,
+      'Nama Pasien': p.patientName,
+      'Keluhan / Alasan Kunjungan': p.complaint,
+      'Dokter Pemeriksa': p.doctorName,
+      'Ruang / Poli': p.room,
+      'Waktu Kunjungan': p.time,
+      'Jenis Kunjungan': p.type === 'walk_in' ? 'Walk-in' : p.type === 'online' ? 'Online' : 'Darurat',
+      Status:
+        p.status === 'done'
+          ? 'Selesai'
+          : p.status === 'calling'
+          ? 'Dipanggil'
+          : p.status === 'consulting'
+          ? 'Konsultasi'
+          : p.status === 'waiting'
+          ? 'Menunggu'
+          : p.status === 'cancelled'
+          ? 'Batal'
+          : p.status === 'skipped'
+          ? 'Dilewati'
+          : p.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Pasien');
+    XLSX.writeFile(workbook, `Laporan_Pasien_${reportDate}_NonSensitif.xlsx`);
   };
 
   // Fetch Doctors
@@ -1145,6 +1200,159 @@ export default function AdminPage() {
               </div>
             </div>
           )}
+
+          {/* TABEL LAPORAN KUNJUNGAN PASIEN HARIAN (NON-SENSITIF: PRIVASI UU PDP) */}
+          <div className="bg-white border border-[#E2E8F0] rounded-[8px] overflow-hidden shadow-sm">
+            <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <ClipboardList className="text-[#0D9488]" size={18} />
+                  <h2 className="font-headline font-bold text-sm text-[#0F172A]">
+                    Tabel Laporan Kunjungan Pasien ({reportType === 'daily' ? 'Harian' : 'Bulanan'})
+                  </h2>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Bebas Data Sensitif (No NIK / No HP)
+                  </span>
+                </div>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  Menampilkan nama pasien, keluhan klinis, dan dokter yang memeriksa sesuai prinsip minimalisasi data privasi.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Search box */}
+                <div className="relative">
+                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={patientSearchQuery}
+                    onChange={(e) => setPatientSearchQuery(e.target.value)}
+                    placeholder="Cari nama, keluhan..."
+                    className="pl-8 pr-3 py-1.5 text-xs border border-[#CBD5E1] rounded-lg text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0D9488] w-44 md:w-52"
+                  />
+                </div>
+
+                {/* Filter Dokter */}
+                <select
+                  value={patientDoctorFilter}
+                  onChange={(e) => setPatientDoctorFilter(e.target.value)}
+                  className="px-2.5 py-1.5 text-xs border border-[#CBD5E1] rounded-lg text-[#0F172A] bg-white focus:outline-none focus:ring-1 focus:ring-[#0D9488]"
+                >
+                  <option value="all">Semua Dokter</option>
+                  {doctors && doctors.length > 0 ? (
+                    doctors.map((d) => (
+                      <option key={d.id} value={d.code}>
+                        Poli {d.code} - {d.name}
+                      </option>
+                    ))
+                  ) : (
+                    <>
+                      <option value="A">Poli A - dr. Sarah Sp.PD</option>
+                      <option value="B">Poli B - dr. Budi Sp.A</option>
+                      <option value="C">Poli C - dr. Siti Sp.JP</option>
+                      <option value="D">Poli D - dr. Hendra Umum</option>
+                    </>
+                  )}
+                </select>
+
+                {/* Export Excel Non-Sensitif */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportNonSensitiveExcel}
+                  className="text-xs flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
+                >
+                  <FileSpreadsheet size={14} />
+                  Export Excel
+                </Button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-body">
+                <thead className="bg-[#0F172A] text-white font-headline text-[12px] uppercase">
+                  <tr>
+                    <th className="py-3 px-4">No. Antrean</th>
+                    <th className="py-3 px-4">Nama Pasien</th>
+                    <th className="py-3 px-4">Keluhan / Alasan Kunjungan</th>
+                    <th className="py-3 px-4">Dokter & Ruang</th>
+                    <th className="py-3 px-4">Waktu</th>
+                    <th className="py-3 px-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#F1F5F9]">
+                  {filteredDailyPatients.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center text-slate-400">
+                        Tidak ada data kunjungan pasien untuk filter atau tanggal yang dipilih.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredDailyPatients.map((patient: any) => (
+                      <tr key={patient.id} className="hover:bg-[#F8FAFC] transition-colors">
+                        <td className="py-3 px-4 font-mono font-bold text-[#0F172A]">
+                          {patient.queueNumber}
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-[#0F172A]">
+                          {patient.patientName}
+                        </td>
+                        <td className="py-3 px-4 text-[#334155] max-w-xs truncate" title={patient.complaint}>
+                          {patient.complaint}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="font-medium text-[#0F172A]">{patient.doctorName}</div>
+                          <div className="text-[11px] text-[#64748B]">{patient.room}</div>
+                        </td>
+                        <td className="py-3 px-4 font-mono text-[#64748B]">
+                          {patient.time}
+                        </td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider inline-block ${
+                              patient.status === 'done'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : patient.status === 'consulting'
+                                ? 'bg-sky-50 text-sky-700 border border-sky-200'
+                                : patient.status === 'calling'
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse'
+                                : patient.status === 'cancelled' || patient.status === 'skipped'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : 'bg-slate-100 text-slate-700 border border-slate-200'
+                            }`}
+                          >
+                            {patient.status === 'done'
+                              ? 'Selesai'
+                              : patient.status === 'consulting'
+                              ? 'Konsultasi'
+                              : patient.status === 'calling'
+                              ? 'Dipanggil'
+                              : patient.status === 'waiting'
+                              ? 'Menunggu'
+                              : patient.status === 'cancelled'
+                              ? 'Batal'
+                              : patient.status === 'skipped'
+                              ? 'Dilewati'
+                              : patient.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Table Footer info */}
+            <div className="p-3 bg-[#F8FAFC] border-t border-[#E2E8F0] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#64748B]">
+              <span>
+                Menampilkan <strong className="text-[#0F172A]">{filteredDailyPatients.length}</strong> pasien
+                {patientSearchQuery || patientDoctorFilter !== 'all' ? ' (terfilter)' : ''}
+              </span>
+              <span className="text-[11px] text-slate-500 italic">
+                * Data pribadi sensitif (NIK, No. HP, Tanggal Lahir) tidak dipaparkan sesuai Prinsip Perlindungan Data Pribadi (UU PDP).
+              </span>
+            </div>
+          </div>
         </div>
       )}
 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getDb, saveDb, logAudit } from '@/lib/db';
 
-const BACKUP_SECRET_KEY = process.env.BACKUP_ENCRYPTION_KEY || 'KlinikSehatUtamaSecretKey2026DentalCare99!';
+const BACKUP_SECRET_KEY = process.env.BACKUP_ENCRYPTION_KEY || 'KlinikPratamaSehatUtamaPoliklinikUmumSecretKey2026!';
 
 function encryptData(text: string): string {
   const iv = crypto.randomBytes(16);
@@ -15,7 +15,7 @@ function encryptData(text: string): string {
 
 function decryptData(encryptedText: string): string {
   const parts = encryptedText.split(':');
-  if (parts.length !== 2) throw new Error('Format file backup tidak valid');
+  if (parts.length !== 2) throw new Error('Format file backup tidak valid. File harus memiliki pemisah IV heksadesimal.');
   const iv = Buffer.from(parts[0], 'hex');
   const key = crypto.createHash('sha256').update(BACKUP_SECRET_KEY).digest();
   const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
@@ -35,12 +35,12 @@ export async function GET() {
     db.settings.lastBackupAt = new Date().toISOString();
     saveDb(db);
 
-    return new Response(encryptedPayload, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="backup-polyclinic-${new Date().toISOString().split('T')[0]}.enc"`,
-      },
+    const filename = `backup-polyclinic-${new Date().toISOString().split('T')[0]}.enc`;
+
+    return NextResponse.json({
+      success: true,
+      encryptedPayload,
+      filename,
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -50,34 +50,44 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { encryptedData, actorName = 'IT Admin' } = body;
+    const { encryptedPayload, encryptedData, dryRun = false, actorName = 'IT Admin' } = body;
+    const rawCipher = (encryptedPayload || encryptedData || '').trim();
 
-    if (!encryptedData) {
+    if (!rawCipher) {
       return NextResponse.json({ error: 'File terenkripsi wajib disertakan' }, { status: 400 });
     }
 
-    const decryptedJson = decryptData(encryptedData.trim());
+    const decryptedJson = decryptData(rawCipher);
     const parsedData = JSON.parse(decryptedJson);
 
     if (!parsedData.settings || !parsedData.doctors || !parsedData.queue) {
       return NextResponse.json({ error: 'Struktur data backup tidak valid' }, { status: 400 });
     }
 
-    saveDb(parsedData);
+    if (!dryRun) {
+      saveDb(parsedData);
+    }
 
     logAudit(
       actorName,
       'admin',
-      'BACKUP_RESTORE_TEST',
+      dryRun ? 'BACKUP_TEST_VALIDATE' : 'BACKUP_RESTORE_APPLIED',
       'backup',
-      `Super Admin berhasil memverifikasi dan memulihkan data dari backup terenkripsi`
+      dryRun
+        ? 'Super Admin menguji dekripsi integritas file backup (Dry Run - Sukses)'
+        : 'Super Admin memulihkan basis data klinik dari file backup terenkripsi'
     );
 
     return NextResponse.json({
       success: true,
-      message: 'Restore data klinik dari file backup terenkripsi berhasil!',
-      queueCount: parsedData.queue.length,
-      doctorsCount: parsedData.doctors.length,
+      message: dryRun
+        ? 'Uji integritas backup AES-256 berhasil! File valid dan dapat dipulihkan.'
+        : 'Restore data klinik dari file backup terenkripsi berhasil!',
+      stats: {
+        queueCount: Array.isArray(parsedData.queue) ? parsedData.queue.length : 0,
+        doctorCount: Array.isArray(parsedData.doctors) ? parsedData.doctors.length : 0,
+        referralCount: Array.isArray(parsedData.referrals) ? parsedData.referrals.length : 0,
+      },
     });
   } catch (err: any) {
     return NextResponse.json({ error: `Gagal memulihkan backup: ${err.message}` }, { status: 400 });

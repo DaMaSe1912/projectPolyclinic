@@ -12,7 +12,7 @@
     "cancellationCutoffHours": 2,
     "rescheduleHoldSlotHours": 24,
     "maxBookingHorizonDays": 30,
-    "lastBackupAt": "2026-11-09T18:29:44.956Z"
+    "lastBackupAt": "2026-11-09T18:34:54.104Z"
   },
   "doctors": [
     {
@@ -398,6 +398,15 @@
   ],
   "auditLogs": [
     {
+      "id": "aud-1794249934444-436",
+      "timestamp": "2026-11-09T18:45:34.444Z",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual"
+    },
+    {
       "id": "aud-1794248938553-856",
       "timestamp": "2026-11-09T18:28:58.553Z",
       "actorName": "Ahmad Pratama, S.Kom",
@@ -768,17 +777,6 @@
       "createdAt": "2026-11-09T16:05:13.352Z",
       "expiresAt": "2026-11-23T16:05:13.352Z",
       "lastActiveAt": "2026-11-09T16:05:13.352Z",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-075c6ceaa58f165923cf910ccba73a823b2a121e4940dd78",
-      "userId": "usr-admin",
-      "role": "admin",
-      "email": "admin@poliklinik.id",
-      "name": "Ahmad Pratama, S.Kom",
-      "createdAt": "2026-11-09T18:28:58.551Z",
-      "expiresAt": "2026-11-09T18:43:58.626Z",
-      "lastActiveAt": "2026-11-09T18:28:58.626Z",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     }
   ],
