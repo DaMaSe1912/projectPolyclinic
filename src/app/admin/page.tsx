@@ -674,7 +674,7 @@ export default function AdminPage() {
             Pusat Kendali & Tata Kelola Sistem
           </h1>
           <p className="text-xs text-[#64748B]">
-            Master data dokter gigi, manajemen akun staf, backup terenkripsi, audit kepatuhan UU PDP No. 27/2022, dan analitik laporan
+            Master data dokter umum/spesialis, manajemen akun staf, backup terenkripsi, audit kepatuhan UU PDP No. 27/2022, dan analitik laporan
           </p>
         </div>
 
@@ -725,7 +725,7 @@ export default function AdminPage() {
           }`}
         >
           <Users size={15} />
-          Master Dokter Gigi (5 Dokter)
+          Master Dokter Poliklinik (5 Dokter)
         </button>
 
         <button
@@ -894,7 +894,7 @@ export default function AdminPage() {
               type="text"
               value={newStaffName}
               onChange={(e) => setNewStaffName(e.target.value)}
-              placeholder="Contoh: drg. Ahmad Fauzi / Ns. Rina"
+              placeholder="Contoh: dr. Ahmad Fauzi / Ns. Rina"
               required
               className="w-full px-3 py-2 border border-[#CBD5E1] rounded-[8px] text-sm"
             />
@@ -925,7 +925,7 @@ export default function AdminPage() {
                 className="w-full px-3 py-2 border border-[#CBD5E1] rounded-[8px] text-sm"
               >
                 <option value="front_desk">Front Desk (Resepsionis)</option>
-                <option value="doctor">Dokter Gigi (Doctor)</option>
+                <option value="doctor">Dokter Poliklinik (Doctor)</option>
                 <option value="nurse">Perawat (Nurse)</option>
               </select>
             </div>
@@ -947,7 +947,7 @@ export default function AdminPage() {
           {newStaffRole === 'doctor' && (
             <div>
               <label className="block text-xs font-semibold text-[#334155] mb-1">
-                Tautkan ke Master Dokter Gigi
+                Tautkan ke Master Dokter Poliklinik
               </label>
               <select
                 value={newStaffDoctorId}
@@ -1098,7 +1098,7 @@ export default function AdminPage() {
             <div className="bg-white border border-[#E2E8F0] rounded-[8px] overflow-hidden shadow-sm">
               <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between">
                 <h2 className="font-headline font-bold text-sm text-[#0F172A]">
-                  Rincian Kinerja per Dokter Gigi
+                  Rincian Kinerja per Dokter
                 </h2>
                 <span className="text-xs text-[#64748B] font-mono">
                   Periode: {reportDate}
@@ -1140,10 +1140,10 @@ export default function AdminPage() {
         <div className="space-y-4">
           <div className="bg-white p-4 rounded-lg border border-[#E2E8F0]">
             <h2 className="text-sm font-bold font-headline text-[#0F172A]">
-              Konfigurasi Master Data 5 Dokter Gigi Poliklinik
+              Konfigurasi Master Data 5 Dokter Poliklinik Umum
             </h2>
             <p className="text-xs text-[#64748B]">
-              Aturan PRD: Maksimal 2 dokter gigi yang bertugas (On Duty) per hari dalam satu waktu.
+              Aturan PRD: Maksimal 2 dokter yang bertugas (On Duty) per hari dalam satu waktu.
             </p>
           </div>
 

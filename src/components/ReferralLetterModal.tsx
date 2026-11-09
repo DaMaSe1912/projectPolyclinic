@@ -33,7 +33,7 @@ export const ReferralLetterModal: React.FC<ReferralLetterModalProps> = ({
           id: referral.id,
           action: 'approve',
           doctorId: user?.doctorId || 'doc-a',
-          doctorName: user?.name || 'drg. Budi Santoso, Sp.KG',
+          doctorName: user?.name || 'dr. Budi Santoso, Sp.PD',
           actorName: user?.name,
           actorRole: 'doctor',
         }),
@@ -91,8 +91,8 @@ export const ReferralLetterModal: React.FC<ReferralLetterModalProps> = ({
               <h2 className="font-headline font-bold text-lg uppercase tracking-wide text-[#0F172A]">
                 Klinik Pratama Sehat Utama
               </h2>
-              <p className="text-xs text-[#059669] font-medium">
-                Instalasi Pelayanan Poliklinik Gigi & Mulut
+              <p className="text-xs text-[#0D9488] font-medium">
+                Instalasi Pelayanan Poliklinik Umum
               </p>
               <p className="text-[12px] text-[#64748B]">
                 Jl. Kesehatan Raya No. 128, Jakarta Pusat | Telp: (021) 555-0192 | Email: polyclinic@sehatutama.id
@@ -174,10 +174,10 @@ export const ReferralLetterModal: React.FC<ReferralLetterModalProps> = ({
               <div>
                 <p className="text-[#64748B]">Dokter Penanggung Jawab Pelayanan,</p>
                 <p className="text-[11px] text-[#94A3B8] mb-14">
-                  Dokter Gigi Spesialis
+                  Dokter Penanggung Jawab Pasien (DPJP)
                 </p>
                 <p className="font-bold text-[#0F172A] underline">
-                  {referral.approvingDoctorName || 'drg. Budi Santoso, Sp.KG'}
+                  {referral.approvingDoctorName || 'dr. Budi Santoso, Sp.PD'}
                 </p>
                 <p className="text-[10px] text-[#64748B]">SIP. 19800715-2010-004</p>
               </div>

@@ -144,8 +144,8 @@ export default function WaitingRoomTvPage() {
             <h1 className="font-headline font-bold text-2xl tracking-wide text-white uppercase">
               Klinik Pratama Sehat Utama
             </h1>
-            <p className="text-sm font-medium text-[#059669] tracking-wider">
-              Poliklinik Gigi & Mulut • Layar Informasi Antrean Ruang Tunggu
+            <p className="text-sm font-medium text-[#0D9488] tracking-wider">
+              Poliklinik Umum • Layar Informasi Antrean Ruang Tunggu
             </p>
           </div>
         </div>
@@ -178,13 +178,13 @@ export default function WaitingRoomTvPage() {
         </div>
       </header>
 
-      {/* Main Calling Stage for On-Duty Dentists */}
+      {/* Main Calling Stage for On-Duty Doctors */}
       <main className="flex-1 p-6 md:p-8 flex flex-col justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto w-full">
           {onDutyDoctors.length === 0 ? (
             <div className="col-span-2 text-center py-20 bg-slate-900/50 rounded-2xl border border-slate-800">
               <p className="text-2xl font-headline font-bold text-slate-300">
-                Layanan Poliklinik Gigi Sedang Tutup
+                Layanan Poliklinik Umum Sedang Tutup
               </p>
               <p className="text-sm text-slate-500 mt-2">
                 Jam operasional buka kembali pukul 08:00 WIB. Pendaftaran online tetap dapat diakses.
@@ -293,7 +293,7 @@ export default function WaitingRoomTvPage() {
 
         <div className="flex-1 overflow-hidden whitespace-nowrap">
           <div className="inline-block animate-marquee text-slate-300">
-            Selamat datang di Poliklinik Gigi & Mulut Klinik Pratama Sehat Utama • Harap persiapkan kartu identitas/tiket saat nomor antrean Anda dipanggil • Pasien lansia dan kondisi darurat mendapatkan prioritas pelayanan • Unduh antrean online melalui website resmi polyclinic kami.
+            Selamat datang di Poliklinik Umum Klinik Pratama Sehat Utama • Harap persiapkan kartu identitas/tiket saat nomor antrean Anda dipanggil • Pasien lansia dan kondisi darurat mendapatkan prioritas pelayanan • Unduh antrean online melalui website resmi polyclinic kami.
           </div>
         </div>
 

@@ -46,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
       >
-        <div className="px-6 sm:px-7 py-4 sm:py-5 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex items-center justify-between border-b border-slate-800">
+        <div className="px-6 sm:px-7 py-4 sm:py-5 bg-[#0F172A] text-white flex items-center justify-between border-b border-slate-800">
           <h3 className="font-headline font-semibold text-lg">{title}</h3>
           <button
             onClick={onClose}

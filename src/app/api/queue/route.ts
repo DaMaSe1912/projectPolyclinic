@@ -115,7 +115,7 @@ export async function POST(request: Request) {
     const db = getDb();
     const doctor = db.doctors.find((d) => d.id === doctorId);
     if (!doctor) {
-      return NextResponse.json({ error: 'Dokter gigi tidak ditemukan' }, { status: 404 });
+      return NextResponse.json({ error: 'Dokter poliklinik tidak ditemukan' }, { status: 404 });
     }
 
     if (!doctor.isAvailable) {
@@ -165,7 +165,7 @@ export async function POST(request: Request) {
       status,
       callCount: 0,
       isPriority: isPriority || isEmergency,
-      priorityReason: isEmergency ? `Triase Darurat: ${triageComplaint || 'Gawat Darurat Gigi'}` : priorityReason,
+      priorityReason: isEmergency ? `Triase Darurat: ${triageComplaint || 'Gawat Darurat Medis'}` : priorityReason,
       triageLevel: triageLevel as TriageLevel,
       triageComplaint,
       companionPhone,

@@ -39,20 +39,20 @@ export default function StaffLoginPage() {
       desc: 'Batas idle 10 menit (PC Front Desk)',
     },
     {
-      title: 'drg. Budi Santoso, Sp.KG',
+      title: 'dr. Budi Santoso, Sp.PD',
       role: 'doctor',
       email: 'dr.budi@poliklinik.id',
-      pass: 'DokterGigiBudi2026!',
+      pass: 'DokterBudi2026!',
       icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Tablet Poli Gigi 1)',
+      desc: 'Batas idle 5 menit (Tablet Poli Umum 1)',
     },
     {
-      title: 'drg. Siti Rahma, Sp.Ort',
+      title: 'dr. Siti Rahma, Sp.A',
       role: 'doctor',
       email: 'dr.siti@poliklinik.id',
-      pass: 'DokterGigiSiti2026!',
+      pass: 'DokterSiti2026!',
       icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Tablet Poli Gigi 2)',
+      desc: 'Batas idle 5 menit (Tablet Poli Umum 2)',
     },
     {
       title: 'Ns. Maya Putri, S.Kep (Perawat)',
@@ -114,12 +114,12 @@ export default function StaffLoginPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-gradient-to-b from-[#F0FDFA]/50 via-[#F8FAFC] to-slate-100">
+    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-[#F8FAFC]">
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-700 to-slate-900 text-white items-center justify-center font-bold text-xl mb-3 shadow-md border border-teal-600/30">
-            <ClipboardList size={22} className="text-emerald-300" />
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-[#0D9488] text-white items-center justify-center font-bold text-xl mb-3 shadow-md shadow-teal-700/10">
+            <ClipboardList size={22} className="text-white" />
           </div>
           <h1 className="text-2xl font-headline font-extrabold text-[#0F172A]">
             Portal Staf Poliklinik

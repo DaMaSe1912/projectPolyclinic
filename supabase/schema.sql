@@ -1,5 +1,5 @@
 -- ====================================================================
--- POLIKLINIK GIGI & MULUT (DENTAL CARE) - SUPABASE POSTGRESQL SCHEMA
+-- POLIKLINIK UMUM (GENERAL CLINIC) - SUPABASE POSTGRESQL SCHEMA
 -- ====================================================================
 
 -- 1. CLINIC SETTINGS

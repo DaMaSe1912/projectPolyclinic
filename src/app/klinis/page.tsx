@@ -46,8 +46,8 @@ export default function ClinicalPage() {
   const [refPatientDob, setRefPatientDob] = useState('1985-05-10');
   const [refPatientPhone, setRefPatientPhone] = useState('081234567890');
   const [refAllergies, setRefAllergies] = useState('Tidak ada riwayat alergi.');
-  const [refClinicalNotes, setRefClinicalNotes] = useState('Impaksi gigi molar 3 bawah kanan dengan perikoronitis akut.');
-  const [refReason, setRefReason] = useState('Odontektomi kompleks anestesi umum di Instalasi Bedah Mulut RSUD.');
+  const [refClinicalNotes, setRefClinicalNotes] = useState('Hipertensi urgensi dengan tekanan darah 180/110 mmHg dan riwayat diabetes melitus.');
+  const [refReason, setRefReason] = useState('Pemeriksaan spesialis penyakit dalam dan evaluasi kardiovaskular lanjutan di RSUD rujukan.');
   const [refDestination, setRefDestination] = useState('RSUD Tarakan Jakarta Pusat');
   const [refLoading, setRefLoading] = useState(false);
 
@@ -242,7 +242,7 @@ export default function ClinicalPage() {
             </Chip>
           </div>
           <h1 className="text-2xl font-headline font-bold text-[#0F172A] mt-1">
-            {currentDoctor?.name || 'Dokter Gigi'}
+            {currentDoctor?.name || 'Dokter Poliklinik Umum'}
           </h1>
           <p className="text-xs text-[#64748B]">
             {currentDoctor?.room} • Shift: {currentDoctor?.shiftHours} • {currentDoctor?.specialty}
@@ -664,10 +664,10 @@ export default function ClinicalPage() {
               onChange={(e) => setRefDestination(e.target.value)}
               className="w-full h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-[8px] text-xs font-semibold text-[#0F172A]"
             >
-              <option value="RSUD Tarakan Jakarta Pusat">RSUD Tarakan Jakarta Pusat (Pusat Rujukan Bedah Mulut)</option>
+              <option value="RSUD Tarakan Jakarta Pusat">RSUD Tarakan Jakarta Pusat (Rujukan Spesialis Penyakit Dalam / Anak)</option>
               <option value="RSPAD Gatot Soebroto">RSPAD Gatot Soebroto Jakarta</option>
               <option value="RSUPN Dr. Cipto Mangunkusumo (RSCM)">RSUPN Dr. Cipto Mangunkusumo (RSCM)</option>
-              <option value="RS Gigi dan Mulut (RSGM) FKG UI">RS Gigi dan Mulut (RSGM) FKG UI Salemba</option>
+              <option value="RSUD Pasar Minggu">RSUD Pasar Minggu Jakarta</option>
             </select>
           </div>
 

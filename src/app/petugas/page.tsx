@@ -245,7 +245,7 @@ export default function FrontDeskPage() {
             <span className="text-xs text-[#94A3B8]">• Sinkron: {lastSync}</span>
           </div>
           <h1 className="text-2xl font-headline font-bold text-[#0F172A] mt-1">
-            Meja Front Desk Poliklinik Gigi
+            Meja Front Desk Poliklinik Umum
           </h1>
         </div>
 
@@ -318,7 +318,7 @@ export default function FrontDeskPage() {
             onChange={(e) => setSelectedDoctorFilter(e.target.value)}
             className="h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#0F172A]"
           >
-            <option value="all">Semua Dokter Gigi</option>
+            <option value="all">Semua Dokter Poliklinik</option>
             {doctors.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name} ({d.code}) {d.isOnDuty ? '• Piket' : ''}
@@ -397,7 +397,7 @@ export default function FrontDeskPage() {
                       <td className="py-3.5 px-4">
                         <div className="font-medium text-[#0F172A]">{item.doctorName}</div>
                         <div className="text-[11px] text-[#059669]">
-                          {item.doctorCode === 'A' ? 'Ruang Poli Gigi 1' : 'Ruang Poli Gigi 2'}
+                          {item.doctorCode === 'A' ? 'Ruang Poli Umum 1' : 'Ruang Poli Umum 2'}
                         </div>
                       </td>
 
@@ -559,7 +559,7 @@ export default function FrontDeskPage() {
       >
         <form onSubmit={handleWalkInSubmit} className="space-y-3 font-body">
           <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#E2E8F0] text-xs text-[#64748B]">
-            Pasien walk-in akan langsung diterbitkan nomor antrean fisik dokter gigi hari ini dan bergabung secara adil dengan antrean online.
+            Pasien walk-in akan langsung diterbitkan nomor antrean fisik dokter umum/spesialis hari ini dan bergabung secara adil dengan antrean online.
           </div>
 
           <Input
@@ -624,7 +624,7 @@ export default function FrontDeskPage() {
 
           <div>
             <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
-              Pilih Dokter Gigi Piket
+              Pilih Dokter Poliklinik Piket
             </label>
             <select
               value={walkinDoctorId}

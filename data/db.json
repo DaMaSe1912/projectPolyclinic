@@ -398,6 +398,15 @@
   ],
   "auditLogs": [
     {
+      "id": "aud-1794245045648-506",
+      "timestamp": "2026-11-09T17:24:05.648Z",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient"
+    },
+    {
       "id": "aud-1794243158222-155",
       "timestamp": "2026-11-09T16:52:38.222Z",
       "actorName": "Dewi Lestari (Resepsionis)",
@@ -660,6 +669,17 @@
       "createdAt": "2026-11-09T16:05:13.352Z",
       "expiresAt": "2026-11-23T16:05:13.352Z",
       "lastActiveAt": "2026-11-09T16:05:13.352Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-b9a5ea329316df80032b7a74f881c8226252206dc32c6692",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-09T17:24:05.646Z",
+      "expiresAt": "2026-11-23T17:24:05.646Z",
+      "lastActiveAt": "2026-11-09T17:24:05.646Z",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     }
   ],

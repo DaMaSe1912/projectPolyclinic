@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
     sendDevEmail({
       to: cleanEmail,
-      subject: 'Akun Staf Baru Dibuat - Poliklinik Gigi & Mulut',
+      subject: 'Akun Staf Baru Dibuat - Poliklinik Umum',
       title: 'Selamat Datang di Portal Staf Poliklinik',
       body: `Halo ${name},\n\nAkun staf Anda untuk peran ${role} telah berhasil dibuat oleh Super Admin (${admin.name}). Anda dapat masuk melalui portal khusus staf (/staff) dengan kredensial yang telah diberikan.`,
       link: 'http://localhost:3000/staff',

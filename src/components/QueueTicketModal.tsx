@@ -21,7 +21,7 @@ export const QueueTicketModal: React.FC<QueueTicketModalProps> = ({ item, onClos
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden border border-slate-200/80">
         {/* Modal Controls - Hidden when printing */}
-        <div className="no-print p-4 sm:p-5 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex items-center justify-between border-b border-slate-800">
+        <div className="no-print p-4 sm:p-5 bg-[#0F172A] text-white flex items-center justify-between border-b border-slate-800">
           <span className="font-headline font-semibold text-sm">Cetak Tiket Antrean</span>
           <button onClick={onClose} className="p-1 hover:text-slate-300 rounded-full hover:bg-white/10 transition-colors">
             <X size={18} />
@@ -35,14 +35,14 @@ export const QueueTicketModal: React.FC<QueueTicketModalProps> = ({ item, onClos
               Klinik Pratama Sehat Utama
             </h4>
             <p className="text-xs text-[#0D9488] font-medium mt-0.5">
-              Poliklinik Gigi & Mulut (Dental Care)
+              Poliklinik Umum (General Clinic)
             </p>
             <p className="text-[11px] text-[#94A3B8]">
               Jl. Kesehatan Raya No. 128, Jakarta Pusat
             </p>
           </div>
 
-          <div className="my-4 py-3 bg-gradient-to-br from-teal-50/50 via-white to-slate-50 rounded-2xl border border-teal-100/80 shadow-sm">
+          <div className="my-4 py-3 bg-slate-50 rounded-2xl border border-slate-200/90 shadow-sm">
             <p className="text-xs uppercase tracking-wider text-[#64748B] font-medium">
               Nomor Antrean Anda
             </p>
@@ -67,7 +67,7 @@ export const QueueTicketModal: React.FC<QueueTicketModalProps> = ({ item, onClos
             </div>
             <div className="flex justify-between">
               <span className="text-[#64748B]">Ruang:</span>
-              <span className="font-semibold text-[#0F172A]">{item.doctorCode === 'A' ? 'Ruang Poli Gigi 1' : 'Ruang Poli Gigi 2'}</span>
+              <span className="font-semibold text-[#0F172A]">{item.doctorCode === 'A' ? 'Ruang Poli Umum 1' : 'Ruang Poli Umum 2'}</span>
             </div>
             {item.slotTime && (
               <div className="flex justify-between">

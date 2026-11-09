@@ -24,17 +24,17 @@ export const TriageEmergencyModal: React.FC<TriageEmergencyModalProps> = ({
   const [patientName, setPatientName] = useState('');
   const [approxAge, setApproxAge] = useState('');
   const [gender, setGender] = useState<'L' | 'P'>('L');
-  const [complaint, setComplaint] = useState('Perdarahan hebat pasca tindakan / Trauma maksilofasial');
+  const [complaint, setComplaint] = useState('Demam tinggi akut (> 39°C) / Sesak napas akut');
   const [companionPhone, setCompanionPhone] = useState('');
   const [doctorId, setDoctorId] = useState(doctors.find((d) => d.isOnDuty)?.id || doctors[0]?.id || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const quickComplaints = [
-    'Perdarahan hebat pasca tindakan / Trauma rahang',
-    'Sakit gigi akut berdenyut hebat / Abses fasial meluas',
-    'Fraktur gigi anterior akibat benturan',
-    'Dislokasi sendi temporomandibular (TMJ)',
+    'Demam tinggi akut (> 39°C) / Kejang demam',
+    'Sesak napas berat / Asma bronkial eksaserbasi akut',
+    'Nyeri dada mendadak / Dugaan krisis hipertensi',
+    'Trauma benturan / Luka robek perdarahan aktif',
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -220,7 +220,7 @@ export const TriageEmergencyModal: React.FC<TriageEmergencyModalProps> = ({
 
           <div>
             <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
-              Arahkan ke Dokter Gigi Piket
+              Arahkan ke Dokter Poliklinik Piket
             </label>
             <select
               value={doctorId}

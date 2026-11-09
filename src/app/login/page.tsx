@@ -185,18 +185,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-gradient-to-b from-[#F0FDFA]/60 via-[#FAFBFC] to-white">
+    <div className="flex-1 flex items-center justify-center p-4 py-12 bg-[#FAFBFC]">
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-800 text-white items-center justify-center font-headline font-bold text-xl mb-3 shadow-md">
-            <span className="text-emerald-300">✦</span>V
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-[#0D9488] text-white items-center justify-center font-headline font-bold text-xl mb-3 shadow-md shadow-teal-700/10">
+            <span className="text-white">✦</span>V
           </div>
           <h1 className="text-2xl font-headline font-extrabold text-[#0F172A]">
             Portal Pasien Poliklinik
           </h1>
           <p className="text-xs text-[#64748B] mt-1">
-            Klinik Pratama Sehat Utama • Poliklinik Gigi & Mulut
+            Klinik Pratama Sehat Utama • Poliklinik Umum
           </p>
         </div>
 

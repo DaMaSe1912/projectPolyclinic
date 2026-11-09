@@ -153,7 +153,7 @@ export async function POST(request: Request) {
       to: cleanEmail,
       subject: 'Verifikasi Akun Email Pasien - Klinik Pratama Sehat Utama',
       title: 'Verifikasi Alamat Email Anda',
-      body: `Halo ${cleanName},\n\nTerima kasih telah mendaftar di Sistem Antrean Poliklinik Gigi & Mulut Klinik Pratama Sehat Utama. Untuk mengaktifkan akun Anda dan mulai melakukan reservasi antrean online, silakan klik tautan verifikasi di bawah ini:`,
+      body: `Halo ${cleanName},\n\nTerima kasih telah mendaftar di Sistem Antrean Poliklinik Umum Klinik Pratama Sehat Utama. Untuk mengaktifkan akun Anda dan mulai melakukan reservasi antrean online, silakan klik tautan verifikasi di bawah ini:`,
       link: verifyLink,
       type: 'verification',
     });
