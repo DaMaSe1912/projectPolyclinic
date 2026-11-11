@@ -482,7 +482,7 @@ export default function WaitingRoomTvPage() {
             }`}
           >
             {onDutyDoctorSchedules
-              ? `🩺 Jadwal Dokter Bertugas & Tersedia Hari Ini: ${onDutyDoctorSchedules} • `
+              ? `Jadwal Dokter Bertugas & Tersedia Hari Ini: ${onDutyDoctorSchedules} • `
               : 'Layanan konsultasi poliklinik sedang tidak aktif atau seluruh dokter sedang berhalangan • '}
             Selamat datang di Poliklinik Umum Klinik Pratama Sehat Utama • Harap persiapkan tiket antrean atau kartu identitas saat nomor Anda dipanggil • Pasien lansia dan kondisi darurat mendapatkan prioritas pelayanan • Registrasi online dapat dilakukan melalui website resmi kami.
           </div>

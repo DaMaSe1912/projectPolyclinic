@@ -346,7 +346,7 @@ export default function LoginPage() {
               </div>
 
               <div className="text-[11px] text-[#64748B] flex items-center justify-between">
-                <span>✓ Sesi tersimpan hingga 14 hari di perangkat ini</span>
+                <span>Sesi tersimpan hingga 14 hari di perangkat ini</span>
               </div>
 
               <button
@@ -509,7 +509,7 @@ export default function LoginPage() {
 
                 {regConfirmPassword && regPassword !== regConfirmPassword && (
                   <p className="text-[11px] text-red-600 font-medium">
-                    ⚠️ Konfirmasi kata sandi belum cocok dengan kata sandi di atas.
+                    Konfirmasi kata sandi belum cocok dengan kata sandi di atas.
                   </p>
                 )}
                 {regConfirmPassword && regPassword === regConfirmPassword && (

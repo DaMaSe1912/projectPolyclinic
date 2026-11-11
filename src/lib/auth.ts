@@ -256,7 +256,7 @@ export function sendDevEmail({
 
   // Server console output for instant dev visibility
   console.log('====================================================');
-  console.log(`📧 [DEV MAILBOX] Email Dikirim ke: ${to}`);
+  console.log(`[DEV MAILBOX] Email Dikirim ke: ${to}`);
   console.log(`Subjek : ${subject}`);
   if (link) {
     console.log(`Tautan : ${link}`);

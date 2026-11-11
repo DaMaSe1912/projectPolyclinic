@@ -648,7 +648,7 @@ export default function FrontDeskPage() {
             if (currentDoc && !currentDoc.isAvailable) {
               return (
                 <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
-                  ⚠️ <strong>Dokter Berhalangan:</strong> {currentDoc.name} sedang menandai dirinya tidak tersedia / berhalangan untuk melayani pasien hari ini. Harap pilih dokter lain yang sedang bertugas.
+                  <strong>Dokter Berhalangan:</strong> {currentDoc.name} sedang menandai dirinya tidak tersedia / berhalangan untuk melayani pasien hari ini. Harap pilih dokter lain yang sedang bertugas.
                 </div>
               );
             }
