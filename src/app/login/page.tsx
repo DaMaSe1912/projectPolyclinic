@@ -256,7 +256,7 @@ export default function LoginPage() {
 
         {/* TAB 1: LOGIN */}
         {activeTab === 'login' && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80 space-y-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
             <form onSubmit={handleLogin} className="space-y-4">
               {loginError && (
                 <div
@@ -363,7 +363,7 @@ export default function LoginPage() {
 
         {/* TAB 2: REGISTER */}
         {activeTab === 'register' && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80 space-y-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
             {regSuccessMessage ? (
               <div className="text-center py-6 space-y-4">
                 <div className="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
@@ -579,7 +579,7 @@ export default function LoginPage() {
 
         {/* TAB 3: FORGOT PASSWORD */}
         {activeTab === 'forgot' && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80 space-y-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
             <div className="text-center">
               <div className="w-10 h-10 mx-auto rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold mb-2">
                 <KeyRound size={20} />

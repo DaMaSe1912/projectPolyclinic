@@ -64,8 +64,8 @@ const config: Config = {
         md: "0 4px 16px rgba(15, 23, 42, 0.07)",
         lg: "0 8px 32px rgba(15, 23, 42, 0.10)",
         card: "0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 12px -2px rgba(15, 23, 42, 0.02)",
-        cozy: "0 14px 35px -6px rgba(13, 148, 136, 0.09), 0 6px 14px rgba(15, 23, 42, 0.03)",
-        floating: "0 20px 40px -8px rgba(13, 148, 136, 0.12), 0 8px 16px rgba(15, 23, 42, 0.04)",
+        cozy: "0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.03)",
+        floating: "0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)",
       },
       borderRadius: {
         sm: "6px",

@@ -410,13 +410,13 @@ export default function PatientPage() {
               return (
                 <Card
                   key={item.id}
-                  variant="elevated"
-                  className={`rounded-3xl border transition-all duration-300 shadow-cozy hover:shadow-floating ${
+                  variant="default"
+                  className={`rounded-3xl border transition-all duration-300 shadow-sm hover:shadow-md ${
                     isCalled
-                      ? 'border-emerald-400 ring-4 ring-emerald-500/10 bg-emerald-50/10'
+                      ? 'border-emerald-500 bg-emerald-50/15'
                       : isDocUnavailable
                       ? 'border-red-300 bg-red-50/10'
-                      : 'border-teal-100/90'
+                      : 'border-slate-200/80'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-3">

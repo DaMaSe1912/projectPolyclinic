@@ -15,10 +15,10 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    default: 'bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(15,23,42,0.03)] hover:shadow-[0_8px_30px_rgba(15,23,42,0.06)]',
-    elevated: 'bg-white border border-teal-100/80 shadow-[0_12px_32px_-4px_rgba(13,148,136,0.08),0_4px_12px_rgba(15,23,42,0.03)] hover:shadow-[0_18px_40px_-6px_rgba(13,148,136,0.12)]',
+    default: 'bg-white border border-slate-200/80 shadow-sm hover:shadow-md',
+    elevated: 'bg-white border border-slate-200/80 shadow-sm hover:shadow-md',
     cozy: 'bg-[#FAFBFC] border border-slate-200/80 shadow-sm hover:shadow-md',
-    soft: 'bg-[#F0FDFA] border border-teal-100 shadow-sm',
+    soft: 'bg-slate-50 border border-slate-200/80 shadow-sm',
   };
 
   return (

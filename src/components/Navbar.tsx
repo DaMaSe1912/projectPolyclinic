@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Chip } from '@/components/ui/Chip';
 import {
   LogOut,
   Monitor,
@@ -31,16 +30,16 @@ export const Navbar: React.FC = () => {
   // Hide default navbar on waiting room TV display page for maximum screen real estate
   if (pathname === '/tv') return null;
 
-  const roleLabelMap: Record<string, { label: string; variant: 'filter-active' | 'info' | 'success' | 'warning' }> = {
-    patient: { label: 'Pasien', variant: 'success' },
-    front_desk: { label: 'Resepsionis', variant: 'info' },
-    doctor: { label: 'Dokter Umum', variant: 'filter-active' },
-    nurse: { label: 'Perawat', variant: 'info' },
-    admin: { label: 'Super Admin', variant: 'warning' },
-    guest: { label: 'Tamu / Umum', variant: 'filter-active' },
+  const roleLabelMap: Record<string, { label: string }> = {
+    patient: { label: 'Pasien' },
+    front_desk: { label: 'Resepsionis' },
+    doctor: { label: 'Dokter Umum' },
+    nurse: { label: 'Perawat' },
+    admin: { label: 'Super Admin' },
+    guest: { label: 'Tamu / Umum' },
   };
 
-  const currentRoleInfo = roleLabelMap[role] || { label: 'Tamu', variant: 'filter-active' };
+  const currentRoleInfo = roleLabelMap[role] || { label: 'Tamu' };
   const isStaff = role === 'front_desk' || role === 'doctor' || role === 'nurse' || role === 'admin';
 
   return (
@@ -153,9 +152,9 @@ export const Navbar: React.FC = () => {
                   <div className="text-[13px] font-semibold text-[#0F172A] leading-tight">
                     {user.name}
                   </div>
-                  <Chip variant={currentRoleInfo.variant} className="text-[10px] mt-0.5">
+                  <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
                     {currentRoleInfo.label}
-                  </Chip>
+                  </span>
                 </div>
 
                 {/* Quick sign out button visible on desktop */}
@@ -212,9 +211,9 @@ export const Navbar: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <Chip variant={currentRoleInfo.variant} className="text-[10px]">
+                <span className="text-xs text-slate-500 font-medium shrink-0">
                   {currentRoleInfo.label}
-                </Chip>
+                </span>
               </div>
             ) : null}
 

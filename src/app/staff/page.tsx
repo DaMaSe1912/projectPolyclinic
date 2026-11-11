@@ -161,7 +161,7 @@ export default function StaffLoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-cozy border border-teal-100/80">
+        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div

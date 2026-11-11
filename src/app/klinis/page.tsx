@@ -306,7 +306,7 @@ export default function ClinicalPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* CURRENT CALLED / ACTIVE PATIENT (Col 1 & 2) */}
         <div className="lg:col-span-2">
-          <Card variant="elevated" className="h-full flex flex-col justify-between border-t-4 border-[#0F172A]">
+          <Card variant="default" className="h-full flex flex-col justify-between border-t-4 border-[#0F172A] shadow-sm">
             <div>
               <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3 mb-4">
                 <span className="text-xs uppercase font-mono font-bold tracking-wider text-[#64748B]">

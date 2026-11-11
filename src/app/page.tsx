@@ -18,7 +18,6 @@ import {
   MapPin,
   Phone,
   RefreshCw,
-  Sparkles,
   Stethoscope,
   HeartPulse,
   ShieldCheck,
@@ -96,11 +95,6 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-[#FAFBFC] border-b border-slate-200/70 pt-12 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="relative max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/70 text-teal-800 text-xs font-semibold tracking-wide mb-4 shadow-sm">
-              <Sparkles size={14} className="text-[#0D9488]" />
-              <span>SISTEM ANTREAN RESMI POLIKLINIK UMUM</span>
-            </div>
-            
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-headline font-extrabold text-[#0F172A] tracking-tight leading-[1.15]">
               Pelayanan Kesehatan Nyaman, <br />
               <span className="text-[#0D9488]">Ramah & Terpercaya</span>
@@ -125,7 +119,7 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap gap-3.5">
               <Link href={user ? (role === 'patient' ? '/pasien' : isStaff ? '/klinis' : '/') : '/login'}>
-                <Button variant="sage" size="lg" className="gap-2.5 rounded-2xl shadow-cozy hover:shadow-floating">
+                <Button variant="sage" size="lg" className="gap-2.5 rounded-2xl shadow-sm hover:shadow-md">
                   <Calendar size={18} />
                   {user ? (role === 'patient' ? 'Lihat Antrean Saya' : 'Portal Pelayanan') : 'Daftar / Masuk Akun Pasien'}
                 </Button>
@@ -141,8 +135,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Quick Clinic Info Box with Cozy Rounded Corners */}
-          <div className="w-full lg:w-96 bg-white/95 backdrop-blur-md border border-teal-100 rounded-3xl p-6 shadow-cozy space-y-4">
+          {/* Quick Clinic Info Box */}
+          <div className="w-full lg:w-96 bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center">
@@ -150,8 +144,8 @@ export default function HomePage() {
                 </div>
                 <span className="font-headline font-bold text-[#0F172A] text-sm">Informasi Pelayanan</span>
               </div>
-              <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-3 py-1 rounded-full">
-                Buka Hari Ini
+              <span className="text-xs text-emerald-700 font-semibold">
+                BUKA
               </span>
             </div>
 
@@ -195,9 +189,6 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 uppercase tracking-wider mb-1">
-              <span className="w-2 h-2 rounded-full bg-teal-500"></span> Live Monitoring
-            </div>
             <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
               Nomor Antrean Sedang Berjalan
             </h2>
@@ -229,8 +220,8 @@ export default function HomePage() {
               return (
                 <Card
                   key={doc.id}
-                  variant="elevated"
-                  className="rounded-3xl border border-teal-100/80 shadow-cozy hover:shadow-floating transition-all duration-300 relative overflow-hidden"
+                  variant="default"
+                  className="rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden"
                 >
                   {/* Doctor Header */}
                   <div className="flex items-start justify-between border-b border-slate-100 pb-5">
@@ -323,9 +314,6 @@ export default function HomePage() {
       {/* Doctor Master Schedule Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
         <div className="mb-6">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 uppercase tracking-wider mb-1">
-            <span className="w-2 h-2 rounded-full bg-teal-500"></span> Tim Medis Poliklinik
-          </div>
           <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
             Jadwal Praktik 5 Dokter Poliklinik Umum
           </h2>
@@ -381,9 +369,6 @@ export default function HomePage() {
       {/* FAQ Section with Soft Curves & Clean Margins */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-16">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 uppercase tracking-wider mb-2">
-            <span>Bantuan Pasien</span>
-          </div>
           <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
             Pertanyaan yang Sering Diajukan (FAQ)
           </h2>
