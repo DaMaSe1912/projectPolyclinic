@@ -22,7 +22,16 @@ import {
   RefreshCw,
   BellRing,
   Stethoscope,
+  Info,
 } from 'lucide-react';
+import {
+  STANDARD_CLINIC_SLOTS,
+  getIndonesianDayName,
+  resolveDoctorForSlot,
+  isDoctorPracticingOnDate,
+  isSlotWithinShift,
+  getFirstValidSlotForDoctor,
+} from '@/lib/doctorSchedule';
 
 export default function PatientPage() {
   const router = useRouter();
@@ -80,11 +89,16 @@ export default function PatientPage() {
       if (docData.success) {
         setDoctors(docData.data);
         if (docData.data.length > 0 && !selectedDoctorId) {
-          const availableDoc =
-            docData.data.find((d: Doctor) => d.isOnDuty && d.isAvailable) ||
-            docData.data.find((d: Doctor) => d.isAvailable) ||
-            docData.data[0];
-          setSelectedDoctorId(availableDoc.id);
+          const matched = resolveDoctorForSlot(docData.data, selectedSlot, bookingDate);
+          if (matched) {
+            setSelectedDoctorId(matched.id);
+          } else {
+            const availableDoc =
+              docData.data.find((d: Doctor) => d.isOnDuty && d.isAvailable) ||
+              docData.data.find((d: Doctor) => d.isAvailable) ||
+              docData.data[0];
+            setSelectedDoctorId(availableDoc.id);
+          }
         }
       }
     } catch (e) {
@@ -141,10 +155,84 @@ export default function PatientPage() {
     }
   };
 
+  const handleOpenBookingModal = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setBookingDate(today);
+    setBookError('');
+    // Auto-resolve initial doctor for standard morning slot
+    const initialSlot = '08:30 - 09:00';
+    const doc = resolveDoctorForSlot(doctors, initialSlot, today);
+    if (doc) {
+      setSelectedDoctorId(doc.id);
+      setSelectedSlot(initialSlot);
+    } else {
+      const practicingDoc =
+        doctors.find((d) => isDoctorPracticingOnDate(d, today) && d.isAvailable) ||
+        doctors.find((d) => isDoctorPracticingOnDate(d, today)) ||
+        doctors.find((d) => d.isAvailable) ||
+        doctors[0];
+      if (practicingDoc) {
+        setSelectedDoctorId(practicingDoc.id);
+        const firstSlot = getFirstValidSlotForDoctor(practicingDoc) || STANDARD_CLINIC_SLOTS[0];
+        setSelectedSlot(firstSlot);
+      }
+    }
+    setIsBookModalOpen(true);
+  };
+
+  const handleDateChange = (newDate: string) => {
+    setBookingDate(newDate);
+    const matchedDoctor = resolveDoctorForSlot(doctors, selectedSlot, newDate, selectedDoctorId);
+    if (matchedDoctor) {
+      setSelectedDoctorId(matchedDoctor.id);
+    } else {
+      const practicingDoc =
+        doctors.find((d) => isDoctorPracticingOnDate(d, newDate) && d.isAvailable) ||
+        doctors.find((d) => isDoctorPracticingOnDate(d, newDate)) ||
+        doctors.find((d) => d.isAvailable) ||
+        doctors[0];
+      if (practicingDoc) {
+        setSelectedDoctorId(practicingDoc.id);
+        const firstSlot = getFirstValidSlotForDoctor(practicingDoc) || STANDARD_CLINIC_SLOTS[0];
+        setSelectedSlot(firstSlot);
+      }
+    }
+  };
+
+  const handleSlotSelect = (slot: string) => {
+    setSelectedSlot(slot);
+    // Automatic dynamic doctor switch based on slot time and practice schedule
+    const matchedDoctor = resolveDoctorForSlot(doctors, slot, bookingDate, selectedDoctorId);
+    if (matchedDoctor && matchedDoctor.id !== selectedDoctorId) {
+      setSelectedDoctorId(matchedDoctor.id);
+    }
+  };
+
+  const handleDoctorChange = (docId: string) => {
+    setSelectedDoctorId(docId);
+    const doc = doctors.find((d) => d.id === docId);
+    if (doc) {
+      // If current slot is outside the chosen doctor's shift, auto-switch to their first valid slot
+      if (!isSlotWithinShift(selectedSlot, doc.shiftHours)) {
+        const firstSlot = getFirstValidSlotForDoctor(doc);
+        if (firstSlot) {
+          setSelectedSlot(firstSlot);
+        }
+      }
+    }
+  };
+
   const handleReschedule = async () => {
     if (!rescheduleItem) return;
     setRescheduleLoading(true);
     try {
+      const targetDoctor = resolveDoctorForSlot(
+        doctors,
+        newSlotTime,
+        rescheduleItem.bookingDate,
+        rescheduleItem.doctorId
+      );
+
       const res = await fetch('/api/queue', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -152,6 +240,7 @@ export default function PatientPage() {
           id: rescheduleItem.id,
           action: 'reschedule',
           newSlotTime,
+          newDoctorId: targetDoctor?.id,
           actorName: user?.name,
           actorRole: 'patient',
         }),
@@ -261,20 +350,7 @@ export default function PatientPage() {
     ['done', 'cancelled', 'no_show', 'not_served'].includes(q.status)
   );
 
-  const availableSlots = [
-    '08:30 - 09:00',
-    '09:00 - 09:30',
-    '09:30 - 10:00',
-    '10:00 - 10:30',
-    '10:30 - 11:00',
-    '11:00 - 11:30',
-    '13:00 - 13:30',
-    '13:30 - 14:00',
-    '14:00 - 14:30',
-    '14:30 - 15:00',
-    '15:00 - 15:30',
-    '15:30 - 16:00',
-  ];
+  const availableSlots = STANDARD_CLINIC_SLOTS;
 
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 font-body">
@@ -305,7 +381,7 @@ export default function PatientPage() {
           <Button
             variant="sage"
             size="md"
-            onClick={() => setIsBookModalOpen(true)}
+            onClick={handleOpenBookingModal}
             className="gap-2"
           >
             <Plus size={16} />
@@ -597,72 +673,163 @@ export default function PatientPage() {
             </select>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
+          {/* 2. Tanggal Kunjungan */}
+          <div>
+            <div className="flex items-center justify-between mb-[6px]">
+              <label className="text-[14px] font-medium text-[#0F172A] block">
                 2. Tanggal Kunjungan
               </label>
-              <Input
-                type="date"
-                value={bookingDate}
-                min={new Date().toISOString().split('T')[0]}
-                onChange={(e) => setBookingDate(e.target.value)}
-                required
-              />
+              <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800">
+                📅 Hari: {getIndonesianDayName(bookingDate)}
+              </span>
+            </div>
+            <Input
+              type="date"
+              value={bookingDate}
+              min={new Date().toISOString().split('T')[0]}
+              onChange={(e) => handleDateChange(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* 3. Pilih Sesi Jam (Slot Konsultasi) - Dokter otomatis berganti */}
+          <div className="space-y-1.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <label className="text-[14px] font-medium text-[#0F172A] block">
+                3. Pilih Sesi Jam (Slot Konsultasi)
+              </label>
+              <span className="text-[11px] text-[#059669] font-medium flex items-center gap-1">
+                <Info size={13} />
+                Dokter berganti otomatis sesuai sesi jam yang Anda klik
+              </span>
             </div>
 
-            <div>
-              <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
-                3. Pilih Dokter Poliklinik Umum
-              </label>
-              <select
-                value={selectedDoctorId}
-                onChange={(e) => setSelectedDoctorId(e.target.value)}
-                className="w-full h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-[8px] text-sm text-[#0F172A] outline-none focus:border-[#0F172A]"
-              >
-                {doctors.map((doc) => (
-                  <option key={doc.id} value={doc.id} disabled={!doc.isAvailable}>
-                    {doc.name} ({doc.code}) {!doc.isAvailable ? '• BERHALANGAN (TIDAK DAPAT DIPILIH)' : doc.isOnDuty ? '• PIKET HARI INI' : ''}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 max-h-[260px] overflow-y-auto pr-1">
+              {availableSlots.map((slot) => {
+                const slotDoctor = resolveDoctorForSlot(doctors, slot, bookingDate);
+                const isSlotSelected = selectedSlot === slot;
+                const isPracticing = slotDoctor ? isDoctorPracticingOnDate(slotDoctor, bookingDate) : false;
+                const isAvailable = slotDoctor ? slotDoctor.isAvailable : false;
+                const isDisabled = !slotDoctor || !isPracticing;
+
+                return (
+                  <button
+                    key={slot}
+                    type="button"
+                    disabled={isDisabled}
+                    onClick={() => handleSlotSelect(slot)}
+                    className={`p-2.5 rounded-xl border text-left transition-all relative flex flex-col justify-between min-h-[58px] ${
+                      isSlotSelected
+                        ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-md ring-2 ring-emerald-500/60'
+                        : isDisabled
+                        ? 'bg-slate-50 text-slate-400 border-slate-200 opacity-50 cursor-not-allowed'
+                        : !isAvailable
+                        ? 'bg-rose-50/70 border-rose-200 text-rose-900 hover:bg-rose-100'
+                        : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1 w-full">
+                      <span className={`font-mono text-xs font-bold ${isSlotSelected ? 'text-white' : isDisabled ? 'text-slate-400' : 'text-slate-900'}`}>
+                        {slot}
+                      </span>
+                      {isSlotSelected && (
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                      )}
+                    </div>
+
+                    <div className="mt-1 truncate w-full text-[11px]">
+                      {isDisabled ? (
+                        <span className="text-slate-400 italic text-[10px]">Tutup / Di Luar Jadwal</span>
+                      ) : !isAvailable ? (
+                        <span className="text-rose-600 font-semibold text-[10px] truncate block">
+                          ⚠️ {slotDoctor?.name.split(',')[0]} (Berhalangan)
+                        </span>
+                      ) : (
+                        <span className={`font-medium truncate block ${isSlotSelected ? 'text-emerald-300' : 'text-emerald-700'}`}>
+                          👨‍⚕️ {slotDoctor?.name.split(',')[0]} ({slotDoctor?.code})
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Alert if selected doctor is unavailable */}
+          {/* 4. Dokter Poliklinik (Sinkron Otomatis & Bisa Diganti) */}
+          <div>
+            <div className="flex items-center justify-between mb-[6px]">
+              <label className="text-[14px] font-medium text-[#0F172A] block">
+                4. Dokter Poliklinik yang Bertugas
+              </label>
+              <span className="text-[11px] text-slate-500">
+                Sinkron otomatis dengan jam konsultasi
+              </span>
+            </div>
+            <select
+              value={selectedDoctorId}
+              onChange={(e) => handleDoctorChange(e.target.value)}
+              className="w-full h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-[8px] text-sm text-[#0F172A] outline-none focus:border-[#0F172A]"
+            >
+              {doctors.map((doc) => {
+                const dayName = getIndonesianDayName(bookingDate);
+                const worksOnDate = isDoctorPracticingOnDate(doc, bookingDate);
+                return (
+                  <option key={doc.id} value={doc.id} disabled={!doc.isAvailable}>
+                    {doc.name} ({doc.code}) • Sesi {doc.shiftHours} {!worksOnDate ? `[TIDAK PRAKTIK DI HARI ${dayName.toUpperCase()}]` : ''} {!doc.isAvailable ? '• BERHALANGAN (TIDAK DAPAT DIPILIH)' : doc.isOnDuty ? '• PIKET HARI INI' : ''}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          {/* Doctor Detail & Sync Confirmation Card */}
           {(() => {
             const currentSelectedDoc = doctors.find((d) => d.id === selectedDoctorId);
-            if (currentSelectedDoc && !currentSelectedDoc.isAvailable) {
+            if (!currentSelectedDoc) return null;
+
+            if (!currentSelectedDoc.isAvailable) {
               return (
-                <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
-                  ⚠️ <strong>Dokter Berhalangan:</strong> {currentSelectedDoc.name} sedang menandai dirinya tidak tersedia / berhalangan untuk melayani pasien hari ini. Harap pilih dokter lain yang sedang bertugas.
+                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+                  <AlertTriangle size={18} className="text-rose-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-semibold">Dokter Sedang Berhalangan:</strong>
+                    <p className="mt-0.5 text-rose-700">
+                      {currentSelectedDoc.name} sedang menandai dirinya tidak tersedia / berhalangan untuk melayani pasien hari ini. Harap pilih sesi jam atau dokter lain yang sedang bertugas.
+                    </p>
+                  </div>
                 </div>
               );
             }
-            return null;
-          })()}
 
-          <div>
-            <label className="text-[14px] font-medium text-[#0F172A] mb-[6px] block">
-              4. Pilih Sesi Jam (Slot Konsultasi)
-            </label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {availableSlots.map((slot) => (
-                <button
-                  key={slot}
-                  type="button"
-                  onClick={() => setSelectedSlot(slot)}
-                  className={`py-2 px-2 rounded-lg border text-xs font-mono font-medium transition-all ${
-                    selectedSlot === slot
-                      ? 'bg-[#0F172A] text-white border-[#0F172A]'
-                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                  }`}
-                >
-                  {slot}
-                </button>
-              ))}
-            </div>
-          </div>
+            return (
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="font-semibold text-slate-900 flex items-center gap-1.5 text-sm">
+                      <span>👨‍⚕️ {currentSelectedDoc.name}</span>
+                      <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#0F172A] text-white">
+                        Dokter ({currentSelectedDoc.code})
+                      </span>
+                      <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-100 text-emerald-800">
+                        {currentSelectedDoc.room}
+                      </span>
+                    </div>
+                    <div className="text-slate-500 mt-1">
+                      {currentSelectedDoc.specialty} • Sesi Praktik: <strong className="text-slate-800">{currentSelectedDoc.shiftHours} WIB</strong>
+                    </div>
+                  </div>
+
+                  <div className="shrink-0">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+                      <CheckCircle size={14} className="text-emerald-600" />
+                      Aktif di Sesi: {selectedSlot}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {bookError && (
             <p className="text-xs text-red-600 bg-red-50 p-2.5 rounded">{bookError}</p>
@@ -786,33 +953,76 @@ export default function PatientPage() {
         isOpen={!!rescheduleItem}
         onClose={() => setRescheduleItem(null)}
         title="Jadwal Ulang Antrean (Reschedule)"
+        maxWidth="lg"
       >
         <div className="space-y-4 font-body">
           <p className="text-xs text-[#475569]">
-            Anda sedang menjadwal ulang antrean untuk <strong>{rescheduleItem?.patientName}</strong> ({rescheduleItem?.doctorName}). Sistem akan membatalkan sesi lama dan membuat janji baru dalam satu langkah tanpa penalti.
+            Anda sedang menjadwal ulang antrean untuk <strong>{rescheduleItem?.patientName}</strong> (sebelumnya bersama {rescheduleItem?.doctorName}). Sistem akan membatalkan sesi lama dan membuat janji baru serta menyinkronkan dokter yang bertugas di slot baru tersebut.
           </p>
 
           <div>
             <label className="text-xs font-semibold text-[#0F172A] uppercase block mb-1">
-              Pilih Sesi Jam Baru Hari Ini:
+              Pilih Sesi Jam Baru:
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              {availableSlots.map((slot) => (
-                <button
-                  key={slot}
-                  type="button"
-                  onClick={() => setNewSlotTime(slot)}
-                  className={`py-2 px-2 rounded-lg border text-xs font-mono font-medium ${
-                    newSlotTime === slot
-                      ? 'bg-[#0F172A] text-white border-[#0F172A]'
-                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                  }`}
-                >
-                  {slot}
-                </button>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[220px] overflow-y-auto pr-1">
+              {availableSlots.map((slot) => {
+                const targetDoc = rescheduleItem
+                  ? resolveDoctorForSlot(doctors, slot, rescheduleItem.bookingDate)
+                  : null;
+                const isSelected = newSlotTime === slot;
+                const isAvailable = targetDoc ? targetDoc.isAvailable : false;
+
+                return (
+                  <button
+                    key={slot}
+                    type="button"
+                    disabled={!targetDoc || !isAvailable}
+                    onClick={() => setNewSlotTime(slot)}
+                    className={`p-2.5 rounded-xl border text-left transition-all ${
+                      isSelected
+                        ? 'bg-[#0F172A] text-white border-[#0F172A] ring-2 ring-emerald-500 shadow-sm'
+                        : !targetDoc || !isAvailable
+                        ? 'bg-slate-50 text-slate-400 border-slate-200 opacity-60 cursor-not-allowed'
+                        : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-500 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="font-mono text-xs font-bold">{slot}</div>
+                    <div className="text-[10px] truncate mt-0.5">
+                      {targetDoc ? (
+                        isAvailable ? (
+                          <span className={isSelected ? 'text-emerald-300 font-medium' : 'text-emerald-700 font-medium'}>
+                            👨‍⚕️ {targetDoc.name.split(',')[0]} ({targetDoc.code})
+                          </span>
+                        ) : (
+                          <span className="text-rose-500 font-medium">⚠️ Berhalangan</span>
+                        )
+                      ) : (
+                        <span className="text-slate-400 italic">Tutup</span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {rescheduleItem && (
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+              {(() => {
+                const newDoc = resolveDoctorForSlot(doctors, newSlotTime, rescheduleItem.bookingDate);
+                return (
+                  <div className="text-slate-700 flex items-center justify-between">
+                    <div>
+                      Dokter untuk sesi baru: <strong>{newDoc?.name || 'Dokter Terjadwal'} ({newDoc?.code || '-'})</strong> • Ruangan: {newDoc?.room || '-'}
+                    </div>
+                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                      Sesi: {newSlotTime}
+                    </span>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
 
           <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
             <Button

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { QueueItem, QueueStatus, TriageLevel } from '@/types';
+import { resolveDoctorForSlot } from '@/lib/doctorSchedule';
 
 // Helper to generate next queue number for a doctor code
 function generateNextNumber(doctorCode: string, existingQueue: QueueItem[], isEmergency: boolean): string {
@@ -113,14 +114,23 @@ export async function POST(request: Request) {
     } = body;
 
     const db = await getDbAsync();
-    const doctor = db.doctors.find((d) => d.id === doctorId);
+    let doctor = db.doctors.find((d) => d.id === doctorId);
+
+    // If online booking, automatically resolve authoritative doctor practicing for the chosen slot and date
+    if (type === 'online' && slotTime) {
+      const resolved = resolveDoctorForSlot(db.doctors, slotTime, bookingDate, doctorId);
+      if (resolved) {
+        doctor = resolved;
+      }
+    }
+
     if (!doctor) {
-      return NextResponse.json({ error: 'Dokter poliklinik tidak ditemukan' }, { status: 404 });
+      return NextResponse.json({ error: 'Dokter poliklinik tidak ditemukan atau tidak ada jadwal praktik pada sesi tersebut' }, { status: 404 });
     }
 
     if (!doctor.isAvailable) {
       return NextResponse.json(
-        { error: `${doctor.name} sedang tidak tersedia untuk praktik hari ini.` },
+        { error: `${doctor.name} sedang berhalangan / tidak tersedia untuk melayani antrean hari ini.` },
         { status: 400 }
       );
     }
@@ -305,7 +315,10 @@ export async function PATCH(request: Request) {
         item.status = 'cancelled';
         item.cancelledAt = now;
 
-        const targetDoctor = newDoctorId ? db.doctors.find((d) => d.id === newDoctorId) : db.doctors.find((d) => d.id === item.doctorId);
+        const targetDoctor = newDoctorId
+          ? db.doctors.find((d) => d.id === newDoctorId)
+          : resolveDoctorForSlot(db.doctors, newSlotTime || item.slotTime || '', item.bookingDate, item.doctorId) ||
+            db.doctors.find((d) => d.id === item.doctorId);
         const newBookingCode = `BK-${targetDoctor?.code || item.doctorCode}${Math.floor(1000 + Math.random() * 9000)}`;
 
         const rescheduledItem: QueueItem = {
