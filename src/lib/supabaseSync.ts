@@ -145,6 +145,8 @@ export function mapQueueFromDb(row: any): QueueItem {
     consultationStartedAt: row.consultation_started_at,
     completedAt: row.completed_at,
     cancelledAt: row.cancelled_at,
+    cancelledBy: row.notes?.toLowerCase().includes('pasien') ? 'Pasien' : row.notes?.toLowerCase().includes('petugas') ? 'Petugas' : undefined,
+    cancelledByRole: row.notes?.toLowerCase().includes('pasien') ? 'patient' : row.notes?.toLowerCase().includes('petugas') ? 'front_desk' : undefined,
     notes: row.notes,
   };
 }

@@ -130,6 +130,8 @@ export interface QueueItem {
   consultationStartedAt?: string;
   completedAt?: string;
   cancelledAt?: string;
+  cancelledBy?: string;
+  cancelledByRole?: UserRole;
   notes?: string;
 }
 

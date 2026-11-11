@@ -29,10 +29,17 @@ export async function GET(request: Request) {
     const doctorId = searchParams.get('doctorId');
     const status = searchParams.get('status');
     const patientId = searchParams.get('patientId');
-    const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
+    const date = searchParams.get('date');
 
     const db = await getDbAsync();
-    let items = db.queue.filter((q) => q.bookingDate === date);
+    let items = db.queue;
+
+    if (date && date !== 'all') {
+      items = items.filter((q) => q.bookingDate === date);
+    } else if (!date) {
+      const today = new Date().toISOString().split('T')[0];
+      items = items.filter((q) => q.bookingDate === today);
+    }
 
     if (doctorId) {
       items = items.filter((q) => q.doctorId === doctorId);
@@ -217,6 +224,14 @@ export async function PATCH(request: Request) {
     const item = db.queue[queueIndex];
     const now = new Date().toISOString();
 
+    // Guard: jika janji temu sudah dibatalkan, tidak ada aksi yang dapat dilakukan
+    if (item.status === 'cancelled') {
+      return NextResponse.json(
+        { error: 'Janji temu / antrean ini telah dibatalkan. Tidak ada tindakan lebih lanjut yang dapat diambil.' },
+        { status: 400 }
+      );
+    }
+
     switch (action) {
       case 'check_in': {
         // Issue actual queue number if it was an online booking
@@ -307,7 +322,13 @@ export async function PATCH(request: Request) {
         }
         item.status = 'cancelled';
         item.cancelledAt = now;
-        logAudit(actorName, actorRole, 'QUEUE_CANCEL', 'queue', `Membatalkan antrean ${item.queueNumber} (${item.patientName})`);
+        item.cancelledBy = actorName || (actorRole === 'patient' ? 'Pasien' : 'Resepsionis');
+        item.cancelledByRole = actorRole as any;
+        const cancelActorLabel = actorRole === 'patient' ? 'Pasien' : 'Petugas / Front Desk';
+        if (!item.notes || !item.notes.includes('Dibatalkan')) {
+          item.notes = (item.notes ? item.notes + ' • ' : '') + `Dibatalkan oleh ${cancelActorLabel}`;
+        }
+        logAudit(actorName, actorRole, 'QUEUE_CANCEL', 'queue', `Membatalkan antrean ${item.queueNumber} (${item.patientName}) oleh ${cancelActorLabel}`);
         break;
       }
 

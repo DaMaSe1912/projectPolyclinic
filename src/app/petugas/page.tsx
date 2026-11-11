@@ -35,6 +35,10 @@ export default function FrontDeskPage() {
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDoctorFilter, setSelectedDoctorFilter] = useState<string>('all');
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('all');
+  const [selectedDate, setSelectedDate] = useState<string>(
+    new Date().toISOString().split('T')[0]
+  );
   const [lastSync, setLastSync] = useState<string>('');
 
   // Modals
@@ -69,8 +73,9 @@ export default function FrontDeskPage() {
 
   const loadAllData = async () => {
     try {
+      const dateParam = selectedDate ? `?date=${selectedDate}` : '';
       const [qRes, docRes, refRes] = await Promise.all([
-        fetch('/api/queue'),
+        fetch(`/api/queue${dateParam}`),
         fetch('/api/doctors'),
         fetch('/api/referrals'),
       ]);
@@ -101,9 +106,13 @@ export default function FrontDeskPage() {
     loadAllData();
     const interval = setInterval(loadAllData, 2000); // 2 second sync
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedDate]);
 
   const handleCheckIn = async (item: QueueItem) => {
+    if (item.status === 'cancelled') {
+      alert('Janji temu ini sudah dibatalkan oleh pasien dan tidak dapat di-check in.');
+      return;
+    }
     try {
       const res = await fetch('/api/queue', {
         method: 'PATCH',
@@ -128,6 +137,11 @@ export default function FrontDeskPage() {
 
   const handleSetPriority = async () => {
     if (!priorityModalItem) return;
+    if (priorityModalItem.status === 'cancelled') {
+      alert('Janji temu ini telah dibatalkan dan tidak dapat diubah status prioritasnya.');
+      setPriorityModalItem(null);
+      return;
+    }
     try {
       const res = await fetch('/api/queue', {
         method: 'PATCH',
@@ -150,6 +164,10 @@ export default function FrontDeskPage() {
   };
 
   const handleCancelByStaff = async (item: QueueItem) => {
+    if (item.status === 'cancelled') {
+      alert('Janji temu ini sudah dibatalkan.');
+      return;
+    }
     if (!confirm(`Batalkan antrean ${item.queueNumber} (${item.patientName})?`)) return;
     try {
       await fetch('/api/queue', {
@@ -217,6 +235,15 @@ export default function FrontDeskPage() {
   if (selectedDoctorFilter !== 'all') {
     filteredQueue = filteredQueue.filter((q) => q.doctorId === selectedDoctorFilter);
   }
+  if (selectedStatusFilter === 'active') {
+    filteredQueue = filteredQueue.filter((q) =>
+      ['booked', 'checked_in', 'waiting', 'called', 'in_consultation'].includes(q.status)
+    );
+  } else if (selectedStatusFilter === 'done') {
+    filteredQueue = filteredQueue.filter((q) => q.status === 'done');
+  } else if (selectedStatusFilter === 'cancelled') {
+    filteredQueue = filteredQueue.filter((q) => q.status === 'cancelled');
+  }
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase();
     filteredQueue = filteredQueue.filter(
@@ -235,6 +262,7 @@ export default function FrontDeskPage() {
   const waitingCount = queue.filter((q) => q.status === 'waiting' || q.status === 'checked_in').length;
   const doneCount = queue.filter((q) => q.status === 'done').length;
   const urgentCount = queue.filter((q) => q.isPriority || q.triageLevel === 'emergency').length;
+  const cancelledCount = queue.filter((q) => q.status === 'cancelled').length;
 
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 font-body">
@@ -278,31 +306,97 @@ export default function FrontDeskPage() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
-        <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0]">
-          <span className="text-[11px] uppercase tracking-wider text-[#64748B] block">Total Antrean</span>
-          <span className="text-2xl font-mono font-bold text-[#0F172A]">{totalIssued}</span>
-        </div>
-        <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0]">
-          <span className="text-[11px] uppercase tracking-wider text-emerald-600 block">Sedang Dilayani</span>
-          <span className="text-2xl font-mono font-bold text-emerald-600">{inRoomCount}</span>
-        </div>
-        <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0]">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        <button
+          type="button"
+          onClick={() => setSelectedStatusFilter('all')}
+          className={`text-left p-3.5 rounded-lg border transition-all ${
+            selectedStatusFilter === 'all'
+              ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-sm'
+              : 'bg-white hover:bg-slate-50 border-[#E2E8F0]'
+          }`}
+        >
+          <span className={`text-[11px] uppercase tracking-wider block ${selectedStatusFilter === 'all' ? 'text-slate-300' : 'text-[#64748B]'}`}>
+            Total Antrean
+          </span>
+          <span className={`text-2xl font-mono font-bold ${selectedStatusFilter === 'all' ? 'text-white' : 'text-[#0F172A]'}`}>
+            {totalIssued}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSelectedStatusFilter('active')}
+          className={`text-left p-3.5 rounded-lg border transition-all ${
+            selectedStatusFilter === 'active'
+              ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm'
+              : 'bg-white hover:bg-slate-50 border-[#E2E8F0]'
+          }`}
+        >
+          <span className={`text-[11px] uppercase tracking-wider block ${selectedStatusFilter === 'active' ? 'text-emerald-100' : 'text-emerald-600'}`}>
+            Sedang Dilayani
+          </span>
+          <span className={`text-2xl font-mono font-bold ${selectedStatusFilter === 'active' ? 'text-white' : 'text-emerald-600'}`}>
+            {inRoomCount}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSelectedStatusFilter('active')}
+          className="text-left bg-white p-3.5 rounded-lg border border-[#E2E8F0] hover:bg-slate-50 transition-all"
+        >
           <span className="text-[11px] uppercase tracking-wider text-amber-600 block">Menunggu Giliran</span>
           <span className="text-2xl font-mono font-bold text-amber-600">{waitingCount}</span>
-        </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSelectedStatusFilter('done')}
+          className={`text-left p-3.5 rounded-lg border transition-all ${
+            selectedStatusFilter === 'done'
+              ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-sm'
+              : 'bg-white hover:bg-slate-50 border-[#E2E8F0]'
+          }`}
+        >
+          <span className={`text-[11px] uppercase tracking-wider block ${selectedStatusFilter === 'done' ? 'text-slate-300' : 'text-[#64748B]'}`}>
+            Selesai Periksa
+          </span>
+          <span className={`text-2xl font-mono font-bold ${selectedStatusFilter === 'done' ? 'text-white' : 'text-[#0F172A]'}`}>
+            {doneCount}
+          </span>
+        </button>
+
         <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0]">
-          <span className="text-[11px] uppercase tracking-wider text-[#64748B] block">Selesai Periksa</span>
-          <span className="text-2xl font-mono font-bold text-[#0F172A]">{doneCount}</span>
-        </div>
-        <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0]">
-          <span className="text-[11px] uppercase tracking-wider text-red-600 block">Kasus Urgent/Prioritas</span>
+          <span className="text-[11px] uppercase tracking-wider text-red-600 block">Kasus Urgent</span>
           <span className="text-2xl font-mono font-bold text-red-600">{urgentCount}</span>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setSelectedStatusFilter(selectedStatusFilter === 'cancelled' ? 'all' : 'cancelled')}
+          className={`text-left p-3.5 rounded-lg border transition-all ${
+            selectedStatusFilter === 'cancelled'
+              ? 'bg-rose-600 text-white border-rose-600 shadow-sm'
+              : 'bg-white hover:bg-rose-50/50 border-[#E2E8F0]'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className={`text-[11px] uppercase tracking-wider block ${selectedStatusFilter === 'cancelled' ? 'text-rose-100' : 'text-rose-600'}`}>
+              Dibatalkan
+            </span>
+            {cancelledCount > 0 && selectedStatusFilter !== 'cancelled' && (
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+            )}
+          </div>
+          <span className={`text-2xl font-mono font-bold ${selectedStatusFilter === 'cancelled' ? 'text-white' : 'text-rose-600'}`}>
+            {cancelledCount}
+          </span>
+        </button>
       </div>
 
-      {/* Search & Doctor Filter Bar */}
-      <div className="bg-white p-4 rounded-lg border border-[#E2E8F0] mb-6 flex flex-col sm:flex-row items-center gap-3">
+      {/* Search & Filters Bar */}
+      <div className="bg-white p-4 rounded-lg border border-[#E2E8F0] mb-6 flex flex-col md:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
           <Search size={16} className="absolute left-3 top-3 text-[#94A3B8]" />
           <input
@@ -314,20 +408,44 @@ export default function FrontDeskPage() {
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter size={16} className="text-[#64748B] shrink-0" />
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full md:w-auto">
+          {/* Status filter dropdown */}
           <select
-            value={selectedDoctorFilter}
-            onChange={(e) => setSelectedDoctorFilter(e.target.value)}
+            value={selectedStatusFilter}
+            onChange={(e) => setSelectedStatusFilter(e.target.value)}
             className="h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#0F172A]"
           >
-            <option value="all">Semua Dokter Poliklinik</option>
-            {doctors.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name} ({d.code}) {!d.isAvailable ? '• Berhalangan' : d.isOnDuty ? '• Piket' : ''}
-              </option>
-            ))}
+            <option value="all">Semua Status</option>
+            <option value="active">Aktif / Menunggu</option>
+            <option value="done">Selesai Periksa</option>
+            <option value="cancelled">Dibatalkan ({cancelledCount})</option>
           </select>
+
+          {/* Doctor filter dropdown */}
+          <div className="flex items-center gap-1.5">
+            <Filter size={15} className="text-[#64748B] shrink-0 hidden sm:block" />
+            <select
+              value={selectedDoctorFilter}
+              onChange={(e) => setSelectedDoctorFilter(e.target.value)}
+              className="h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#0F172A]"
+            >
+              <option value="all">Semua Dokter Poliklinik</option>
+              {doctors.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name} ({d.code}) {!d.isAvailable ? '• Berhalangan' : d.isOnDuty ? '• Piket' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Date selector */}
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="h-[42px] px-3 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#0F172A]"
+            title="Filter Tanggal Antrean"
+          />
         </div>
       </div>
 
@@ -354,28 +472,50 @@ export default function FrontDeskPage() {
                 </tr>
               ) : (
                 filteredQueue.map((item) => {
+                  const isCancelled = item.status === 'cancelled';
                   const isCheckedIn = ['checked_in', 'waiting', 'called', 'in_consultation', 'done'].includes(item.status);
+                  const isCancelledByPatient =
+                    isCancelled &&
+                    (item.cancelledByRole === 'patient' ||
+                      item.notes?.toLowerCase().includes('pasien') ||
+                      item.cancelledBy?.toLowerCase().includes('pasien'));
+
                   return (
                     <tr
                       key={item.id}
-                      className={`hover:bg-[#F8FAFC] transition-colors ${
-                        item.isPriority ? 'bg-amber-50/40' : ''
+                      className={`transition-colors ${
+                        isCancelled
+                          ? 'bg-slate-50/80 hover:bg-slate-100/60 text-slate-500'
+                          : item.isPriority
+                          ? 'bg-amber-50/40 hover:bg-amber-50/70'
+                          : 'hover:bg-[#F8FAFC]'
                       }`}
                     >
                       {/* Queue Number */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-mono font-bold text-sm text-[#0F172A]">
+                          <span
+                            className={`font-mono font-bold text-sm ${
+                              isCancelled ? 'text-slate-400 line-through' : 'text-[#0F172A]'
+                            }`}
+                          >
                             {item.queueNumber}
                           </span>
-                          {item.isPriority && (
-                            <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded" title={item.priorityReason}>
+                          {item.isPriority && !isCancelled && (
+                            <span
+                              className="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded"
+                              title={item.priorityReason}
+                            >
                               PRIORITAS
                             </span>
                           )}
                         </div>
                         {item.bookingCode && (
-                          <span className="text-[10px] font-mono text-[#059669] block">
+                          <span
+                            className={`text-[10px] font-mono block ${
+                              isCancelled ? 'text-slate-400 line-through' : 'text-[#059669]'
+                            }`}
+                          >
                             {item.bookingCode}
                           </span>
                         )}
@@ -383,7 +523,11 @@ export default function FrontDeskPage() {
 
                       {/* Patient Name & Phone */}
                       <td className="py-3.5 px-4">
-                        <div className="font-semibold text-[#0F172A] text-sm">
+                        <div
+                          className={`font-semibold text-sm ${
+                            isCancelled ? 'text-slate-600 line-through' : 'text-[#0F172A]'
+                          }`}
+                        >
                           {item.patientName}
                         </div>
                         <div className="text-[11px] text-[#64748B] flex items-center gap-1">
@@ -394,12 +538,29 @@ export default function FrontDeskPage() {
                             NIK: {item.patientNik}
                           </div>
                         )}
+                        {isCancelled && (
+                          <div className="mt-1 text-[11px] text-rose-600 font-medium flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                            <span>
+                              {isCancelledByPatient
+                                ? 'Dibatalkan oleh Pasien'
+                                : item.notes || 'Dibatalkan'}
+                            </span>
+                            {item.cancelledAt && (
+                              <span className="text-[10px] text-slate-400 font-mono">
+                                ({new Date(item.cancelledAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })})
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </td>
 
                       {/* Doctor */}
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-[#0F172A]">{item.doctorName}</div>
-                        <div className="text-[11px] text-[#059669]">
+                        <div className={`font-medium ${isCancelled ? 'text-slate-500' : 'text-[#0F172A]'}`}>
+                          {item.doctorName}
+                        </div>
+                        <div className="text-[11px] text-[#64748B]">
                           {item.doctorCode === 'A' ? 'Ruang Poli Umum 1' : 'Ruang Poli Umum 2'}
                         </div>
                       </td>
@@ -431,52 +592,66 @@ export default function FrontDeskPage() {
 
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-center">
-                        <div className="flex items-center justify-center gap-1.5">
-                          {/* Check in button if booked */}
-                          {item.status === 'booked' && (
-                            <Button
-                              variant="sage"
-                              size="sm"
-                              onClick={() => handleCheckIn(item)}
-                              className="text-xs"
+                        {isCancelled ? (
+                          <div className="flex flex-col items-center justify-center py-1">
+                            <span
+                              className="inline-flex items-center px-2 py-0.5 rounded bg-slate-100 text-slate-400 text-[11px] font-medium cursor-not-allowed select-none border border-slate-200"
+                              title="Janji temu telah dibatalkan oleh pasien. Tidak ada aksi yang dapat diambil."
                             >
-                              Check-in & Terbitkan Nomor
-                            </Button>
-                          )}
+                              Tidak Ada Aksi
+                            </span>
+                            <span className="text-[10px] text-slate-400 mt-0.5 italic">
+                              Janji Dibatalkan
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-1.5">
+                            {/* Check in button if booked */}
+                            {item.status === 'booked' && (
+                              <Button
+                                variant="sage"
+                                size="sm"
+                                onClick={() => handleCheckIn(item)}
+                                className="text-xs"
+                              >
+                                Check-in & Terbitkan Nomor
+                              </Button>
+                            )}
 
-                          {/* Print ticket button */}
-                          {isCheckedIn && (
-                            <button
-                              onClick={() => setSelectedTicket(item)}
-                              title="Cetak Tiket Fisik"
-                              className="p-1.5 rounded bg-slate-100 hover:bg-slate-200 text-[#0F172A]"
-                            >
-                              <Printer size={15} />
-                            </button>
-                          )}
+                            {/* Print ticket button */}
+                            {isCheckedIn && (
+                              <button
+                                onClick={() => setSelectedTicket(item)}
+                                title="Cetak Tiket Fisik"
+                                className="p-1.5 rounded bg-slate-100 hover:bg-slate-200 text-[#0F172A]"
+                              >
+                                <Printer size={15} />
+                              </button>
+                            )}
 
-                          {/* Set Priority */}
-                          {!item.isPriority && item.status !== 'done' && (
-                            <button
-                              onClick={() => setPriorityModalItem(item)}
-                              title="Tandai Prioritas Khusus"
-                              className="p-1.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-800"
-                            >
-                              <Zap size={15} />
-                            </button>
-                          )}
+                            {/* Set Priority */}
+                            {!item.isPriority && item.status !== 'done' && (
+                              <button
+                                onClick={() => setPriorityModalItem(item)}
+                                title="Tandai Prioritas Khusus"
+                                className="p-1.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-800"
+                              >
+                                <Zap size={15} />
+                              </button>
+                            )}
 
-                          {/* Cancel by front desk */}
-                          {item.status !== 'done' && item.status !== 'cancelled' && (
-                            <button
-                              onClick={() => handleCancelByStaff(item)}
-                              title="Batalkan Antrean"
-                              className="p-1.5 rounded bg-red-50 hover:bg-red-100 text-red-600"
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </div>
+                            {/* Cancel by front desk */}
+                            {item.status !== 'done' && (
+                              <button
+                                onClick={() => handleCancelByStaff(item)}
+                                title="Batalkan Antrean"
+                                className="p-1.5 rounded bg-red-50 hover:bg-red-100 text-red-600"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </td>
                     </tr>
                   );
