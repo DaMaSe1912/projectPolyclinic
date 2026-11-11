@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { hashPassword, validatePasswordStrength } from '@/lib/auth';
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const db = getDb();
+    const db = await getDbAsync();
     const userIndex = db.users.findIndex((u) => u.resetPasswordToken === token && !u.isMerged);
 
     if (userIndex === -1) {
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     user.lockedUntil = null;
 
     db.users[userIndex] = user;
-    saveDb(db);
+    await saveDbAsync(db);
 
     logAudit(
       user.name,

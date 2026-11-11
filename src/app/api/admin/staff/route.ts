@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import {
   getSession,
   hashPassword,
@@ -27,7 +27,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Akses ditolak: Hanya Super Admin' }, { status: 403 });
   }
 
-  const db = getDb();
+  const db = await getDbAsync();
   const staffUsers = db.users
     .filter((u) => u.role !== 'patient')
     .map((u) => sanitizeUser(u));
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const db = getDb();
+    const db = await getDbAsync();
 
     // Check duplicate email
     if (db.users.some((u) => u.email?.toLowerCase().trim() === cleanEmail && !u.isMerged)) {
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
     };
 
     db.users.push(newStaff);
-    saveDb(db);
+    await saveDbAsync(db);
 
     sendDevEmail({
       to: cleanEmail,
@@ -133,7 +133,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'ID akun staf wajib diisi' }, { status: 400 });
     }
 
-    const db = getDb();
+    const db = await getDbAsync();
     const idx = db.users.findIndex((u) => u.id === id);
     if (idx === -1) {
       return NextResponse.json({ error: 'Akun staf tidak ditemukan' }, { status: 404 });
@@ -210,7 +210,7 @@ export async function PATCH(request: Request) {
     }
 
     db.users[idx] = staff;
-    saveDb(db);
+    await saveDbAsync(db);
 
     return NextResponse.json({ success: true, user: sanitizeUser(staff) });
   } catch (err: any) {

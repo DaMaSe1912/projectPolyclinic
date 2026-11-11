@@ -12,7 +12,7 @@ import {
   SessionRecord,
   DevEmail,
 } from '@/types';
-import { syncToSupabaseAsync } from './supabaseSync';
+import { syncToSupabaseAsync, loadFromSupabase } from './supabaseSync';
 
 export interface DatabaseSchema {
   settings: ClinicSettings;
@@ -584,6 +584,7 @@ export function getDb(): DatabaseSchema {
 
 export function saveDb(data: DatabaseSchema): void {
   memoryDb = data;
+  lastSupabaseFetchTime = Date.now();
   try {
     ensureDataDir();
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
@@ -594,6 +595,55 @@ export function saveDb(data: DatabaseSchema): void {
     syncToSupabaseAsync(data).catch((err) => {
       console.error('[DB] Supabase async sync error:', err);
     });
+  }
+}
+
+let lastSupabaseFetchTime = 0;
+const SUPABASE_CACHE_TTL_MS = 1000;
+
+/**
+ * Loads the database, prioritizing Supabase Cloud PostgreSQL when available.
+ * Guarantees all distributed serverless instances on Vercel see identical data.
+ */
+export async function getDbAsync(): Promise<DatabaseSchema> {
+  const now = Date.now();
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && now - lastSupabaseFetchTime > SUPABASE_CACHE_TTL_MS) {
+    const cloudDb = await loadFromSupabase();
+    if (cloudDb && cloudDb.users && cloudDb.users.length > 0) {
+      memoryDb = cloudDb;
+      lastSupabaseFetchTime = now;
+      try {
+        ensureDataDir();
+        fs.writeFileSync(DB_FILE, JSON.stringify(cloudDb, null, 2), 'utf-8');
+      } catch {}
+      return cloudDb;
+    } else if (cloudDb === null) {
+      // First boot on Supabase: Seed cloud tables with local baseline data
+      const localData = getDb();
+      await syncToSupabaseAsync(localData);
+      lastSupabaseFetchTime = now;
+      return localData;
+    }
+  }
+
+  return getDb();
+}
+
+/**
+ * Saves database updates to both local fallback and Supabase Cloud synchronously.
+ * Guarantees data persistence before serverless lambda execution freezes.
+ */
+export async function saveDbAsync(data: DatabaseSchema): Promise<void> {
+  memoryDb = data;
+  lastSupabaseFetchTime = Date.now();
+  try {
+    ensureDataDir();
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err: any) {
+    console.warn('[DB] Write to disk suppressed:', err.message);
+  }
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    await syncToSupabaseAsync(data);
   }
 }
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import {
   verifyPassword,
   checkAccountLockout,
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
-    const db = getDb();
+    const db = await getDbAsync();
 
     // Find active user by email
     const userIndex = db.users.findIndex(
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       }
 
       db.users[userIndex] = user;
-      saveDb(db);
+      await saveDbAsync(db);
 
       if (user.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
         return NextResponse.json(
@@ -155,7 +155,7 @@ export async function POST(request: Request) {
     user.failedLoginAttempts = 0;
     user.lockedUntil = null;
     db.users[userIndex] = user;
-    saveDb(db);
+    await saveDbAsync(db);
 
     // If role is Admin, require second factor (2FA)
     if (user.role === 'admin' && user.twoFactorEnabled) {

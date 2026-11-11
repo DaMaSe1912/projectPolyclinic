@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDbAsync } from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const targetType = searchParams.get('targetType');
     const role = searchParams.get('role');
 
-    const db = getDb();
+    const db = await getDbAsync();
     let logs = db.auditLogs;
 
     if (targetType) {

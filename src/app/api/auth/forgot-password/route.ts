@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { sendDevEmail } from '@/lib/auth';
 
 export async function POST(request: Request) {
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const db = getDb();
+    const db = await getDbAsync();
     const userIndex = db.users.findIndex(
       (u) => u.email?.toLowerCase().trim() === cleanEmail && !u.isMerged
     );
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     user.resetPasswordToken = resetToken;
     user.resetPasswordTokenExpiresAt = expiresAt;
     db.users[userIndex] = user;
-    saveDb(db);
+    await saveDbAsync(db);
 
     const host = request.headers.get('host') || 'localhost:3000';
     const proto = request.headers.get('x-forwarded-proto') || 'http';

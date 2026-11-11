@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDbAsync();
     const patients = db.users.filter((u) => u.role === 'patient' && !u.isMerged);
 
     // Find suspected duplicates (matching phone, or matching NIK, or matching lower(name) + dob)
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Akses ditolak. Hanya Super Admin yang dapat menggabungkan data.' }, { status: 403 });
     }
 
-    const db = getDb();
+    const db = await getDbAsync();
     const primary = db.users.find((u) => u.id === primaryPatientId);
     const secondary = db.users.find((u) => u.id === secondaryPatientId);
 
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       });
     }
 
-    saveDb(db);
+    await saveDbAsync(db);
 
     logAudit(
       actorName,

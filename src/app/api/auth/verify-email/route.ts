@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Token verifikasi wajib disertakan' }, { status: 400 });
     }
 
-    const db = getDb();
+    const db = await getDbAsync();
     const userIndex = db.users.findIndex((u) => u.verificationToken === token && !u.isMerged);
 
     if (userIndex === -1) {
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     user.verificationTokenExpiresAt = undefined;
 
     db.users[userIndex] = user;
-    saveDb(db);
+    await saveDbAsync(db);
 
     logAudit(
       user.name,

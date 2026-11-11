@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getSession, sanitizeUser, SESSION_COOKIE_NAME, getRoleIdleTimeoutMs } from '@/lib/auth';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -55,7 +55,7 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { newFamilyMember, name, phone, nik, dob, gender } = body;
 
-    const db = getDb();
+    const db = await getDbAsync();
     const userIndex = db.users.findIndex((u) => u.id === sessionData.user.id && !u.isMerged);
     if (userIndex === -1) {
       return NextResponse.json({ error: 'Pengguna tidak ditemukan' }, { status: 404 });
@@ -82,7 +82,7 @@ export async function PATCH(request: Request) {
     if (gender) user.gender = gender;
 
     db.users[userIndex] = user;
-    saveDb(db);
+    await saveDbAsync(db);
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { hashPassword, validatePasswordStrength, sendDevEmail } from '@/lib/auth';
 import { UserAccount } from '@/types';
 
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const cleanName = name.trim();
     const cleanDob = dob.trim();
 
-    const db = getDb();
+    const db = await getDbAsync();
 
     // Check duplicate email
     const existingByEmail = db.users.find(
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
     };
 
     db.users.push(newPatient);
-    saveDb(db);
+    await saveDbAsync(db);
 
     // Send verification email via Dev Mailbox
     const host = request.headers.get('host') || 'localhost:3000';

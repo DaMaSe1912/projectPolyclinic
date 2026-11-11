@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDbAsync();
     const todayStr = new Date().toISOString().split('T')[0];
 
     // Enrich each doctor with today's queue count
@@ -36,7 +36,7 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { doctorId, isOnDuty, isAvailable, actorName = 'Admin', actorRole = 'admin' } = body;
 
-    const db = getDb();
+    const db = await getDbAsync();
     const docIndex = db.doctors.findIndex((d) => d.id === doctorId);
 
     if (docIndex === -1) {
@@ -76,7 +76,7 @@ export async function PATCH(request: Request) {
     }
 
     db.doctors[docIndex] = doctor;
-    saveDb(db);
+    await saveDbAsync(db);
 
     logAudit(
       actorName,

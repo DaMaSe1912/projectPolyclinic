@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { QueueItem, QueueStatus, TriageLevel } from '@/types';
 
 // Helper to generate next queue number for a doctor code
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     const patientId = searchParams.get('patientId');
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
-    const db = getDb();
+    const db = await getDbAsync();
     let items = db.queue.filter((q) => q.bookingDate === date);
 
     if (doctorId) {
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
       actorRole = 'patient',
     } = body;
 
-    const db = getDb();
+    const db = await getDbAsync();
     const doctor = db.doctors.find((d) => d.id === doctorId);
     if (!doctor) {
       return NextResponse.json({ error: 'Dokter poliklinik tidak ditemukan' }, { status: 404 });
@@ -176,7 +176,7 @@ export async function POST(request: Request) {
     };
 
     db.queue.push(newQueueItem);
-    saveDb(db);
+    await saveDbAsync(db);
 
     logAudit(
       actorName,
@@ -197,7 +197,7 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, action, actorName = 'Staf', actorRole = 'front_desk', priorityReason, newSlotTime, newDoctorId } = body;
 
-    const db = getDb();
+    const db = await getDbAsync();
     const queueIndex = db.queue.findIndex((q) => q.id === id);
 
     if (queueIndex === -1) {
@@ -336,7 +336,7 @@ export async function PATCH(request: Request) {
     }
 
     db.queue[queueIndex] = item;
-    saveDb(db);
+    await saveDbAsync(db);
 
     return NextResponse.json({ success: true, item });
   } catch (err: any) {

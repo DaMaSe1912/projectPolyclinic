@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { Referral } from '@/types';
 
 export async function GET(request: Request) {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
 
-    const db = getDb();
+    const db = await getDbAsync();
     let referrals = db.referrals;
 
     if (status) {
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const db = getDb();
+    const db = await getDbAsync();
     const newReferral: Referral = {
       id: `ref-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       queueId: queueId || `q-ref-${Date.now()}`,
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     };
 
     db.referrals.unshift(newReferral);
-    saveDb(db);
+    await saveDbAsync(db);
 
     logAudit(
       actorName,
@@ -90,7 +90,7 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, action, doctorId, doctorName, actorName = 'Dokter', actorRole = 'doctor' } = body;
 
-    const db = getDb();
+    const db = await getDbAsync();
     const refIndex = db.referrals.findIndex((r) => r.id === id);
 
     if (refIndex === -1) {
@@ -134,7 +134,7 @@ export async function PATCH(request: Request) {
     }
 
     db.referrals[refIndex] = referral;
-    saveDb(db);
+    await saveDbAsync(db);
 
     return NextResponse.json({ success: true, referral });
   } catch (err: any) {

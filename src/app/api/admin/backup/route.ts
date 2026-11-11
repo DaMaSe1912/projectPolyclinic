@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 
 const BACKUP_SECRET_KEY = process.env.BACKUP_ENCRYPTION_KEY || 'KlinikPratamaSehatUtamaPoliklinikUmumSecretKey2026!';
 
@@ -26,14 +26,14 @@ function decryptData(encryptedText: string): string {
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDbAsync();
     const rawJson = JSON.stringify(db);
     const encryptedPayload = encryptData(rawJson);
 
     logAudit('IT Admin', 'admin', 'BACKUP_EXPORT', 'backup', 'Super Admin mengekspor backup terenkripsi data klinik');
 
     db.settings.lastBackupAt = new Date().toISOString();
-    saveDb(db);
+    await saveDbAsync(db);
 
     const filename = `backup-polyclinic-${new Date().toISOString().split('T')[0]}.enc`;
 
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     }
 
     if (!dryRun) {
-      saveDb(parsedData);
+      await saveDbAsync(parsedData);
     }
 
     logAudit(

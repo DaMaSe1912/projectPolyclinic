@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb, saveDb, logAudit } from '@/lib/db';
+import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import {
   verifyTotp,
   createSession,
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     const cleanEmail = email.trim().toLowerCase();
     const cleanCode = code.trim().toUpperCase();
-    const db = getDb();
+    const db = await getDbAsync();
 
     const userIndex = db.users.findIndex(
       (u) => u.email?.toLowerCase().trim() === cleanEmail && u.role === 'admin' && !u.isMerged
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         // Consume the recovery code (single use)
         user.recoveryCodes = user.recoveryCodes.filter((c) => c !== cleanCode);
         db.users[userIndex] = user;
-        saveDb(db);
+        await saveDbAsync(db);
         logAudit(
           user.name,
           user.role,

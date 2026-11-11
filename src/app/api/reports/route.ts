@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDbAsync } from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const type = searchParams.get('type') || 'daily'; // 'daily' | 'monthly'
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
-    const db = getDb();
+    const db = await getDbAsync();
     const isMonthly = type === 'monthly';
     const monthPrefix = date.slice(0, 7); // e.g. "2026-10"
 

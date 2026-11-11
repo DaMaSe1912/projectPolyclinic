@@ -392,14 +392,21 @@ export default function AdminPage() {
   const handleDownloadBackup = async () => {
     try {
       const res = await fetch('/api/admin/backup');
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error);
+      let data: any;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`Server mengembalikan respon tidak valid (Status HTTP ${res.status})`);
+      }
+      if (!res.ok || !data.success) {
+        throw new Error(data?.error || `Gagal mengekspor backup (Status ${res.status})`);
+      }
 
       const blob = new Blob([data.encryptedPayload], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = data.filename;
+      a.download = data.filename || `backup-polyclinic-${new Date().toISOString().split('T')[0]}.enc`;
       a.click();
       URL.revokeObjectURL(url);
       fetchAuditLogs();
@@ -427,10 +434,15 @@ export default function AdminPage() {
           actorRole: 'admin',
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      let data: any;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`Server mengembalikan respon tidak valid (Status HTTP ${res.status})`);
+      }
+      if (!res.ok) throw new Error(data?.error || `Gagal memulihkan backup (Status ${res.status})`);
 
-      setRestoreStatus(`Sukses: ${data.message} (${data.stats.queueCount} antrean, ${data.stats.doctorCount} dokter, ${data.stats.referralCount} rujukan)`);
+      setRestoreStatus(`Sukses: ${data.message} (${data.stats?.queueCount || 0} antrean, ${data.stats?.doctorCount || 0} dokter, ${data.stats?.referralCount || 0} rujukan)`);
       fetchAuditLogs();
     } catch (e: any) {
       setRestoreStatus(`Gagal restore: ${e.message}`);

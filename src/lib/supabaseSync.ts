@@ -373,3 +373,98 @@ export async function syncToSupabaseAsync(db: DatabaseSchema) {
     console.error('[SupabaseSync] Error syncing to Supabase:', err.message);
   }
 }
+
+/**
+ * Load complete database schema directly from Supabase.
+ * Returns null if Supabase is unreachable or unseeded.
+ */
+export async function loadFromSupabase(): Promise<DatabaseSchema | null> {
+  try {
+    const supabase = getSupabaseAdmin();
+
+    const [
+      settingsRes,
+      doctorsRes,
+      usersRes,
+      queueRes,
+      referralsRes,
+      auditRes,
+      sessionsRes,
+      mailRes,
+    ] = await Promise.all([
+      supabase.from('clinic_settings').select('*').limit(1),
+      supabase.from('doctors').select('*'),
+      supabase.from('users').select('*'),
+      supabase.from('queue').select('*'),
+      supabase.from('referrals').select('*'),
+      supabase.from('audit_logs').select('*').order('timestamp', { ascending: false }).limit(200),
+      supabase.from('sessions').select('*'),
+      supabase.from('mail_log').select('*').order('sent_at', { ascending: false }).limit(50),
+    ]);
+
+    if (usersRes.error || doctorsRes.error) {
+      console.warn('[SupabaseSync] Query error from Supabase:', usersRes.error || doctorsRes.error);
+      return null;
+    }
+
+    // If Supabase has no users and no doctors, it needs initial seeding
+    if ((!usersRes.data || usersRes.data.length === 0) && (!doctorsRes.data || doctorsRes.data.length === 0)) {
+      return null;
+    }
+
+    const settingsRow = settingsRes.data?.[0];
+    const settings: ClinicSettings = settingsRow
+      ? {
+          id: settingsRow.id,
+          name: settingsRow.name,
+          polyclinicName: settingsRow.polyclinic_name,
+          address: settingsRow.address,
+          phone: settingsRow.phone,
+          openTime: settingsRow.open_time,
+          closeTime: settingsRow.close_time,
+          isOpenToday: settingsRow.is_open_today,
+          checkInOpensMinutesBefore: settingsRow.check_in_opens_minutes_before,
+          cancellationCutoffHours: settingsRow.cancellation_cutoff_hours,
+          rescheduleHoldSlotHours: settingsRow.reschedule_hold_slot_hours,
+          maxBookingHorizonDays: settingsRow.max_booking_horizon_days,
+          lastBackupAt: settingsRow.last_backup_at,
+        }
+      : {
+          id: 'clinic-utama-01',
+          name: 'Klinik Pratama Sehat Utama',
+          polyclinicName: 'Poliklinik Umum (General Clinic)',
+          address: 'Jl. Kesehatan Raya No. 128, Jakarta Pusat',
+          phone: '021-5550192',
+          openTime: '08:00',
+          closeTime: '17:00',
+          isOpenToday: true,
+          checkInOpensMinutesBefore: 60,
+          cancellationCutoffHours: 2,
+          rescheduleHoldSlotHours: 24,
+          maxBookingHorizonDays: 30,
+          lastBackupAt: new Date().toISOString(),
+        };
+
+    const doctors: Doctor[] = (doctorsRes.data || []).map(mapDoctorFromDb);
+    const users: UserAccount[] = (usersRes.data || []).map(mapUserFromDb);
+    const queue: QueueItem[] = (queueRes.data || []).map(mapQueueFromDb);
+    const referrals: Referral[] = (referralsRes.data || []).map(mapReferralFromDb);
+    const auditLogs: AuditLog[] = (auditRes.data || []).map(mapAuditLogFromDb);
+    const sessions: SessionRecord[] = (sessionsRes.data || []).map(mapSessionFromDb);
+    const mailLog: DevEmail[] = (mailRes.data || []).map(mapMailFromDb);
+
+    return {
+      settings,
+      doctors,
+      users,
+      queue,
+      referrals,
+      auditLogs,
+      sessions,
+      mailLog,
+    };
+  } catch (err: any) {
+    console.warn('[SupabaseSync] Could not load from Supabase:', err.message);
+    return null;
+  }
+}
