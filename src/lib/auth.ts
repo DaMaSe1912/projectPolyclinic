@@ -85,9 +85,9 @@ export function generateTotp(secretBase32: string, stepOffset: number = 0, timeS
 
 export function verifyTotp(token: string, secretBase32: string): boolean {
   if (!token || !secretBase32) return false;
-  const cleanToken = token.trim();
-  // Check -1, 0, +1 time-step windows (30s window with clock drift tolerance)
-  for (const offset of [0, -1, 1]) {
+  const cleanToken = token.trim().replace(/[\s-]+/g, '');
+  // Check 0, -1, +1, -2, +2 time-step windows (tolerant of clock drift up to 60s)
+  for (const offset of [0, -1, 1, -2, 2]) {
     const expected = generateTotp(secretBase32, offset);
     if (expected === cleanToken) {
       return true;

@@ -64,6 +64,7 @@ export default function AdminPage() {
     secondsLeft: number;
     recoveryCodes: string[];
   } | null>(null);
+  const [countdownSeconds, setCountdownSeconds] = useState<number>(30);
 
   // Dashboard Tabs
   const [activeTab, setActiveTab] = useState<
@@ -109,9 +110,14 @@ export default function AdminPage() {
   // Fetch demo TOTP code for live preview
   const fetchDemoTotp = async () => {
     try {
-      const res = await fetch('/api/auth/demo-totp');
+      const res = await fetch(`/api/auth/demo-totp?_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
-      setLiveTotp(data);
+      if (data && data.totpCode) {
+        setLiveTotp(data);
+        if (typeof data.secondsLeft === 'number') {
+          setCountdownSeconds(data.secondsLeft);
+        }
+      }
     } catch (e) {
       console.error(e);
     }
@@ -119,8 +125,19 @@ export default function AdminPage() {
 
   useEffect(() => {
     fetchDemoTotp();
-    const interval = setInterval(fetchDemoTotp, 2000);
-    return () => clearInterval(interval);
+
+    const timer = setInterval(() => {
+      const epoch = Math.floor(Date.now() / 1000);
+      const remaining = 30 - (epoch % 30);
+      setCountdownSeconds(remaining);
+
+      // Re-fetch when countdown hits boundary or every 15s to guarantee fresh TOTP
+      if (remaining === 30 || remaining === 15) {
+        fetchDemoTotp();
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   // Fetch Reports
@@ -638,11 +655,20 @@ export default function AdminPage() {
                   <input
                     type="text"
                     value={twoFactorCode}
-                    onChange={(e) => setTwoFactorCode(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setTwoFactorCode(val);
+                      setLoginError('');
+                      if (val.toUpperCase().startsWith('RECOV') || val.includes('-')) {
+                        setIsRecoveryCode(true);
+                      } else if (val.replace(/[\s-]+/g, '').length === 6 && /^\d+$/.test(val.replace(/[\s-]+/g, ''))) {
+                        setIsRecoveryCode(false);
+                      }
+                    }}
                     placeholder={isRecoveryCode ? 'RECOV-1A2B-3C4D' : 'Contoh: 123456'}
                     required
                     autoFocus
-                    maxLength={isRecoveryCode ? 20 : 6}
+                    maxLength={30}
                     className="w-full px-3 py-2.5 text-center font-mono font-bold tracking-widest text-lg rounded-[8px] bg-slate-900 border border-slate-700 text-amber-400 focus:outline-none focus:ring-2 focus:ring-[#CA8A04]"
                   />
                 </div>
@@ -690,49 +716,64 @@ export default function AdminPage() {
                 <Sparkles size={14} />
                 <span>Kredensial Demo Super Admin & Live 2FA</span>
               </div>
-              {liveTotp && (
-                <span className="text-[10px] text-slate-400 font-mono">
-                  Ganti dlm {liveTotp.secondsLeft}s
-                </span>
-              )}
+              <span className="text-[11px] text-amber-300 font-mono font-semibold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                Ganti dlm {countdownSeconds}s
+              </span>
             </div>
 
             <div className="text-[11px] text-slate-300 space-y-1 bg-slate-900 p-2.5 rounded-[8px] border border-slate-800">
               <div><strong>Email:</strong> admin@poliklinik.id</div>
               <div><strong>Password:</strong> AdminUtama2026!# (16 karakter)</div>
-              <div><strong>2FA Secret:</strong> JBSWY3DPEHPK3PXP</div>
+              <div><strong>2FA Secret:</strong> {liveTotp?.secret || 'JBSWY3DPEHPK3PXP'}</div>
             </div>
 
-            {liveTotp && (
-              <div className="flex flex-col sm:flex-row gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsRecoveryCode(false);
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRecoveryCode(false);
+                  if (liveTotp?.totpCode) {
                     setTwoFactorCode(liveTotp.totpCode);
-                    setLoginStep('2fa');
-                  }}
-                  className="flex-1 p-2 rounded-[6px] bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-300 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <span>Gunakan TOTP Aktif:</span>
-                  <span className="text-white text-sm bg-slate-900 px-2 py-0.5 rounded border border-amber-500/50">
-                    {liveTotp.totpCode}
-                  </span>
-                </button>
+                  }
+                  setLoginStep('2fa');
+                  setLoginError('');
+                }}
+                className="w-full p-2.5 rounded-[6px] bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-300 text-xs font-mono font-bold flex items-center justify-between gap-1.5 transition-colors"
+              >
+                <span>Gunakan TOTP Aktif Sekarang:</span>
+                <span className="text-white text-sm bg-slate-900 px-2.5 py-0.5 rounded border border-amber-500/50 tracking-wider">
+                  {liveTotp?.totpCode || 'Memuat...'}
+                </span>
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsRecoveryCode(true);
-                    setTwoFactorCode(liveTotp.recoveryCodes[0]);
-                    setLoginStep('2fa');
-                  }}
-                  className="p-2 rounded-[6px] bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 text-[11px] font-mono flex items-center justify-center gap-1"
-                >
-                  <span>Gunakan Recovery Code</span>
-                </button>
+              <div className="pt-1">
+                <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+                  <span>Pilihan Recovery Code (Klik untuk mengisi):</span>
+                  <span className="text-[10px] text-amber-400">Single Use</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(liveTotp?.recoveryCodes && liveTotp.recoveryCodes.length > 0
+                    ? liveTotp.recoveryCodes
+                    : ['RECOV-1A2B-3C4D', 'RECOV-5E6F-7G8H', 'RECOV-9I0J-1K2L', 'RECOV-3M4N-5O6P']
+                  ).map((recCode) => (
+                    <button
+                      key={recCode}
+                      type="button"
+                      onClick={() => {
+                        setIsRecoveryCode(true);
+                        setTwoFactorCode(recCode);
+                        setLoginStep('2fa');
+                        setLoginError('');
+                      }}
+                      className="p-1.5 rounded-[6px] bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-amber-400/50 text-slate-200 text-[11px] font-mono flex items-center justify-center gap-1 transition-colors"
+                      title="Klik untuk mengisi recovery code ini"
+                    >
+                      <span>{recCode}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
