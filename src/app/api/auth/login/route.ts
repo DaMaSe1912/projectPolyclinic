@@ -6,6 +6,7 @@ import {
   checkAccountLockout,
   createSession,
   sanitizeUser,
+  createTwoFactorChallenge,
   SESSION_COOKIE_NAME,
   MAX_FAILED_ATTEMPTS,
   LOCKOUT_DURATION_MS,
@@ -159,7 +160,7 @@ export async function POST(request: Request) {
 
     // If role is Admin, require second factor (2FA)
     if (user.role === 'admin' && user.twoFactorEnabled) {
-      const tempToken = `2fa-${crypto.randomBytes(24).toString('hex')}`;
+      const tempToken = createTwoFactorChallenge(user.id);
       logAudit(user.name, user.role, '2FA_CHALLENGE', 'system', 'Menunggu verifikasi faktor kedua (TOTP/Recovery Code)');
       return NextResponse.json({
         success: true,

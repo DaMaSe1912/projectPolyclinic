@@ -50,12 +50,14 @@ export default function AdminPage() {
   const [adminPassword, setAdminPassword] = useState('AdminUtama2026!#');
   const [showAdminPassword, setShowAdminPassword] = useState(false);
   const [loginStep, setLoginStep] = useState<'credentials' | '2fa'>('credentials');
+  const [tempToken, setTempToken] = useState('');
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [isRecoveryCode, setIsRecoveryCode] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [isLocked, setIsLocked] = useState(false);
   const [remainingMinutes, setRemainingMinutes] = useState<number | null>(null);
+  const [showDemoHelper, setShowDemoHelper] = useState(false);
 
   // Live TOTP Demo Helper
   const [liveTotp, setLiveTotp] = useState<{
@@ -289,7 +291,9 @@ export default function AdminPage() {
       }
 
       if (data.require2FA) {
+        setTempToken(data.tempToken || '');
         setLoginStep('2fa');
+        setLoginError('');
       } else {
         login(data.user);
       }
@@ -306,6 +310,13 @@ export default function AdminPage() {
     setLoginLoading(true);
     setLoginError('');
 
+    if (!tempToken) {
+      setLoginError('Sesi verifikasi kata sandi telah kedaluwarsa. Silakan masukkan kata sandi Anda kembali.');
+      setLoginStep('credentials');
+      setLoginLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch('/api/auth/verify-2fa', {
         method: 'POST',
@@ -314,6 +325,7 @@ export default function AdminPage() {
           email: adminEmail.trim(),
           code: twoFactorCode.trim(),
           isRecoveryCode,
+          tempToken,
         }),
       });
 
@@ -690,6 +702,8 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => {
                       setLoginStep('credentials');
+                      setTempToken('');
+                      setTwoFactorCode('');
                       setLoginError('');
                     }}
                     className="text-slate-400 hover:text-slate-200"
@@ -709,72 +723,96 @@ export default function AdminPage() {
             )}
           </div>
 
-          {/* Demo Helper Drawer for Admin & Live TOTP */}
-          <div className="bg-[#1E293B] p-4 rounded-[12px] border border-slate-700 shadow-md space-y-3">
-            <div className="flex items-center justify-between text-xs font-bold text-amber-400">
-              <div className="flex items-center gap-1.5">
-                <Sparkles size={14} />
-                <span>Kredensial Demo Super Admin & Live 2FA</span>
-              </div>
-              <span className="text-[11px] text-amber-300 font-mono font-semibold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
-                Ganti dlm {countdownSeconds}s
-              </span>
-            </div>
-
-            <div className="text-[11px] text-slate-300 space-y-1 bg-slate-900 p-2.5 rounded-[8px] border border-slate-800">
-              <div><strong>Email:</strong> admin@poliklinik.id</div>
-              <div><strong>Password:</strong> AdminUtama2026!# (16 karakter)</div>
-              <div><strong>2FA Secret:</strong> {liveTotp?.secret || 'JBSWY3DPEHPK3PXP'}</div>
-            </div>
-
-            <div className="space-y-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsRecoveryCode(false);
-                  if (liveTotp?.totpCode) {
-                    setTwoFactorCode(liveTotp.totpCode);
-                  }
-                  setLoginStep('2fa');
-                  setLoginError('');
-                }}
-                className="w-full p-2.5 rounded-[6px] bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-300 text-xs font-mono font-bold flex items-center justify-between gap-1.5 transition-colors"
-              >
-                <span>Gunakan TOTP Aktif Sekarang:</span>
-                <span className="text-white text-sm bg-slate-900 px-2.5 py-0.5 rounded border border-amber-500/50 tracking-wider">
-                  {liveTotp?.totpCode || 'Memuat...'}
-                </span>
-              </button>
-
-              <div className="pt-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
-                  <span>Pilihan Recovery Code (Klik untuk mengisi):</span>
-                  <span className="text-[10px] text-amber-400">Single Use</span>
-                </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {(liveTotp?.recoveryCodes && liveTotp.recoveryCodes.length > 0
-                    ? liveTotp.recoveryCodes
-                    : ['RECOV-1A2B-3C4D', 'RECOV-5E6F-7G8H', 'RECOV-9I0J-1K2L', 'RECOV-3M4N-5O6P']
-                  ).map((recCode) => (
-                    <button
-                      key={recCode}
-                      type="button"
-                      onClick={() => {
-                        setIsRecoveryCode(true);
-                        setTwoFactorCode(recCode);
-                        setLoginStep('2fa');
-                        setLoginError('');
-                      }}
-                      className="p-1.5 rounded-[6px] bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-amber-400/50 text-slate-200 text-[11px] font-mono flex items-center justify-center gap-1 transition-colors"
-                      title="Klik untuk mengisi recovery code ini"
-                    >
-                      <span>{recCode}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+          {/* Toggle for Demo Helper Drawer */}
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setShowDemoHelper(!showDemoHelper)}
+              className="text-xs text-slate-400 hover:text-amber-400 inline-flex items-center gap-1.5 transition-colors py-1.5 px-3 rounded-md bg-[#1E293B] border border-slate-700 shadow-sm"
+            >
+              <Sparkles size={13} className="text-amber-400" />
+              <span>{showDemoHelper ? 'Sembunyikan Bantuan Demo & 2FA' : 'Mode Demo: Buka Bantuan Kredensial & 2FA'}</span>
+            </button>
           </div>
+
+          {/* Demo Helper Drawer for Admin & Live TOTP */}
+          {showDemoHelper && (
+            <div className="bg-[#1E293B] p-4 rounded-[12px] border border-slate-700 shadow-md space-y-3">
+              <div className="flex items-center justify-between text-xs font-bold text-amber-400">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles size={14} />
+                  <span>Kredensial Demo Super Admin & Live 2FA</span>
+                </div>
+                <span className="text-[11px] text-amber-300 font-mono font-semibold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                  Ganti dlm {countdownSeconds}s
+                </span>
+              </div>
+
+              <div className="text-[11px] text-slate-300 space-y-1 bg-slate-900 p-2.5 rounded-[8px] border border-slate-800">
+                <div><strong>Email:</strong> admin@poliklinik.id</div>
+                <div><strong>Password:</strong> AdminUtama2026!# (16 karakter)</div>
+                <div><strong>2FA Secret:</strong> {liveTotp?.secret || 'JBSWY3DPEHPK3PXP'}</div>
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (loginStep === 'credentials') {
+                      setAdminEmail('admin@poliklinik.id');
+                      setAdminPassword('AdminUtama2026!#');
+                      setLoginError('Kredensial demo terisi. Silakan klik "Lanjutkan ke Verifikasi 2FA" untuk memvalidasi kata sandi terlebih dahulu.');
+                    } else {
+                      setIsRecoveryCode(false);
+                      if (liveTotp?.totpCode) {
+                        setTwoFactorCode(liveTotp.totpCode);
+                      }
+                      setLoginError('');
+                    }
+                  }}
+                  className="w-full p-2.5 rounded-[6px] bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-300 text-xs font-mono font-bold flex items-center justify-between gap-1.5 transition-colors"
+                >
+                  <span>{loginStep === 'credentials' ? 'Isi Password Admin:' : 'Gunakan TOTP Aktif Sekarang:'}</span>
+                  <span className="text-white text-sm bg-slate-900 px-2.5 py-0.5 rounded border border-amber-500/50 tracking-wider">
+                    {loginStep === 'credentials' ? 'AdminUtama2026!#' : (liveTotp?.totpCode || 'Memuat...')}
+                  </span>
+                </button>
+
+                <div className="pt-1">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+                    <span>Pilihan Recovery Code (Klik untuk mengisi):</span>
+                    <span className="text-[10px] text-amber-400">Single Use</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {(liveTotp?.recoveryCodes && liveTotp.recoveryCodes.length > 0
+                      ? liveTotp.recoveryCodes
+                      : ['RECOV-1A2B-3C4D', 'RECOV-5E6F-7G8H', 'RECOV-9I0J-1K2L', 'RECOV-3M4N-5O6P']
+                    ).map((recCode) => (
+                      <button
+                        key={recCode}
+                        type="button"
+                        onClick={() => {
+                          if (loginStep === 'credentials') {
+                            setAdminEmail('admin@poliklinik.id');
+                            setAdminPassword('AdminUtama2026!#');
+                            setLoginError('Kata sandi harus divalidasi terlebih dahulu. Klik "Lanjutkan ke Verifikasi 2FA".');
+                          } else {
+                            setIsRecoveryCode(true);
+                            setTwoFactorCode(recCode);
+                            setLoginError('');
+                          }
+                        }}
+                        className="p-1.5 rounded-[6px] bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-amber-400/50 text-slate-200 text-[11px] font-mono flex items-center justify-center gap-1 transition-colors"
+                        title="Klik untuk mengisi recovery code ini"
+                      >
+                        <span>{recCode}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

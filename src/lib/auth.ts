@@ -107,6 +107,38 @@ export function generateRecoveryCodes(count: number = 4): string[] {
 }
 
 // ==========================================
+// 2B. 2FA Challenge Ticket (Step 1 -> Step 2)
+// ==========================================
+
+const CHALLENGE_SECRET = process.env.ADMIN_SECRET_KEY || 'sehat-utama-it-2026';
+const CHALLENGE_TTL_MS = 5 * 60 * 1000; // 5 minutes validity
+
+export function createTwoFactorChallenge(userId: string): string {
+  const expiresAt = Date.now() + CHALLENGE_TTL_MS;
+  const payload = `${userId}:${expiresAt}`;
+  const sig = crypto.createHmac('sha256', CHALLENGE_SECRET).update(payload).digest('hex');
+  return Buffer.from(`${payload}:${sig}`).toString('base64url');
+}
+
+export function verifyTwoFactorChallenge(token: string, expectedUserId: string): boolean {
+  if (!token) return false;
+  try {
+    const raw = Buffer.from(token, 'base64url').toString('utf-8');
+    const parts = raw.split(':');
+    if (parts.length !== 3) return false;
+    const [userId, expiresAtStr, sig] = parts;
+    if (userId !== expectedUserId) return false;
+    const expiresAt = parseInt(expiresAtStr, 10);
+    if (isNaN(expiresAt) || Date.now() > expiresAt) return false;
+    const payload = `${userId}:${expiresAt}`;
+    const expectedSig = crypto.createHmac('sha256', CHALLENGE_SECRET).update(payload).digest('hex');
+    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig));
+  } catch {
+    return false;
+  }
+}
+
+// ==========================================
 // 3. Lockout & Rate Limit Rules
 // ==========================================
 

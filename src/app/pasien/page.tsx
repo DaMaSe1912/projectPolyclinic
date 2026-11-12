@@ -421,10 +421,10 @@ export default function PatientPage() {
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <span className="text-xs font-semibold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200/50">
-                        Pasien: <strong className="text-teal-900">{item.patientName}</strong>
+                      <span className="text-xs text-slate-500 font-medium block">
+                        Pasien: <strong className="font-semibold text-slate-800">{item.patientName}</strong>
                       </span>
-                      <h3 className="text-base font-headline font-bold text-[#0F172A] mt-2">
+                      <h3 className="text-base font-headline font-bold text-[#0F172A] mt-1">
                         {item.doctorName}
                       </h3>
                       <p className="text-xs text-[#64748B] mt-0.5">{item.doctorCode === 'A' ? 'Ruang Poli Umum 1' : 'Ruang Poli Umum 2'}</p>
@@ -435,7 +435,11 @@ export default function PatientPage() {
                       {isInRoom && <Chip variant="info">SEDANG KONSULTASI</Chip>}
                       {item.status === 'waiting' && <Chip variant="warning">DALAM ANTREAN</Chip>}
                       {item.status === 'checked_in' && <Chip variant="info">SUDAH CHECK-IN</Chip>}
-                      {item.status === 'booked' && <Chip variant="neutral">MENUNGGU CHECK-IN</Chip>}
+                      {item.status === 'booked' && (
+                        <span className="text-xs font-semibold text-slate-500">
+                          Menunggu Check-in
+                        </span>
+                      )}
                       {isDocUnavailable && <Chip variant="error">DOKTER BERHALANGAN</Chip>}
                     </div>
                   </div>
@@ -480,11 +484,12 @@ export default function PatientPage() {
                       <p>
                         Sesuai ketentuan, Anda berhak memilih jadwal sesi berikutnya dengan prioritas antrean, berpindah ke dokter lain yang bertugas, atau membatalkan tanpa sanksi.
                       </p>
-                      <div className="flex gap-2 pt-1">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
                         <Button
                           variant="secondary"
                           size="sm"
                           onClick={() => setRescheduleItem(item)}
+                          className="text-xs"
                         >
                           Pilih Jadwal Lain (Prioritas)
                         </Button>
@@ -492,6 +497,7 @@ export default function PatientPage() {
                           variant="destructive"
                           size="sm"
                           onClick={() => handleCancel(item)}
+                          className="text-xs"
                         >
                           Batalkan Antrean
                         </Button>
@@ -500,21 +506,22 @@ export default function PatientPage() {
                   )}
 
                   {/* Action Buttons */}
-                  <div className="flex items-center justify-between pt-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs text-[#64748B] flex items-center gap-1">
-                      <Clock size={13} /> {item.bookingDate}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 border-t border-slate-100">
+                    <span className="text-xs text-[#64748B] flex items-center gap-1.5 shrink-0">
+                      <Clock size={13} className="text-slate-400" />
+                      <span>{item.bookingDate}</span>
                     </span>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       {!isCheckedIn && !isDocUnavailable && (
                         <Button
                           variant="sage"
                           size="sm"
                           onClick={() => handleCheckIn(item)}
-                          className="gap-1.5"
+                          className="gap-1 sm:gap-1.5 text-xs font-semibold"
                         >
-                          <CheckCircle size={14} />
-                          Saya Sudah di Klinik (Check-in)
+                          <CheckCircle size={13} />
+                          Check-in
                         </Button>
                       )}
 
@@ -523,9 +530,9 @@ export default function PatientPage() {
                           variant="secondary"
                           size="sm"
                           onClick={() => setRescheduleItem(item)}
-                          className="gap-1.5"
+                          className="gap-1 sm:gap-1.5 text-xs font-medium"
                         >
-                          <RotateCcw size={14} />
+                          <RotateCcw size={13} />
                           Jadwal Ulang
                         </Button>
                       )}
@@ -535,7 +542,7 @@ export default function PatientPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleCancel(item)}
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                          className="text-xs text-red-600 hover:bg-red-50 hover:text-red-700 px-2 sm:px-2.5"
                         >
                           Batalkan
                         </Button>

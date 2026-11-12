@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium font-body transition-all duration-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 min-h-[44px] cursor-pointer select-none active:scale-[0.98]';
+    'inline-flex items-center justify-center font-medium font-body transition-all duration-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer select-none active:scale-[0.98]';
 
   const variantStyles = {
     primary:
@@ -32,9 +32,9 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   const sizeStyles = {
-    sm: 'text-[14px] px-[14px] py-[6px] h-[36px]',
-    md: 'text-[14px] px-[22px] py-[10px] h-[44px]',
-    lg: 'text-[16px] px-[28px] py-[12px] h-[48px]',
+    sm: 'text-xs sm:text-[13px] px-2.5 py-1.5 sm:px-3.5 sm:py-2 min-h-[34px] sm:min-h-[38px] rounded-lg sm:rounded-xl',
+    md: 'text-[14px] px-[22px] py-[10px] min-h-[44px]',
+    lg: 'text-[16px] px-[28px] py-[12px] min-h-[48px]',
   };
 
   const disabledStyles = disabled || isLoading

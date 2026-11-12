@@ -4,6 +4,7 @@ import {
   verifyTotp,
   createSession,
   sanitizeUser,
+  verifyTwoFactorChallenge,
   SESSION_COOKIE_NAME,
 } from '@/lib/auth';
 
@@ -13,7 +14,7 @@ export const revalidate = 0;
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, code, isRecoveryCode } = body;
+    const { email, code, isRecoveryCode, tempToken } = body;
 
     if (!email || !code) {
       return NextResponse.json(
@@ -35,6 +36,17 @@ export async function POST(request: Request) {
     }
 
     const user = db.users[userIndex];
+
+    // Strict Step 1 Enforcement:
+    // User must provide a valid, unexpired challenge token issued upon successful password verification
+    if (!tempToken || !verifyTwoFactorChallenge(tempToken, user.id)) {
+      logAudit(user.name, user.role, '2FA_UNAUTHORIZED', 'system', 'Mencoba verifikasi 2FA tanpa tiket password Step 1 yang sah');
+      return NextResponse.json(
+        { error: 'Sesi autentikasi telah kedaluwarsa atau kata sandi belum diverifikasi. Silakan masukkan kata sandi Admin Anda terlebih dahulu.' },
+        { status: 401 }
+      );
+    }
+
     let verified = false;
 
     // Check if input looks like a recovery code or if explicitly marked as recovery code

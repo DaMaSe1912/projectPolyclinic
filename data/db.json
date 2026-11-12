@@ -840,6 +840,106 @@
   ],
   "auditLogs": [
     {
+      "id": "aud-1794497281349-743",
+      "timestamp": "2026-11-12T15:28:01.349+00:00",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient",
+      "ip": null
+    },
+    {
+      "id": "aud-1794497259459-110",
+      "timestamp": "2026-11-12T15:27:39.459+00:00",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "SESSION_EXPIRED_IDLE",
+      "targetType": "system",
+      "details": "Sesi otomatis berakhir karena idle (> 10 menit)",
+      "ip": null
+    },
+    {
+      "id": "aud-1794495328514-127",
+      "timestamp": "2026-11-12T14:55:28.514+00:00",
+      "actorName": "Bambang Wijaya",
+      "actorRole": "patient",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai patient",
+      "ip": null
+    },
+    {
+      "id": "aud-1794494726259-714",
+      "timestamp": "2026-11-12T14:45:26.259+00:00",
+      "actorName": "Dewi Lestari (Resepsionis)",
+      "actorRole": "front_desk",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk sebagai front_desk",
+      "ip": null
+    },
+    {
+      "id": "aud-1794494717837-860",
+      "timestamp": "2026-11-12T14:45:17.837+00:00",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual",
+      "ip": null
+    },
+    {
+      "id": "aud-1794494710940-454",
+      "timestamp": "2026-11-12T14:45:10.94+00:00",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk Super Admin setelah verifikasi 2FA",
+      "ip": null
+    },
+    {
+      "id": "aud-1794494706391-824",
+      "timestamp": "2026-11-12T14:45:06.391+00:00",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "2FA_CHALLENGE",
+      "targetType": "system",
+      "details": "Menunggu verifikasi faktor kedua (TOTP/Recovery Code)",
+      "ip": null
+    },
+    {
+      "id": "aud-1794494216460-9",
+      "timestamp": "2026-11-12T14:36:56.46+00:00",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGOUT",
+      "targetType": "system",
+      "details": "Pengguna keluar akun secara manual",
+      "ip": null
+    },
+    {
+      "id": "aud-1794493999710-529",
+      "timestamp": "2026-11-12T14:33:19.71+00:00",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "LOGIN_SUCCESS",
+      "targetType": "system",
+      "details": "Berhasil masuk Super Admin setelah verifikasi 2FA",
+      "ip": null
+    },
+    {
+      "id": "aud-1794493974362-864",
+      "timestamp": "2026-11-12T14:32:54.362+00:00",
+      "actorName": "Ahmad Pratama, S.Kom",
+      "actorRole": "admin",
+      "action": "2FA_CHALLENGE",
+      "targetType": "system",
+      "details": "Menunggu verifikasi faktor kedua (TOTP/Recovery Code)",
+      "ip": null
+    },
+    {
       "id": "aud-1794489163602-596",
       "timestamp": "2026-11-12T13:12:43.602+00:00",
       "actorName": "Dewi Lestari (Resepsionis)",
@@ -2642,6 +2742,28 @@
   ],
   "sessions": [
     {
+      "id": "sess-63549ea8969434df7b0a8de9ddd317482a00e380daee339e",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-12T14:55:28.512+00:00",
+      "expiresAt": "2026-11-26T14:58:59.925+00:00",
+      "lastActiveAt": "2026-11-12T14:58:59.925+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-f0cbff7137cf2ffe0455bf7aee62a8921b713913a89a8a4a",
+      "userId": "usr-admin",
+      "role": "admin",
+      "email": "admin@poliklinik.id",
+      "name": "Ahmad Pratama, S.Kom",
+      "createdAt": "2026-11-12T14:33:19.708+00:00",
+      "expiresAt": "2026-11-12T14:48:20.09+00:00",
+      "lastActiveAt": "2026-11-12T14:33:20.09+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
       "id": "sess-37d1dc2f45744d2e0e994937e2f73202e9a9f097d85f47e9",
       "userId": "usr-admin",
       "role": "admin",
@@ -2697,15 +2819,81 @@
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     },
     {
-      "id": "sess-16e40718d61be001c3bf70310b7fddea5cb4d33488f956fe",
+      "id": "sess-388323755a555955af66b94e5a284e43895602f8fe08fff7",
       "userId": "usr-patient-1",
       "role": "patient",
       "email": "bambang.wijaya@gmail.com",
       "name": "Bambang Wijaya",
-      "createdAt": "2026-11-09T23:38:44.848+00:00",
-      "expiresAt": "2026-11-23T23:38:44.848+00:00",
-      "lastActiveAt": "2026-11-09T23:38:44.848+00:00",
+      "createdAt": "2026-11-09T18:46:48.829+00:00",
+      "expiresAt": "2026-11-23T18:47:32.016+00:00",
+      "lastActiveAt": "2026-11-09T18:47:32.016+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-d5bc47e569b14001d58d3bd3c461738a67ef073296506655",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-12T01:05:33.234+00:00",
+      "expiresAt": "2026-11-26T01:05:33.234+00:00",
+      "lastActiveAt": "2026-11-12T01:05:33.234+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-1de177e929a740fdc00a971756ca433167067b88d19aec62",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-11T09:57:38.62+00:00",
+      "expiresAt": "2026-11-25T09:57:38.62+00:00",
+      "lastActiveAt": "2026-11-11T09:57:38.62+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-36bf14b186570cdfccc80061f1d50b4d2e417783d08e8fe4",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-12T15:28:01.347+00:00",
+      "expiresAt": "2026-11-26T15:36:01.983Z",
+      "lastActiveAt": "2026-11-12T15:36:01.983Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-47241ba6f46f9042bde75da230742aee28c7eb5efce0df8f",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-09T20:02:06.24+00:00",
+      "expiresAt": "2026-11-23T20:02:06.24+00:00",
+      "lastActiveAt": "2026-11-09T20:02:06.24+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-bc52ddab906ab67a4b53b15cff314ffc2e83fcf2175b2ab5",
+      "userId": "usr-admin",
+      "role": "admin",
+      "email": "admin@poliklinik.id",
+      "name": "Ahmad Pratama, S.Kom",
+      "createdAt": "2026-11-09T23:42:29.873+00:00",
+      "expiresAt": "2026-11-09T23:57:29.873+00:00",
+      "lastActiveAt": "2026-11-09T23:42:29.873+00:00",
       "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
+    },
+    {
+      "id": "sess-4d32373e4fe036e8740f1355b87e58e6ab5491fc3c62ac27",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-12T01:40:41.189+00:00",
+      "expiresAt": "2026-11-26T02:34:40.542+00:00",
+      "lastActiveAt": "2026-11-12T02:34:40.542+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
     },
     {
       "id": "sess-c985842f8f8a492c4cf00668ba1ca675ddd5ed6e954c29bf",
@@ -2741,6 +2929,17 @@
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     },
     {
+      "id": "sess-f3959574786461257b187fa385e6a7cf5c052784ac460821",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-09T23:46:45.311+00:00",
+      "expiresAt": "2026-11-10T00:00:12.701+00:00",
+      "lastActiveAt": "2026-11-09T23:50:12.701+00:00",
+      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
+    },
+    {
       "id": "sess-7e2b259fc9c01aebf740133416a443222bf839d3319bf028",
       "userId": "usr-patient-1",
       "role": "patient",
@@ -2774,17 +2973,6 @@
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
     },
     {
-      "id": "sess-4d32373e4fe036e8740f1355b87e58e6ab5491fc3c62ac27",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-12T01:40:41.189+00:00",
-      "expiresAt": "2026-11-26T02:34:40.542+00:00",
-      "lastActiveAt": "2026-11-12T02:34:40.542+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
-    },
-    {
       "id": "sess-583cd38b88e4d981afa9304ba0948b27481a09597b27d024",
       "userId": "usr-patient-1",
       "role": "patient",
@@ -2794,6 +2982,94 @@
       "expiresAt": "2026-11-26T02:35:05.321+00:00",
       "lastActiveAt": "2026-11-12T02:35:05.321+00:00",
       "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1"
+    },
+    {
+      "id": "sess-b9a5ea329316df80032b7a74f881c8226252206dc32c6692",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-09T17:24:05.646+00:00",
+      "expiresAt": "2026-11-23T17:44:38.534+00:00",
+      "lastActiveAt": "2026-11-09T17:44:38.534+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-e153cf7821d14e443a278504c34a7808c83ea447a6561375",
+      "userId": "usr-doc-d",
+      "role": "doctor",
+      "email": "dr.anita@poliklinik.id",
+      "name": "dr. Anita Kusuma",
+      "createdAt": "2026-11-09T18:57:39.965+00:00",
+      "expiresAt": "2026-11-09T19:03:13.038+00:00",
+      "lastActiveAt": "2026-11-09T18:58:13.038+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-da1e25df1f91a0ff1cc134d390c936d645e6950027f7ea87",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-09T18:47:35.475+00:00",
+      "expiresAt": "2026-11-23T18:47:50.57+00:00",
+      "lastActiveAt": "2026-11-09T18:47:50.57+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-a39a7a7a182bbe9303d236ec6941987eefe4b2dbe6c12477",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-09T19:37:26.904+00:00",
+      "expiresAt": "2026-11-09T19:47:26.904+00:00",
+      "lastActiveAt": "2026-11-09T19:37:26.904+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-f8614a664b9e0ba2d94050e28317d81944f498b9e9dbb8b2",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-11T10:02:32.514+00:00",
+      "expiresAt": "2026-11-25T10:02:32.514+00:00",
+      "lastActiveAt": "2026-11-11T10:02:32.514+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-4277a81de17a44bc38dbeeecbe4fd6e185b28231a4f28039",
+      "userId": "usr-doc-d",
+      "role": "doctor",
+      "email": "dr.anita@poliklinik.id",
+      "name": "dr. Anita Kusuma",
+      "createdAt": "2026-11-09T23:50:57.163+00:00",
+      "expiresAt": "2026-11-09T23:55:57.163+00:00",
+      "lastActiveAt": "2026-11-09T23:50:57.163+00:00",
+      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
+    },
+    {
+      "id": "sess-16e40718d61be001c3bf70310b7fddea5cb4d33488f956fe",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-09T23:38:44.848+00:00",
+      "expiresAt": "2026-11-23T23:38:44.848+00:00",
+      "lastActiveAt": "2026-11-09T23:38:44.848+00:00",
+      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
+    },
+    {
+      "id": "sess-ac96bc2cd96951713f8b782b32e3fa05c9e4f6d58aa47833",
+      "userId": "usr-admin",
+      "role": "admin",
+      "email": "admin@poliklinik.id",
+      "name": "Ahmad Pratama, S.Kom",
+      "createdAt": "2026-11-12T14:45:10.938+00:00",
+      "expiresAt": "2026-11-12T15:00:11.252+00:00",
+      "lastActiveAt": "2026-11-12T14:45:11.252+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
     },
     {
       "id": "sess-7b666680e268b0c5f483a19b18fd554eeff9e89ebd23fe11",
@@ -2827,182 +3103,6 @@
       "expiresAt": "2026-11-25T15:59:09.715+00:00",
       "lastActiveAt": "2026-11-11T15:59:09.715+00:00",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-b9a5ea329316df80032b7a74f881c8226252206dc32c6692",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-09T17:24:05.646+00:00",
-      "expiresAt": "2026-11-23T17:44:38.534+00:00",
-      "lastActiveAt": "2026-11-09T17:44:38.534+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-ef02739f6d2b698670bca8278c1095f7b284c01f824f82f4",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-11T11:07:25.004+00:00",
-      "expiresAt": "2026-11-25T11:07:25.004+00:00",
-      "lastActiveAt": "2026-11-11T11:07:25.004+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-7dd2ccc045b2e097fd4101b8fa79eb54ad676b9d3800d206",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-11T11:07:36.558+00:00",
-      "expiresAt": "2026-11-25T12:22:23.524+00:00",
-      "lastActiveAt": "2026-11-11T12:22:23.524+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-f3959574786461257b187fa385e6a7cf5c052784ac460821",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-09T23:46:45.311+00:00",
-      "expiresAt": "2026-11-10T00:00:12.701+00:00",
-      "lastActiveAt": "2026-11-09T23:50:12.701+00:00",
-      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
-    },
-    {
-      "id": "sess-da1e25df1f91a0ff1cc134d390c936d645e6950027f7ea87",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-09T18:47:35.475+00:00",
-      "expiresAt": "2026-11-23T18:47:50.57+00:00",
-      "lastActiveAt": "2026-11-09T18:47:50.57+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-168c4a6078309e5337bc52fe5fbfbf9f249f2bf660340fdc",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-11T09:52:34.248+00:00",
-      "expiresAt": "2026-11-11T10:02:34.248+00:00",
-      "lastActiveAt": "2026-11-11T09:52:34.248+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-7fc26fb31cb9c10454fa2695c24a7c2f619da5d50ed080ee",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-11T09:52:42.377+00:00",
-      "expiresAt": "2026-11-11T10:02:44.303+00:00",
-      "lastActiveAt": "2026-11-11T09:52:44.303+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-d5bc47e569b14001d58d3bd3c461738a67ef073296506655",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-12T01:05:33.234+00:00",
-      "expiresAt": "2026-11-26T01:05:33.234+00:00",
-      "lastActiveAt": "2026-11-12T01:05:33.234+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-b5cc9da65672d86f7bd0face59f0aaff9103be06c16e5dd9",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-12T01:27:24.367+00:00",
-      "expiresAt": "2026-11-26T01:27:24.367+00:00",
-      "lastActiveAt": "2026-11-12T01:27:24.367+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-767292acbb379c50735071bb015a16cb83d4dd67c5c9db24",
-      "userId": "usr-admin",
-      "role": "admin",
-      "email": "admin@poliklinik.id",
-      "name": "Ahmad Pratama, S.Kom",
-      "createdAt": "2026-11-12T01:06:48.401+00:00",
-      "expiresAt": "2026-11-12T01:21:48.401+00:00",
-      "lastActiveAt": "2026-11-12T01:06:48.401+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-4706adf9b69adf042e370b5ff8db651259764ca7e8f60df6",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-11T12:22:51.979+00:00",
-      "expiresAt": "2026-11-11T12:33:25.42+00:00",
-      "lastActiveAt": "2026-11-11T12:23:25.42+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-a39a7a7a182bbe9303d236ec6941987eefe4b2dbe6c12477",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-09T19:37:26.904+00:00",
-      "expiresAt": "2026-11-09T19:47:26.904+00:00",
-      "lastActiveAt": "2026-11-09T19:37:26.904+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-4277a81de17a44bc38dbeeecbe4fd6e185b28231a4f28039",
-      "userId": "usr-doc-d",
-      "role": "doctor",
-      "email": "dr.anita@poliklinik.id",
-      "name": "dr. Anita Kusuma",
-      "createdAt": "2026-11-09T23:50:57.163+00:00",
-      "expiresAt": "2026-11-09T23:55:57.163+00:00",
-      "lastActiveAt": "2026-11-09T23:50:57.163+00:00",
-      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
-    },
-    {
-      "id": "sess-f8614a664b9e0ba2d94050e28317d81944f498b9e9dbb8b2",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-11T10:02:32.514+00:00",
-      "expiresAt": "2026-11-25T10:02:32.514+00:00",
-      "lastActiveAt": "2026-11-11T10:02:32.514+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-47241ba6f46f9042bde75da230742aee28c7eb5efce0df8f",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-09T20:02:06.24+00:00",
-      "expiresAt": "2026-11-23T20:02:06.24+00:00",
-      "lastActiveAt": "2026-11-09T20:02:06.24+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-bc52ddab906ab67a4b53b15cff314ffc2e83fcf2175b2ab5",
-      "userId": "usr-admin",
-      "role": "admin",
-      "email": "admin@poliklinik.id",
-      "name": "Ahmad Pratama, S.Kom",
-      "createdAt": "2026-11-09T23:42:29.873+00:00",
-      "expiresAt": "2026-11-09T23:57:29.873+00:00",
-      "lastActiveAt": "2026-11-09T23:42:29.873+00:00",
-      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
     },
     {
       "id": "sess-11fa73dd8eff955fadedaedc1198f90cc91b20a72a8e1d93",
@@ -3159,6 +3259,105 @@
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
     },
     {
+      "id": "sess-ef02739f6d2b698670bca8278c1095f7b284c01f824f82f4",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-11T11:07:25.004+00:00",
+      "expiresAt": "2026-11-25T11:07:25.004+00:00",
+      "lastActiveAt": "2026-11-11T11:07:25.004+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-7dd2ccc045b2e097fd4101b8fa79eb54ad676b9d3800d206",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-11T11:07:36.558+00:00",
+      "expiresAt": "2026-11-25T12:22:23.524+00:00",
+      "lastActiveAt": "2026-11-11T12:22:23.524+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-b5cc9da65672d86f7bd0face59f0aaff9103be06c16e5dd9",
+      "userId": "usr-patient-1",
+      "role": "patient",
+      "email": "bambang.wijaya@gmail.com",
+      "name": "Bambang Wijaya",
+      "createdAt": "2026-11-12T01:27:24.367+00:00",
+      "expiresAt": "2026-11-26T01:27:24.367+00:00",
+      "lastActiveAt": "2026-11-12T01:27:24.367+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-168c4a6078309e5337bc52fe5fbfbf9f249f2bf660340fdc",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-11T09:52:34.248+00:00",
+      "expiresAt": "2026-11-11T10:02:34.248+00:00",
+      "lastActiveAt": "2026-11-11T09:52:34.248+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-7fc26fb31cb9c10454fa2695c24a7c2f619da5d50ed080ee",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-11T09:52:42.377+00:00",
+      "expiresAt": "2026-11-11T10:02:44.303+00:00",
+      "lastActiveAt": "2026-11-11T09:52:44.303+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-af5b57a58f696cf4e91772457594d5dc4668a68bdbd5f864",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-09T16:47:42.671+00:00",
+      "expiresAt": "2026-11-09T17:02:38.22+00:00",
+      "lastActiveAt": "2026-11-09T16:52:38.22+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-fbddca543a7e68e71bc34d6019e6c734292881462ed05199",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-12T14:45:26.257+00:00",
+      "expiresAt": "2026-11-12T15:04:30.258+00:00",
+      "lastActiveAt": "2026-11-12T14:54:30.258+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-767292acbb379c50735071bb015a16cb83d4dd67c5c9db24",
+      "userId": "usr-admin",
+      "role": "admin",
+      "email": "admin@poliklinik.id",
+      "name": "Ahmad Pratama, S.Kom",
+      "createdAt": "2026-11-12T01:06:48.401+00:00",
+      "expiresAt": "2026-11-12T01:21:48.401+00:00",
+      "lastActiveAt": "2026-11-12T01:06:48.401+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+    },
+    {
+      "id": "sess-4706adf9b69adf042e370b5ff8db651259764ca7e8f60df6",
+      "userId": "usr-frontdesk",
+      "role": "front_desk",
+      "email": "resepsionis@poliklinik.id",
+      "name": "Dewi Lestari (Resepsionis)",
+      "createdAt": "2026-11-11T12:22:51.979+00:00",
+      "expiresAt": "2026-11-11T12:33:25.42+00:00",
+      "lastActiveAt": "2026-11-11T12:23:25.42+00:00",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    },
+    {
       "id": "sess-50cdf8528b7e9eadafd2f3733c45b4d8d23c377f8f6f7da0",
       "userId": "usr-patient-1",
       "role": "patient",
@@ -3178,50 +3377,6 @@
       "createdAt": "2026-11-09T19:22:40.098+00:00",
       "expiresAt": "2026-11-09T19:28:21.051+00:00",
       "lastActiveAt": "2026-11-09T19:23:21.051+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-e153cf7821d14e443a278504c34a7808c83ea447a6561375",
-      "userId": "usr-doc-d",
-      "role": "doctor",
-      "email": "dr.anita@poliklinik.id",
-      "name": "dr. Anita Kusuma",
-      "createdAt": "2026-11-09T18:57:39.965+00:00",
-      "expiresAt": "2026-11-09T19:03:13.038+00:00",
-      "lastActiveAt": "2026-11-09T18:58:13.038+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-af5b57a58f696cf4e91772457594d5dc4668a68bdbd5f864",
-      "userId": "usr-frontdesk",
-      "role": "front_desk",
-      "email": "resepsionis@poliklinik.id",
-      "name": "Dewi Lestari (Resepsionis)",
-      "createdAt": "2026-11-09T16:47:42.671+00:00",
-      "expiresAt": "2026-11-09T17:02:38.22+00:00",
-      "lastActiveAt": "2026-11-09T16:52:38.22+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-388323755a555955af66b94e5a284e43895602f8fe08fff7",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-09T18:46:48.829+00:00",
-      "expiresAt": "2026-11-23T18:47:32.016+00:00",
-      "lastActiveAt": "2026-11-09T18:47:32.016+00:00",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
-    },
-    {
-      "id": "sess-1de177e929a740fdc00a971756ca433167067b88d19aec62",
-      "userId": "usr-patient-1",
-      "role": "patient",
-      "email": "bambang.wijaya@gmail.com",
-      "name": "Bambang Wijaya",
-      "createdAt": "2026-11-11T09:57:38.62+00:00",
-      "expiresAt": "2026-11-25T09:57:38.62+00:00",
-      "lastActiveAt": "2026-11-11T09:57:38.62+00:00",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
     }
   ],
