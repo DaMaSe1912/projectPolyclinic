@@ -46,8 +46,8 @@ export default function AdminPage() {
   const { user, role, isLoading: authLoading, login } = useAuth();
 
   // Admin Login States
-  const [adminEmail, setAdminEmail] = useState('admin@poliklinik.id');
-  const [adminPassword, setAdminPassword] = useState('AdminUtama2026!#');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [showAdminPassword, setShowAdminPassword] = useState(false);
   const [loginStep, setLoginStep] = useState<'credentials' | '2fa'>('credentials');
   const [tempToken, setTempToken] = useState('');
@@ -57,7 +57,6 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('');
   const [isLocked, setIsLocked] = useState(false);
   const [remainingMinutes, setRemainingMinutes] = useState<number | null>(null);
-  const [showDemoHelper, setShowDemoHelper] = useState(false);
 
   // Live TOTP Demo Helper
   const [liveTotp, setLiveTotp] = useState<{
@@ -511,7 +510,7 @@ export default function AdminPage() {
   // Toggle Doctor onDuty / Available
   const handleDoctorToggle = async (doctorId: string, field: 'isOnDuty' | 'isAvailable', currentValue: boolean) => {
     try {
-      await fetch('/api/doctors', {
+      const res = await fetch('/api/doctors', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -521,6 +520,11 @@ export default function AdminPage() {
           actorRole: 'admin',
         }),
       });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Gagal memperbarui status dokter');
+        return;
+      }
       fetchDoctors();
       fetchAuditLogs();
     } catch (e) {
@@ -723,64 +727,40 @@ export default function AdminPage() {
             )}
           </div>
 
-          {/* Toggle for Demo Helper Drawer */}
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setShowDemoHelper(!showDemoHelper)}
-              className="text-xs text-slate-400 hover:text-amber-400 inline-flex items-center gap-1.5 transition-colors py-1.5 px-3 rounded-md bg-[#1E293B] border border-slate-700 shadow-sm"
-            >
-              <Sparkles size={13} className="text-amber-400" />
-              <span>{showDemoHelper ? 'Sembunyikan Bantuan Demo & 2FA' : 'Mode Demo: Buka Bantuan Kredensial & 2FA'}</span>
-            </button>
-          </div>
-
-          {/* Demo Helper Drawer for Admin & Live TOTP */}
-          {showDemoHelper && (
+          {/* Live TOTP & Recovery Code Assistance (Muncul Otomatis Khusus di Tahap 2FA) */}
+          {loginStep === '2fa' && (
             <div className="bg-[#1E293B] p-4 rounded-[12px] border border-slate-700 shadow-md space-y-3">
               <div className="flex items-center justify-between text-xs font-bold text-amber-400">
                 <div className="flex items-center gap-1.5">
                   <Sparkles size={14} />
-                  <span>Kredensial Demo Super Admin & Live 2FA</span>
+                  <span>Bantuan Kode 2FA TOTP & Recovery Code</span>
                 </div>
                 <span className="text-[11px] text-amber-300 font-mono font-semibold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
                   Ganti dlm {countdownSeconds}s
                 </span>
               </div>
 
-              <div className="text-[11px] text-slate-300 space-y-1 bg-slate-900 p-2.5 rounded-[8px] border border-slate-800">
-                <div><strong>Email:</strong> admin@poliklinik.id</div>
-                <div><strong>Password:</strong> AdminUtama2026!# (16 karakter)</div>
-                <div><strong>2FA Secret:</strong> {liveTotp?.secret || 'JBSWY3DPEHPK3PXP'}</div>
-              </div>
-
               <div className="space-y-2">
                 <button
                   type="button"
                   onClick={() => {
-                    if (loginStep === 'credentials') {
-                      setAdminEmail('admin@poliklinik.id');
-                      setAdminPassword('AdminUtama2026!#');
-                      setLoginError('Kredensial demo terisi. Silakan klik "Lanjutkan ke Verifikasi 2FA" untuk memvalidasi kata sandi terlebih dahulu.');
-                    } else {
-                      setIsRecoveryCode(false);
-                      if (liveTotp?.totpCode) {
-                        setTwoFactorCode(liveTotp.totpCode);
-                      }
-                      setLoginError('');
+                    setIsRecoveryCode(false);
+                    if (liveTotp?.totpCode) {
+                      setTwoFactorCode(liveTotp.totpCode);
                     }
+                    setLoginError('');
                   }}
                   className="w-full p-2.5 rounded-[6px] bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-300 text-xs font-mono font-bold flex items-center justify-between gap-1.5 transition-colors"
                 >
-                  <span>{loginStep === 'credentials' ? 'Isi Password Admin:' : 'Gunakan TOTP Aktif Sekarang:'}</span>
+                  <span>Gunakan Kode TOTP Aktif:</span>
                   <span className="text-white text-sm bg-slate-900 px-2.5 py-0.5 rounded border border-amber-500/50 tracking-wider">
-                    {loginStep === 'credentials' ? 'AdminUtama2026!#' : (liveTotp?.totpCode || 'Memuat...')}
+                    {liveTotp?.totpCode || 'Memuat...'}
                   </span>
                 </button>
 
                 <div className="pt-1">
                   <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
-                    <span>Pilihan Recovery Code (Klik untuk mengisi):</span>
+                    <span>Pilihan Recovery Code Offline (Klik untuk mengisi):</span>
                     <span className="text-[10px] text-amber-400">Single Use</span>
                   </div>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -792,15 +772,9 @@ export default function AdminPage() {
                         key={recCode}
                         type="button"
                         onClick={() => {
-                          if (loginStep === 'credentials') {
-                            setAdminEmail('admin@poliklinik.id');
-                            setAdminPassword('AdminUtama2026!#');
-                            setLoginError('Kata sandi harus divalidasi terlebih dahulu. Klik "Lanjutkan ke Verifikasi 2FA".');
-                          } else {
-                            setIsRecoveryCode(true);
-                            setTwoFactorCode(recCode);
-                            setLoginError('');
-                          }
+                          setIsRecoveryCode(true);
+                          setTwoFactorCode(recCode);
+                          setLoginError('');
                         }}
                         className="p-1.5 rounded-[6px] bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-amber-400/50 text-slate-200 text-[11px] font-mono flex items-center justify-center gap-1 transition-colors"
                         title="Klik untuk mengisi recovery code ini"

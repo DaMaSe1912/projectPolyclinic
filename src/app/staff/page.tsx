@@ -3,10 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import {
-  Stethoscope,
   ClipboardList,
   Lock,
   Mail,
@@ -14,7 +11,6 @@ import {
   ArrowRight,
   ShieldAlert,
   Clock,
-  Sparkles,
   Eye,
   EyeOff,
 } from 'lucide-react';
@@ -23,79 +19,13 @@ export default function StaffLoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState('resepsionis@poliklinik.id');
-  const [password, setPassword] = useState('StafFrontDesk2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isLocked, setIsLocked] = useState(false);
   const [remainingMinutes, setRemainingMinutes] = useState<number | null>(null);
-
-  // Quick fill staff demo accounts
-  const staffDemos = [
-    {
-      title: 'Dewi Lestari (Front Desk)',
-      role: 'front_desk',
-      email: 'resepsionis@poliklinik.id',
-      pass: 'StafFrontDesk2026!',
-      icon: ClipboardList,
-      desc: 'Batas idle 10 menit (PC Front Desk)',
-    },
-    {
-      title: 'dr. Budi Santoso, Sp.PD',
-      role: 'doctor',
-      email: 'dr.budi@poliklinik.id',
-      pass: 'DokterBudi2026!',
-      icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Tablet Poli Umum 1)',
-    },
-    {
-      title: 'dr. Siti Rahma, Sp.A',
-      role: 'doctor',
-      email: 'dr.siti@poliklinik.id',
-      pass: 'DokterSiti2026!',
-      icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Tablet Poli Umum 2)',
-    },
-    {
-      title: 'dr. Hendra Wijaya, Sp.JP',
-      role: 'doctor',
-      email: 'dr.hendra@poliklinik.id',
-      pass: 'DokterHendra2026!',
-      icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Poli Jantung & Kardio)',
-    },
-    {
-      title: 'dr. Anita Kusuma',
-      role: 'doctor',
-      email: 'dr.anita@poliklinik.id',
-      pass: 'DokterAnita2026!',
-      icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Poli MCU & Umum)',
-    },
-    {
-      title: 'dr. Farhan Ramadhan',
-      role: 'doctor',
-      email: 'dr.farhan@poliklinik.id',
-      pass: 'DokterFarhan2026!',
-      icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Poli Primer Weekend)',
-    },
-    {
-      title: 'Ns. Maya Putri, S.Kep (Perawat)',
-      role: 'nurse',
-      email: 'perawat.maya@poliklinik.id',
-      pass: 'PerawatMaya2026!',
-      icon: Stethoscope,
-      desc: 'Batas idle 5 menit (Tablet Triage / Poli)',
-    },
-  ];
-
-  const handleQuickFill = (item: typeof staffDemos[0]) => {
-    setEmail(item.email);
-    setPassword(item.pass);
-    setError('');
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,45 +176,6 @@ export default function StaffLoginPage() {
               <ArrowRight size={16} />
             </button>
           </form>
-        </div>
-
-        {/* Demo Quick-Fill Drawer */}
-        <div className="bg-white p-4 rounded-[12px] border border-[#CBD5E1] shadow-xs">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0F172A] mb-3">
-            <Sparkles size={14} className="text-[#059669]" />
-            <span>Kredensial Demo Akun Staf (Pengujian Cepat)</span>
-          </div>
-
-          <div className="space-y-2">
-            {staffDemos.map((item, idx) => {
-              const IconComp = item.icon;
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleQuickFill(item)}
-                  className="w-full text-left p-2.5 rounded-[8px] border border-[#E2E8F0] hover:border-[#059669] hover:bg-[#F0FDF4] transition-all flex items-center justify-between group"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded bg-slate-100 text-slate-700 group-hover:bg-[#059669] group-hover:text-white transition-colors">
-                      <IconComp size={15} />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold text-[#0F172A] leading-tight">
-                        {item.title}
-                      </div>
-                      <div className="text-[11px] text-[#64748B] mt-0.5">
-                        {item.email} • {item.desc}
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-[#059669] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    Gunakan ↵
-                  </span>
-                </button>
-              );
-            })}
-          </div>
         </div>
       </div>
     </div>

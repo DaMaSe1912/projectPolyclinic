@@ -555,6 +555,20 @@ export function getDb(): DatabaseSchema {
         }
       }
     }
+
+    // Auto-prune expired sessions to keep database clean and lightweight
+    const nowTime = Date.now();
+    if (data.sessions && data.sessions.length > 0) {
+      const activeSessions = data.sessions.filter((s) => {
+        if (!s.expiresAt) return false;
+        return new Date(s.expiresAt).getTime() > nowTime;
+      });
+      if (activeSessions.length !== data.sessions.length) {
+        data.sessions = activeSessions;
+        modified = true;
+      }
+    }
+
     if (modified) {
       saveDb(data);
     }

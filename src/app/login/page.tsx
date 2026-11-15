@@ -17,7 +17,6 @@ import {
   CheckCircle2,
   ShieldAlert,
   KeyRound,
-  Sparkles,
   Eye,
   EyeOff,
 } from 'lucide-react';
@@ -29,8 +28,8 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState<'login' | 'register' | 'forgot'>('login');
 
   // Patient Login State
-  const [loginEmail, setLoginEmail] = useState('bambang.wijaya@gmail.com');
-  const [loginPassword, setLoginPassword] = useState('PasienBambang123');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
@@ -59,32 +58,6 @@ export default function LoginPage() {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState('');
   const [forgotError, setForgotError] = useState('');
-
-  // Patient Demo Accounts
-  const patientDemos = [
-    {
-      name: 'Bambang Wijaya',
-      email: 'bambang.wijaya@gmail.com',
-      pass: 'PasienBambang123',
-      phone: '081234567890',
-      note: 'Akun Terverifikasi • 2 Anggota Keluarga',
-    },
-    {
-      name: 'Ibu Ratna Kumala',
-      email: 'ratna.kumala@gmail.com',
-      pass: 'PasienRatna123',
-      phone: '087812345678',
-      note: 'Akun Terverifikasi • Pasien Prioritas Lansia',
-    },
-  ];
-
-  const handleQuickFill = (item: typeof patientDemos[0]) => {
-    setLoginEmail(item.email);
-    setLoginPassword(item.pass);
-    setLoginError('');
-    setIsLocked(false);
-    setNeedsVerification(false);
-  };
 
   // Submit Login
   const handleLogin = async (e: React.FormEvent) => {
@@ -655,45 +628,6 @@ export default function LoginPage() {
             )}
           </div>
         )}
-
-        {/* Demo Accounts Quick-Fill Drawer */}
-        <div className="bg-white p-4 rounded-[12px] border border-[#E2E8F0] shadow-xs">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-[#0F172A] mb-3">
-            <Sparkles size={14} className="text-[#059669]" />
-            <span>Akun Pasien Demo (Pengujian Instan)</span>
-          </div>
-
-          <div className="space-y-2">
-            {patientDemos.map((item, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => {
-                  handleQuickFill(item);
-                  setActiveTab('login');
-                }}
-                className="w-full text-left p-2.5 rounded-[8px] border border-[#E2E8F0] hover:border-[#059669] hover:bg-[#F0FDF4] transition-all flex items-center justify-between group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="p-1.5 rounded bg-slate-100 text-slate-700 group-hover:bg-[#059669] group-hover:text-white transition-colors">
-                    <User size={15} />
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-[#0F172A] leading-tight">
-                      {item.name}
-                    </div>
-                    <div className="text-[11px] text-[#64748B] mt-0.5">
-                      {item.email} • {item.note}
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] text-[#059669] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  Gunakan ↵
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Walk-in notice */}
         <div className="text-center text-xs text-[#64748B]">

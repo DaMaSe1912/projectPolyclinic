@@ -69,6 +69,17 @@ export async function PATCH(request: Request) {
     }
 
     if (typeof isOnDuty === 'boolean') {
+      if (isOnDuty === true && !doctor.isOnDuty) {
+        const currentOnDuty = db.doctors.filter((d) => d.id !== doctor.id && d.isOnDuty);
+        if (currentOnDuty.length >= 2) {
+          return NextResponse.json(
+            {
+              error: `Maksimal hanya 2 dokter yang dapat bertugas (On Duty) bersamaan sesuai kapasitas 2 ruang periksa poliklinik. Nonaktifkan status piket dokter lain terlebih dahulu (${currentOnDuty.map((d) => d.name).join(', ')}).`,
+            },
+            { status: 400 }
+          );
+        }
+      }
       doctor.isOnDuty = isOnDuty;
     }
     if (typeof isAvailable === 'boolean') {
