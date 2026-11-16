@@ -92,42 +92,42 @@ export default function HomePage() {
       </div>
 
       {/* Hero Section with Cozy Aesthetic */}
-      <section className="relative overflow-hidden bg-[#FAFBFC] border-b border-slate-200/70 pt-12 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="relative max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10">
-          <div className="max-w-2xl">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-headline font-extrabold text-[#0F172A] tracking-tight leading-[1.15]">
-              Pelayanan Kesehatan Nyaman, <br />
+      <section className="relative overflow-hidden bg-[#FAFBFC] border-b border-slate-200/70 pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10">
+          <div className="max-w-2xl w-full">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-headline font-extrabold text-[#0F172A] tracking-tight leading-[1.2] sm:leading-[1.15]">
+              Pelayanan Kesehatan Nyaman, <br className="hidden sm:inline" />
               <span className="text-[#0D9488]">Ramah & Terpercaya</span>
             </h1>
 
-            <p className="mt-4 text-base sm:text-lg text-[#475569] leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-lg text-[#475569] leading-relaxed">
               Pantau antrean secara langsung dari rumah atau gadget Anda. Daftarkan diri Anda dan keluarga ke poliklinik umum secara online tanpa perlu cemas menunggu lama di ruang tunggu klinik.
             </p>
 
             {/* Quick Feature Badges */}
-            <div className="mt-5 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600">
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                <CheckCircle2 size={15} className="text-[#0D9488]" /> Transparan & Real-time
+            <div className="mt-4 sm:mt-5 flex flex-wrap items-center gap-2 sm:gap-4 text-[11px] sm:text-xs font-medium text-slate-600">
+              <span className="flex items-center gap-1.5 bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <CheckCircle2 size={14} className="text-[#0D9488] shrink-0" /> Transparan & Real-time
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                <ShieldCheck size={15} className="text-[#0D9488]" /> Dokter Umum & Spesialis Berizin
+              <span className="flex items-center gap-1.5 bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <ShieldCheck size={14} className="text-[#0D9488] shrink-0" /> Dokter Berizin Resmi
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                <UserCheck size={15} className="text-sky-600" /> Ruang Periksa Bersih & Ramah
+              <span className="flex items-center gap-1.5 bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <UserCheck size={14} className="text-sky-600 shrink-0" /> Ruang Periksa Ramah
               </span>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3.5">
-              <Link href={user ? (role === 'patient' ? '/pasien' : isStaff ? '/klinis' : '/') : '/login'}>
-                <Button variant="sage" size="lg" className="gap-2.5 rounded-2xl shadow-sm hover:shadow-md">
-                  <Calendar size={18} />
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-3.5">
+              <Link href={user ? (role === 'patient' ? '/pasien' : isStaff ? '/klinis' : '/') : '/login'} className="w-full sm:w-auto">
+                <Button variant="sage" size="lg" className="w-full sm:w-auto gap-2.5 rounded-2xl shadow-sm hover:shadow-md text-sm sm:text-base">
+                  <Calendar size={17} />
                   {user ? (role === 'patient' ? 'Lihat Antrean Saya' : 'Portal Pelayanan') : 'Daftar / Masuk Akun Pasien'}
                 </Button>
               </Link>
               {isStaff && (
-                <Link href="/tv" target="_blank">
-                  <Button variant="secondary" size="lg" className="gap-2 rounded-2xl">
-                    <Monitor size={18} className="text-teal-600" />
+                <Link href="/tv" target="_blank" className="w-full sm:w-auto">
+                  <Button variant="secondary" size="lg" className="w-full sm:w-auto gap-2 rounded-2xl text-sm sm:text-base">
+                    <Monitor size={17} className="text-teal-600" />
                     Buka Layar TV Ruang Tunggu
                   </Button>
                 </Link>
@@ -186,30 +186,30 @@ export default function HomePage() {
       </section>
 
       {/* Live Queue Boards Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
+            <h2 className="text-xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
               Nomor Antrean Sedang Berjalan
             </h2>
-            <p className="text-sm text-[#64748B] mt-1">
+            <p className="text-xs sm:text-sm text-[#64748B] mt-1">
               Data terhubung langsung dengan layar ruang tunggu klinik (Privasi aman: tanpa menampilkan nama pasien)
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 text-xs text-slate-600 bg-white px-4 py-2 rounded-2xl border border-slate-200/80 shadow-sm self-start sm:self-auto">
-            <RefreshCw size={14} className="text-teal-600 animate-spin" style={{ animationDuration: '3s' }} />
+          <div className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-600 bg-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl border border-slate-200/80 shadow-sm self-start sm:self-auto">
+            <RefreshCw size={13} className="text-teal-600 animate-spin shrink-0" style={{ animationDuration: '3s' }} />
             <span>Pembaruan otomatis: <strong>{lastUpdated || 'Sinkronisasi...'}</strong></span>
           </div>
         </div>
 
         {/* On-Duty Doctor Queue Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
           {onDutyDoctors.length === 0 ? (
-            <div className="col-span-2 text-center p-12 bg-white border border-slate-200/80 rounded-3xl text-slate-500 shadow-sm">
-              <Stethoscope size={36} className="mx-auto text-slate-400 mb-3" />
-              <p className="font-semibold text-base text-slate-700">Tidak ada dokter yang sedang bertugas atau dokter sedang berhalangan saat ini.</p>
-              <p className="text-xs text-slate-500 mt-1">Layanan panggilan antrean akan aktif kembali saat dokter telah tersedia.</p>
+            <div className="col-span-2 text-center p-8 sm:p-12 bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl text-slate-500 shadow-sm">
+              <Stethoscope size={32} className="mx-auto text-slate-400 mb-2 sm:mb-3" />
+              <p className="font-semibold text-sm sm:text-base text-slate-700">Tidak ada dokter yang sedang bertugas atau dokter sedang berhalangan saat ini.</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 mt-1">Layanan panggilan antrean akan aktif kembali saat dokter telah tersedia.</p>
             </div>
           ) : (
             onDutyDoctors.map((doc) => {
@@ -221,43 +221,43 @@ export default function HomePage() {
                 <Card
                   key={doc.id}
                   variant="default"
-                  className="rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden"
+                  className="rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden"
                 >
                   {/* Doctor Header */}
-                  <div className="flex items-start justify-between border-b border-slate-100 pb-5">
-                    <div className="flex items-start gap-3.5">
-                      <div className="w-12 h-12 rounded-2xl bg-teal-50 text-[#0D9488] flex items-center justify-center font-headline font-bold text-lg border border-teal-200/60 shrink-0">
+                  <div className="flex items-start justify-between border-b border-slate-100 pb-3 sm:pb-5 gap-2">
+                    <div className="flex items-start gap-2.5 sm:gap-3.5 min-w-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-teal-50 text-[#0D9488] flex items-center justify-center font-headline font-bold text-base sm:text-lg border border-teal-200/60 shrink-0">
                         {doc.code}
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-medium text-slate-500">
+                          <span className="text-[11px] sm:text-xs font-medium text-slate-500">
                             {doc.room}
                           </span>
                         </div>
-                        <h3 className="font-headline font-bold text-lg text-[#0F172A] mt-1">
+                        <h3 className="font-headline font-bold text-base sm:text-lg text-[#0F172A] mt-0.5 sm:mt-1 truncate sm:whitespace-normal">
                           {doc.name}
                         </h3>
-                        <p className="text-xs text-[#0D9488] font-medium mt-0.5">{doc.specialty}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">Shift Praktik: {doc.shiftHours}</p>
+                        <p className="text-[11px] sm:text-xs text-[#0D9488] font-medium mt-0.5 truncate">{doc.specialty}</p>
+                        <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">Shift Praktik: {doc.shiftHours}</p>
                       </div>
                     </div>
-                    <Chip variant="success" className="shrink-0">
+                    <Chip variant="success" className="shrink-0 text-[10px] sm:text-xs px-2 py-0.5">
                       PIKET AKTIF
                     </Chip>
                   </div>
 
                   {/* Calling & Next Display with Cozy Green (#0D9488) */}
-                  <div className="my-6 grid grid-cols-2 gap-4 text-center">
+                  <div className="my-4 sm:my-6 grid grid-cols-2 gap-2.5 sm:gap-4 text-center">
                     {/* Active Calling Box: Solid Cozy Green palette matching "Ramah & Terpercaya" (#0D9488) */}
-                    <div className="bg-[#0D9488] text-white p-5 rounded-2xl shadow-md flex flex-col justify-center">
-                      <span className="text-[11px] font-mono tracking-wider uppercase text-teal-100 font-semibold">
+                    <div className="bg-[#0D9488] text-white p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-md flex flex-col justify-center">
+                      <span className="text-[9px] sm:text-[11px] font-mono tracking-wider uppercase text-teal-100 font-semibold truncate">
                         SEDANG DIPANGGIL
                       </span>
-                      <span className="text-4xl sm:text-5xl font-mono font-extrabold text-white tracking-widest my-1.5">
+                      <span className="text-2xl sm:text-5xl font-mono font-extrabold text-white tracking-normal sm:tracking-widest my-1 sm:my-1.5">
                         {currentCalled ? currentCalled.queueNumber : '---'}
                       </span>
-                      <span className="inline-flex items-center justify-center text-xs text-teal-50 font-medium bg-teal-700/40 px-3 py-1 rounded-full self-center">
+                      <span className="inline-flex items-center justify-center text-[10px] sm:text-xs text-teal-50 font-medium bg-teal-700/40 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full self-center leading-tight">
                         {currentCalled?.status === 'in_consultation'
                           ? 'Sedang Konsultasi'
                           : currentCalled
@@ -267,27 +267,27 @@ export default function HomePage() {
                     </div>
 
                     {/* Next In Line Box: Soft clean porcelain surface without dark contrast */}
-                    <div className="bg-slate-50 border border-slate-200/90 p-5 rounded-2xl flex flex-col justify-center shadow-sm">
-                      <span className="text-[11px] font-mono tracking-wider uppercase text-slate-500 font-medium">
+                    <div className="bg-slate-50 border border-slate-200/90 p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-center shadow-sm">
+                      <span className="text-[9px] sm:text-[11px] font-mono tracking-wider uppercase text-slate-500 font-medium truncate">
                         NOMOR BERIKUTNYA
                       </span>
-                      <span className="text-3xl sm:text-4xl font-mono font-extrabold text-[#0F172A] tracking-wider my-1.5">
+                      <span className="text-2xl sm:text-4xl font-mono font-extrabold text-[#0F172A] tracking-normal sm:tracking-wider my-1 sm:my-1.5">
                         {waitingList.length > 0 ? waitingList[0].queueNumber : '---'}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-[10px] sm:text-xs text-slate-500">
                         <strong className="text-[#0D9488]">{waitingList.length}</strong> pasien menunggu
                       </span>
                     </div>
                   </div>
 
                   {/* Next up queue preview pills */}
-                  <div className="border-t border-slate-100 pt-4 flex items-center justify-between text-xs">
-                    <span className="text-slate-500 font-medium">Urutan antrean selanjutnya:</span>
-                    <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="border-t border-slate-100 pt-3 sm:pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                    <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Urutan antrean selanjutnya:</span>
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
                       {waitingList.slice(0, 4).map((item, idx) => (
                         <span
                           key={item.id}
-                          className={`font-mono px-2.5 py-1 rounded-full text-xs transition-all ${
+                          className={`font-mono px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[11px] sm:text-xs transition-all ${
                             idx === 0
                               ? 'bg-teal-100 text-teal-800 font-bold border border-teal-200'
                               : 'bg-slate-100 text-slate-700'
@@ -297,7 +297,7 @@ export default function HomePage() {
                         </span>
                       ))}
                       {waitingList.length > 4 && (
-                        <span className="text-xs text-slate-400 font-medium self-center pl-1">
+                        <span className="text-[10px] sm:text-xs text-slate-400 font-medium self-center pl-1">
                           +{waitingList.length - 4} lagi
                         </span>
                       )}
@@ -311,50 +311,50 @@ export default function HomePage() {
       </section>
 
       {/* Doctor Master Schedule Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <div className="mb-6">
-          <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
             Jadwal Praktik 5 Dokter Poliklinik Umum
           </h2>
-          <p className="text-sm text-[#64748B] mt-1">
+          <p className="text-xs sm:text-sm text-[#64748B] mt-1">
             Sesuai ketentuan standar pelayanan klinik, maksimal 2 dokter berpiket secara simultan per hari kerja.
           </p>
         </div>
 
-        <div className="bg-white border border-slate-200/80 rounded-3xl overflow-hidden shadow-card">
+        <div className="bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl overflow-hidden shadow-card">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm font-body">
-              <thead className="bg-[#0F172A] text-white font-headline text-xs uppercase tracking-wider">
+              <thead className="bg-[#0F172A] text-white font-headline text-[11px] sm:text-xs uppercase tracking-wider">
                 <tr>
-                  <th className="py-4 px-5">Kode</th>
-                  <th className="py-4 px-5">Nama Dokter</th>
-                  <th className="py-4 px-5">Bidang Spesialisasi / Layanan</th>
-                  <th className="py-4 px-5">Hari Praktik</th>
-                  <th className="py-4 px-5">Jam Sesi</th>
-                  <th className="py-4 px-5 text-center">Status Hari Ini</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-5">Kode</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-5">Nama Dokter</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-5">Bidang Spesialisasi / Layanan</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-5">Hari Praktik</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-5">Jam Sesi</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-5 text-center">Status Hari Ini</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {doctors.map((doc) => (
                   <tr key={doc.id} className="hover:bg-teal-50/30 transition-colors">
-                    <td className="py-4 px-5 font-mono font-bold text-teal-800">
-                      <span className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 inline-flex items-center justify-center border border-teal-200/60">
+                    <td className="py-3 sm:py-4 px-3 sm:px-5 font-mono font-bold text-teal-800">
+                      <span className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 inline-flex items-center justify-center border border-teal-200/60 text-xs sm:text-sm">
                         {doc.code}
                       </span>
                     </td>
-                    <td className="py-4 px-5 font-semibold text-[#0F172A]">{doc.name}</td>
-                    <td className="py-4 px-5 text-[#475569]">{doc.specialty}</td>
-                    <td className="py-4 px-5 text-[#475569]">{doc.scheduleDays.join(', ')}</td>
-                    <td className="py-4 px-5 font-mono text-slate-700">{doc.shiftHours}</td>
-                    <td className="py-4 px-5 text-center">
+                    <td className="py-3 sm:py-4 px-3 sm:px-5 font-semibold text-[#0F172A] text-xs sm:text-sm">{doc.name}</td>
+                    <td className="py-3 sm:py-4 px-3 sm:px-5 text-[#475569] text-xs sm:text-sm">{doc.specialty}</td>
+                    <td className="py-3 sm:py-4 px-3 sm:px-5 text-[#475569] text-xs sm:text-sm">{doc.scheduleDays.join(', ')}</td>
+                    <td className="py-3 sm:py-4 px-3 sm:px-5 font-mono text-slate-700 text-xs sm:text-sm">{doc.shiftHours}</td>
+                    <td className="py-3 sm:py-4 px-3 sm:px-5 text-center">
                       {doc.isOnDuty ? (
                         doc.isAvailable ? (
-                          <Chip variant="success">PIKET AKTIF</Chip>
+                          <Chip variant="success" className="text-[10px] sm:text-xs px-2 py-0.5">PIKET AKTIF</Chip>
                         ) : (
-                          <Chip variant="error">BERHALANGAN</Chip>
+                          <Chip variant="error" className="text-[10px] sm:text-xs px-2 py-0.5">BERHALANGAN</Chip>
                         )
                       ) : (
-                        <Chip variant="neutral">LIBUR / OFF</Chip>
+                        <Chip variant="neutral" className="text-[10px] sm:text-xs px-2 py-0.5">LIBUR / OFF</Chip>
                       )}
                     </td>
                   </tr>
@@ -366,37 +366,37 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section with Soft Curves & Clean Margins */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-16">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20 mb-12 sm:mb-16">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-3xl font-headline font-extrabold text-[#0F172A]">
             Pertanyaan yang Sering Diajukan (FAQ)
           </h2>
-          <p className="text-sm text-[#64748B] mt-1.5">
+          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5">
             Panduan lengkap alur pendaftaran, check-in, dan pembatalan layanan poliklinik
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {faqs.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
               <div
                 key={idx}
-                className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm transition-all duration-200 hover:border-teal-200 hover:shadow-md my-4"
+                className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm transition-all duration-200 hover:border-teal-200 hover:shadow-md my-3 sm:my-4"
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full text-left px-6 sm:px-8 py-5 sm:py-6 flex items-center justify-between font-headline font-semibold text-sm sm:text-base text-[#0F172A] hover:bg-slate-50/60 transition-colors"
+                  className="w-full text-left px-4 sm:px-8 py-3.5 sm:py-6 flex items-center justify-between font-headline font-semibold text-xs sm:text-base text-[#0F172A] hover:bg-slate-50/60 transition-colors"
                 >
-                  <span className="pr-4">{faq.q}</span>
+                  <span className="pr-3 sm:pr-4">{faq.q}</span>
                   {isOpen ? (
-                    <ChevronUp size={20} className="text-[#0D9488] shrink-0" />
+                    <ChevronUp size={18} className="text-[#0D9488] shrink-0" />
                   ) : (
-                    <ChevronDown size={20} className="text-slate-400 shrink-0" />
+                    <ChevronDown size={18} className="text-slate-400 shrink-0" />
                   )}
                 </button>
                 {isOpen && (
-                  <div className="px-6 sm:px-8 pb-6 text-sm text-[#475569] leading-relaxed border-t border-slate-100 pt-4 bg-slate-50/40">
+                  <div className="px-4 sm:px-8 pb-4 sm:pb-6 text-xs sm:text-sm text-[#475569] leading-relaxed border-t border-slate-100 pt-3 sm:pt-4 bg-slate-50/40">
                     {faq.a}
                   </div>
                 )}

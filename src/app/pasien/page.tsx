@@ -450,7 +450,7 @@ export default function PatientPage() {
                       <span className="text-[11px] uppercase tracking-wider text-[#64748B] block font-medium">
                         Nomor Antrean
                       </span>
-                      <span className="text-3xl font-mono font-extrabold text-[#0F172A]">
+                      <span className="text-2xl sm:text-3xl font-mono font-extrabold text-[#0F172A]">
                         {item.queueNumber.startsWith('PENDING-') ? 'Belum Terbit' : item.queueNumber}
                       </span>
                       <p className="text-[11px] text-[#64748B] mt-0.5">

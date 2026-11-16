@@ -53,10 +53,10 @@ export const Navbar: React.FC = () => {
               <span className="text-teal-100">✦</span>V
             </div>
             <div>
-              <div className="font-headline font-extrabold text-[15px] sm:text-[16px] text-[#0F172A] leading-tight group-hover:text-teal-700 transition-colors">
+              <div className="font-headline font-extrabold text-[13px] sm:text-[16px] text-[#0F172A] leading-tight group-hover:text-teal-700 transition-colors">
                 Klinik Pratama Sehat Utama
               </div>
-              <div className="font-body text-[11px] sm:text-[12px] text-[#0D9488] font-medium leading-tight">
+              <div className="font-body text-[10px] sm:text-[12px] text-[#0D9488] font-medium leading-tight">
                 Poliklinik Umum
               </div>
             </div>
