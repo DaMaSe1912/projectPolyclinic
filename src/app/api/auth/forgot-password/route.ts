@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { sendDevEmail } from '@/lib/auth';
+import { sendActualEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -49,6 +50,16 @@ export async function POST(request: Request) {
       body: `Halo ${user.name},\n\nKami menerima permintaan untuk mengatur ulang kata sandi akun Anda. Klik tombol atau tautan di bawah ini untuk membuat kata sandi baru. Tautan ini berlaku selama 60 menit.`,
       link: resetLink,
       type: 'password_reset',
+    });
+
+    // Send real email via Gmail SMTP
+    await sendActualEmail({
+      to: cleanEmail,
+      subject: 'Atur Ulang Kata Sandi - Klinik Pratama Sehat Utama',
+      title: 'Atur Ulang Kata Sandi Akun Pasien',
+      body: `Halo ${user.name},\n\nKami menerima permintaan untuk mengatur ulang kata sandi akun pasien Anda di Klinik Pratama Sehat Utama.\n\nKlik tombol di bawah ini untuk membuat kata sandi baru. Tautan ini berlaku selama 60 menit. Jika Anda tidak meminta reset kata sandi, abaikan email ini.`,
+      link: resetLink,
+      buttonText: 'Atur Ulang Kata Sandi',
     });
 
     logAudit(

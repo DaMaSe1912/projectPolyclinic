@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getDbAsync, saveDbAsync, logAudit } from '@/lib/db';
 import { hashPassword, validatePasswordStrength, sendDevEmail } from '@/lib/auth';
+import { sendActualEmail } from '@/lib/email';
 import { UserAccount } from '@/types';
 
 export async function POST(request: Request) {
@@ -156,6 +157,16 @@ export async function POST(request: Request) {
       body: `Halo ${cleanName},\n\nTerima kasih telah mendaftar di Sistem Antrean Poliklinik Umum Klinik Pratama Sehat Utama. Untuk mengaktifkan akun Anda dan mulai melakukan reservasi antrean online, silakan klik tautan verifikasi di bawah ini:`,
       link: verifyLink,
       type: 'verification',
+    });
+
+    // Send real email via Gmail SMTP
+    await sendActualEmail({
+      to: cleanEmail,
+      subject: 'Verifikasi Akun Email Pasien - Klinik Pratama Sehat Utama',
+      title: 'Aktivasi Akun Pasien Poliklinik',
+      body: `Halo ${cleanName},\n\nTerima kasih telah mendaftar di Sistem Antrean Poliklinik Umum Klinik Pratama Sehat Utama.\n\nUntuk mengaktifkan akun Anda dan mulai melakukan reservasi antrean, silakan klik tombol verifikasi di bawah ini:`,
+      link: verifyLink,
+      buttonText: 'Verifikasi Akun Saya',
     });
 
     logAudit(

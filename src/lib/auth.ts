@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { getDb, saveDb, logAudit } from './db';
 import { UserAccount, UserRole, SessionRecord, DevEmail } from '@/types';
+import { sendActualEmail } from './email';
 
 // ==========================================
 // 1. Password Hashing & Salt
@@ -30,6 +31,44 @@ export function validatePasswordStrength(password: string, role: UserRole): { va
       message: `Password harus memiliki minimal ${minLength} karakter untuk peran ${role === 'patient' ? 'pasien' : 'staf klinik'}.`,
     };
   }
+  return { valid: true };
+}
+
+// Strict email validation to prevent fake / random email submissions
+export function validateEmailFormat(email: string): { valid: boolean; message?: string } {
+  if (!email || typeof email !== 'string') {
+    return { valid: false, message: 'Alamat email wajib diisi.' };
+  }
+  const clean = email.trim().toLowerCase();
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(clean)) {
+    return { valid: false, message: 'Format alamat email tidak valid (contoh: nama@gmail.com).' };
+  }
+
+  // Block temporary / disposable / dummy domains
+  const blockedDomains = [
+    'tempmail.com',
+    'mailinator.com',
+    '10minutemail.com',
+    'guerrillamail.com',
+    'throwawaymail.com',
+    'trashmail.com',
+    'yopmail.com',
+    'fake.com',
+    'dummy.com',
+    'test.com',
+    'asal.com',
+    'contoh.com',
+    'example.com',
+  ];
+  const domain = clean.split('@')[1];
+  if (blockedDomains.includes(domain)) {
+    return {
+      valid: false,
+      message: 'Harap gunakan alamat email asli yang aktif (seperti Gmail, Yahoo, Outlook, dsb.). Layanan email sementara tidak diizinkan.',
+    };
+  }
+
   return { valid: true };
 }
 
@@ -288,12 +327,24 @@ export function sendDevEmail({
 
   // Server console output for instant dev visibility
   console.log('====================================================');
-  console.log(`[DEV MAILBOX] Email Dikirim ke: ${to}`);
+  console.log(`[EMAIL DISPATCH] Email Dikirim ke: ${to}`);
   console.log(`Subjek : ${subject}`);
   if (link) {
     console.log(`Tautan : ${link}`);
   }
   console.log('====================================================');
+
+  // Trigger actual email dispatch asynchronously if SMTP is configured
+  const buttonText =
+    type === 'verification'
+      ? 'Verifikasi Akun Sekarang'
+      : type === 'password_reset'
+      ? 'Atur Ulang Password'
+      : 'Buka Portal Staf';
+
+  sendActualEmail({ to, subject, title, body, link, buttonText }).catch((err) => {
+    console.error('[Email] Background send failed:', err);
+  });
 
   return emailRecord;
 }

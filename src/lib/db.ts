@@ -14,6 +14,22 @@ import {
 } from '@/types';
 import { syncToSupabaseAsync, loadFromSupabase } from './supabaseSync';
 
+export interface PendingRegistration {
+  email: string;
+  otp: string;
+  name: string;
+  phone: string;
+  password?: string;
+  passwordHash: string;
+  passwordSalt: string;
+  dob: string;
+  gender: 'L' | 'P';
+  nik?: string;
+  verificationToken: string;
+  createdAt: string;
+  expiresAt: string;
+}
+
 export interface DatabaseSchema {
   settings: ClinicSettings;
   doctors: Doctor[];
@@ -23,6 +39,7 @@ export interface DatabaseSchema {
   auditLogs: AuditLog[];
   sessions: SessionRecord[];
   mailLog: DevEmail[];
+  pendingRegistrations?: PendingRegistration[];
 }
 
 const isVercel = process.env.VERCEL === '1' || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
@@ -525,6 +542,7 @@ export function getDb(): DatabaseSchema {
     const data: DatabaseSchema = JSON.parse(content);
     if (!data.sessions) data.sessions = [];
     if (!data.mailLog) data.mailLog = [];
+    if (!data.pendingRegistrations) data.pendingRegistrations = [];
 
     // Ensure seed users have email and security fields populated
     let modified = false;

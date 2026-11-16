@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -19,6 +19,8 @@ import {
   KeyRound,
   Eye,
   EyeOff,
+  RefreshCw,
+  ArrowLeft,
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -52,6 +54,20 @@ export default function LoginPage() {
   const [regError, setRegError] = useState('');
   const [regSuccessMessage, setRegSuccessMessage] = useState('');
   const [duplicateWarning, setDuplicateWarning] = useState<any>(null);
+
+  // OTP Verification States
+  const [regStep, setRegStep] = useState<'form' | 'otp' | 'success'>('form');
+  const [regOtp, setRegOtp] = useState('');
+  const [otpCountdown, setOtpCountdown] = useState(0);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendLoginVerificationSent, setResendLoginVerificationSent] = useState(false);
+
+  useEffect(() => {
+    if (otpCountdown > 0) {
+      const timer = setTimeout(() => setOtpCountdown(otpCountdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [otpCountdown]);
 
   // Forgot Password State
   const [forgotEmail, setForgotEmail] = useState('');
@@ -99,7 +115,7 @@ export default function LoginPage() {
     }
   };
 
-  // Submit Register
+  // Submit Register (Step 1: Validate & Send OTP)
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegError('');
@@ -119,7 +135,7 @@ export default function LoginPage() {
     setRegLoading(true);
 
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch('/api/auth/register/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -141,12 +157,96 @@ export default function LoginPage() {
         throw new Error(data.error);
       }
 
-      setRegSuccessMessage(data.message || 'Registrasi berhasil! Tautan verifikasi telah dikirimkan ke email Anda.');
-      setLoginEmail(regEmail);
+      setRegStep('otp');
+      setOtpCountdown(60);
+      setRegSuccessMessage(data.message || `Kode OTP telah dikirim ke ${regEmail}.`);
     } catch (err: any) {
-      setRegError(err.message || 'Gagal mendaftar');
+      setRegError(err.message || 'Gagal mengirimkan kode verifikasi email.');
     } finally {
       setRegLoading(false);
+    }
+  };
+
+  // Submit OTP Verification (Step 2: Confirm 6-Digit OTP)
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegError('');
+
+    if (!regOtp || regOtp.trim().length !== 6) {
+      setRegError('Masukkan 6 digit kode verifikasi OTP.');
+      return;
+    }
+
+    setRegLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/register/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: regEmail.trim(),
+          otp: regOtp.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setRegStep('success');
+      setLoginEmail(regEmail);
+      setRegSuccessMessage(data.message || 'Akun Anda berhasil diverifikasi dan diaktifkan!');
+    } catch (err: any) {
+      setRegError(err.message || 'Kode verifikasi tidak valid atau telah kedaluwarsa.');
+    } finally {
+      setRegLoading(false);
+    }
+  };
+
+  // Resend OTP for Registration
+  const handleResendOtp = async () => {
+    if (otpCountdown > 0 || resendLoading) return;
+    setResendLoading(true);
+    setRegError('');
+
+    try {
+      const res = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: regEmail.trim() }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setOtpCountdown(60);
+      setRegSuccessMessage('Kode verifikasi baru telah dikirimkan ke email Anda.');
+    } catch (err: any) {
+      setRegError(err.message || 'Gagal mengirim ulang kode verifikasi.');
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  // Resend Verification from Login tab
+  const handleResendLoginVerification = async () => {
+    if (!loginEmail || resendLoading) return;
+    setResendLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: loginEmail.trim() }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setResendLoginVerificationSent(true);
+    } catch (err: any) {
+      setLoginError(err.message || 'Gagal mengirim ulang email verifikasi.');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -252,8 +352,26 @@ export default function LoginPage() {
                       </div>
                     )}
                     {needsVerification && (
-                      <div className="text-[11px] mt-1 text-red-600">
-                        Buka simulasi <strong>Dev Mailbox</strong> di pojok kanan bawah untuk klik tautan verifikasi email secara instan.
+                      <div className="mt-2 pt-2 border-t border-red-200">
+                        <p className="text-[11px] text-red-600 mb-2">
+                          Email Anda belum diverifikasi. Silakan periksa inbox / spam email Anda, atau kirim ulang verifikasi di bawah ini:
+                        </p>
+                        {resendLoginVerificationSent ? (
+                          <div className="text-[11px] text-emerald-700 bg-emerald-50 p-2 rounded border border-emerald-200 font-medium flex items-center gap-1.5">
+                            <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
+                            Email verifikasi baru telah dikirimkan ke {loginEmail}. Silakan periksa kotak masuk Anda.
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleResendLoginVerification}
+                            disabled={resendLoading}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-[6px] transition-colors disabled:opacity-50"
+                          >
+                            <Mail size={13} />
+                            {resendLoading ? 'Mengirim Ulang...' : 'Kirim Ulang Email Verifikasi'}
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -337,30 +455,120 @@ export default function LoginPage() {
         {/* TAB 2: REGISTER */}
         {activeTab === 'register' && (
           <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
-            {regSuccessMessage ? (
+            {regStep === 'success' ? (
               <div className="text-center py-6 space-y-4">
                 <div className="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
                   <CheckCircle2 size={32} />
                 </div>
                 <h3 className="text-lg font-bold font-headline text-[#0F172A]">
-                  Pendaftaran Berhasil!
+                  Pendaftaran & Verifikasi Berhasil!
                 </h3>
                 <p className="text-xs text-[#475569] leading-relaxed">
-                  {regSuccessMessage}
+                  {regSuccessMessage || 'Akun pasien Anda telah aktif dan siap digunakan.'}
                 </p>
-                <div className="p-3 bg-emerald-50 rounded-[8px] border border-emerald-200 text-xs text-emerald-800 text-left space-y-1">
-                  <div className="font-bold">Tips Cepat Pengujian:</div>
-                  <div>
-                    Klik tombol <strong>Dev Mailbox</strong> di pojok kanan bawah layar untuk melihat email verifikasi dan klik tautan aktivasi dengan 1 klik.
-                  </div>
+                <div className="p-3 bg-emerald-50 rounded-[8px] border border-emerald-200 text-xs text-emerald-800 text-left">
+                  Silakan masuk menggunakan email <strong>{regEmail}</strong> dan kata sandi yang telah Anda daftarkan.
                 </div>
                 <button
                   type="button"
-                  onClick={() => setActiveTab('login')}
+                  onClick={() => {
+                    setActiveTab('login');
+                    setRegStep('form');
+                  }}
                   className="w-full py-2.5 px-4 bg-[#0F172A] hover:bg-[#020617] text-white text-sm font-medium rounded-[8px] transition-colors shadow-sm"
                 >
                   Beralih ke Halaman Masuk
                 </button>
+              </div>
+            ) : regStep === 'otp' ? (
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold mb-2">
+                    <Mail size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold font-headline text-[#0F172A]">
+                    Verifikasi Email Pasien
+                  </h3>
+                  <p className="text-xs text-[#64748B] mt-1">
+                    Kode verifikasi 6-digit telah dikirimkan ke:
+                  </p>
+                  <p className="text-xs font-semibold text-teal-800 bg-teal-50 py-1 px-2 rounded-md inline-block mt-1">
+                    {regEmail}
+                  </p>
+                </div>
+
+                <form onSubmit={handleVerifyOtp} className="space-y-4">
+                  {regError && (
+                    <div className="p-3 rounded-[8px] text-xs bg-red-50 border border-red-200 text-red-700 flex items-start gap-2">
+                      <AlertTriangle size={16} className="shrink-0 mt-0.5 text-red-600" />
+                      <div>{regError}</div>
+                    </div>
+                  )}
+
+                  {regSuccessMessage && (
+                    <div className="p-3 rounded-[8px] text-xs bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-start gap-2">
+                      <CheckCircle2 size={16} className="shrink-0 mt-0.5 text-emerald-600" />
+                      <div>{regSuccessMessage}</div>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#334155] mb-1.5 text-center">
+                      Masukkan 6 Digit Kode OTP
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={regOtp}
+                      onChange={(e) => setRegOtp(e.target.value.replace(/\D/g, ''))}
+                      placeholder="000000"
+                      required
+                      autoFocus
+                      className="w-full text-center tracking-[0.5em] text-2xl font-mono font-bold py-3 px-4 rounded-[8px] border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-[#059669] text-[#0F172A]"
+                    />
+                    <p className="text-[11px] text-center text-[#64748B] mt-1.5">
+                      Periksa kotak masuk atau folder spam di email Anda.
+                    </p>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={regLoading || regOtp.length !== 6}
+                    className="w-full py-2.5 px-4 bg-[#059669] hover:bg-[#047857] text-white text-sm font-medium rounded-[8px] transition-colors shadow-sm disabled:opacity-50"
+                  >
+                    {regLoading ? 'Memverifikasi...' : 'Konfirmasi & Aktifkan Akun'}
+                  </button>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegStep('form');
+                        setRegError('');
+                      }}
+                      className="text-[#64748B] hover:text-[#0F172A] inline-flex items-center gap-1 font-medium"
+                    >
+                      <ArrowLeft size={14} />
+                      Ubah Data / Email
+                    </button>
+
+                    {otpCountdown > 0 ? (
+                      <span className="text-[#94A3B8]">
+                        Kirim ulang ({otpCountdown}s)
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={resendLoading}
+                        className="text-[#059669] hover:underline font-semibold inline-flex items-center gap-1"
+                      >
+                        <RefreshCw size={13} className={resendLoading ? 'animate-spin' : ''} />
+                        {resendLoading ? 'Mengirim...' : 'Kirim Ulang Kode'}
+                      </button>
+                    )}
+                  </div>
+                </form>
               </div>
             ) : (
               <form onSubmit={handleRegister} className="space-y-3.5">
@@ -535,7 +743,7 @@ export default function LoginPage() {
                 </div>
 
                 <p className="text-[11px] text-[#64748B]">
-                  * Setelah pendaftaran, tautan verifikasi akan dikirimkan ke email Anda untuk mengaktifkan akun.
+                  * Kode verifikasi 6 digit akan dikirimkan langsung ke email Anda untuk memvalidasi dan mengaktifkan akun.
                 </p>
 
                 <button
@@ -543,7 +751,7 @@ export default function LoginPage() {
                   disabled={regLoading}
                   className="w-full py-2.5 px-4 bg-[#059669] hover:bg-[#047857] text-white text-sm font-medium rounded-[8px] transition-colors shadow-sm disabled:opacity-50"
                 >
-                  {regLoading ? 'Mendaftarkan Akun...' : 'Daftar & Kirim Email Verifikasi'}
+                  {regLoading ? 'Mengirim Kode Verifikasi...' : 'Daftar & Kirim Kode Verifikasi'}
                 </button>
               </form>
             )}
@@ -572,7 +780,7 @@ export default function LoginPage() {
                 </div>
                 <p className="text-xs text-[#475569]">{forgotSuccess}</p>
                 <div className="p-3 bg-emerald-50 rounded-[8px] border border-emerald-200 text-xs text-emerald-800 text-left">
-                  Tautan reset dapat dilihat langsung pada panel <strong>Dev Mailbox</strong> di pojok kanan bawah layar.
+                  Tautan pemulihan kata sandi telah dikirimkan ke email Anda. Silakan periksa kotak masuk atau folder spam Anda.
                 </div>
                 <button
                   type="button"

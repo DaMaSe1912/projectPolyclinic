@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
-import { DevMailboxModal } from "@/components/DevMailboxModal";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +19,6 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           <main className="flex-1 flex flex-col">{children}</main>
-          <DevMailboxModal />
         </AuthProvider>
       </body>
     </html>
