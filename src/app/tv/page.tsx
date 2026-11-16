@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Doctor, QueueItem } from '@/types';
 import {
-  Volume2,
-  VolumeX,
   Wifi,
   WifiOff,
   Maximize2,
@@ -25,7 +23,6 @@ export default function WaitingRoomTvPage() {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
   const [isOnline, setIsOnline] = useState<boolean>(true);
-  const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(true);
   const [lastCalledNumber, setLastCalledNumber] = useState<string>('');
   const [flashCall, setFlashCall] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -103,22 +100,12 @@ export default function WaitingRoomTvPage() {
           const newQueue: QueueItem[] = queueData.data;
           setQueue(newQueue);
 
-          // Check if any doctor just called a number
+          // Check if any doctor just called a number (visual flash)
           newQueue.forEach((item) => {
             if (item.status === 'called' && item.queueNumber !== lastCalledNumber) {
               setLastCalledNumber(item.queueNumber);
               setFlashCall(true);
               setTimeout(() => setFlashCall(false), 5000);
-
-              // Sound chime
-              if (isAudioEnabled && 'speechSynthesis' in window) {
-                const doc = docData.data?.find((d: Doctor) => d.id === item.doctorId);
-                const speech = new SpeechSynthesisUtterance(
-                  `Nomor antrean, ${item.queueNumber.replace('-', ' ')}, silakan menuju ${doc?.room || 'ruang periksa'}`
-                );
-                speech.lang = 'id-ID';
-                window.speechSynthesis.speak(speech);
-              }
             }
           });
         }
@@ -131,7 +118,7 @@ export default function WaitingRoomTvPage() {
     fetchTvData();
     const interval = setInterval(fetchTvData, 1500);
     return () => clearInterval(interval);
-  }, [isAudioEnabled, lastCalledNumber]);
+  }, [lastCalledNumber]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -232,24 +219,6 @@ export default function WaitingRoomTvPage() {
               <span className="hidden sm:inline text-[11px] font-mono">
                 {isDarkMode ? 'Malam' : 'Terang'}
               </span>
-            </button>
-
-            {/* Audio Toggle */}
-            <button
-              onClick={() => setIsAudioEnabled(!isAudioEnabled)}
-              className={`p-2 rounded-lg transition-colors ${
-                isDarkMode
-                  ? 'hover:bg-slate-800 text-slate-300'
-                  : 'hover:bg-slate-200 text-slate-700'
-              }`}
-              title={isAudioEnabled ? 'Matikan Suara Panggilan' : 'Nyalakan Suara Panggilan'}
-              aria-label="Suara Panggilan"
-            >
-              {isAudioEnabled ? (
-                <Volume2 size={19} className={isDarkMode ? 'text-emerald-400' : 'text-[#0D9488]'} />
-              ) : (
-                <VolumeX size={19} className="text-slate-400" />
-              )}
             </button>
 
             {/* Fullscreen Toggle */}
