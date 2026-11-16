@@ -82,7 +82,8 @@ export async function POST(request: Request) {
     // 4. Generate 6-Digit Numeric OTP & Verification Token
     const otpCode = crypto.randomInt(100000, 999999).toString();
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes expiry
+    const linkExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours expiry for link
+    const otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 minutes for OTP
 
     const { hash, salt } = hashPassword(password);
 
@@ -108,7 +109,7 @@ export async function POST(request: Request) {
       nik: nik ? nik.trim() : undefined,
       verificationToken,
       createdAt: new Date().toISOString(),
-      expiresAt,
+      expiresAt: linkExpiresAt,
     };
 
     db.pendingRegistrations.push(pendingItem);
@@ -128,8 +129,8 @@ export async function POST(request: Request) {
       passwordSalt: salt,
       emailVerified: false,
       verificationToken,
-      verificationTokenExpiresAt: expiresAt,
-      recoveryCodes: [otpCode], // Store 6-digit OTP in recoveryCodes for sync
+      verificationTokenExpiresAt: linkExpiresAt,
+      recoveryCodes: [otpCode, otpExpiresAt], // Store 6-digit OTP and its expiry
       failedLoginAttempts: 0,
       lockedUntil: null,
       isActive: true,

@@ -78,8 +78,7 @@ export async function POST(request: Request) {
 
     if (stagedUser) {
       stagedUser.emailVerified = true;
-      stagedUser.verificationToken = undefined;
-      stagedUser.verificationTokenExpiresAt = undefined;
+      // Retain verificationToken so clicking the email verification link later shows "Akun Pasien Sudah Aktif"
       stagedUser.recoveryCodes = [];
       db.users[stagedUserIdx] = stagedUser;
       activatedUser = stagedUser;
@@ -98,8 +97,8 @@ export async function POST(request: Request) {
         passwordHash: pending!.passwordHash,
         passwordSalt: pending!.passwordSalt,
         emailVerified: true,
-        verificationToken: undefined,
-        verificationTokenExpiresAt: undefined,
+        verificationToken: pending!.verificationToken,
+        verificationTokenExpiresAt: pending!.expiresAt,
         failedLoginAttempts: 0,
         lockedUntil: null,
         isActive: true,

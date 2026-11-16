@@ -24,11 +24,50 @@ export async function POST(request: Request) {
 
     const db = await getDbAsync();
 
-    // Check user directly by verificationToken in db.users
+    // 1. Check user directly by verificationToken in db.users
     let userIndex = db.users.findIndex((u) => u.verificationToken === token && !u.isMerged);
 
-    // If not found in db.users, check if it's from a pending registration
-    if (userIndex === -1 && db.pendingRegistrations && db.pendingRegistrations.length > 0) {
+    if (userIndex !== -1) {
+      const user = db.users[userIndex];
+
+      if (user.emailVerified) {
+        return NextResponse.json({
+          success: true,
+          alreadyVerified: true,
+          message: 'Akun pasien Anda sudah berstatus aktif dan terverifikasi. Anda dapat langsung masuk ke portal pasien.',
+          email: user.email,
+        });
+      }
+
+      if (user.verificationTokenExpiresAt && new Date(user.verificationTokenExpiresAt) < new Date()) {
+        return NextResponse.json(
+          { error: 'Tautan verifikasi telah kedaluwarsa. Silakan lakukan pendaftaran ulang atau masuk untuk minta tautan baru.' },
+          { status: 400 }
+        );
+      }
+
+      user.emailVerified = true;
+      user.recoveryCodes = [];
+      db.users[userIndex] = user;
+      await saveDbAsync(db);
+
+      logAudit(
+        user.name,
+        user.role,
+        'EMAIL_VERIFIED_LINK',
+        'patient',
+        `Verifikasi email tautan berhasil untuk ${user.email}`
+      );
+
+      return NextResponse.json({
+        success: true,
+        message: 'Email berhasil diverifikasi! Akun pasien Anda telah aktif.',
+        email: user.email,
+      });
+    }
+
+    // 2. Check pendingRegistrations
+    if (db.pendingRegistrations && db.pendingRegistrations.length > 0) {
       const pendingIndex = db.pendingRegistrations.findIndex((p) => p.verificationToken === token);
       if (pendingIndex !== -1) {
         const pending = db.pendingRegistrations[pendingIndex];
@@ -48,8 +87,7 @@ export async function POST(request: Request) {
 
         if (stagedIdx !== -1) {
           db.users[stagedIdx].emailVerified = true;
-          db.users[stagedIdx].verificationToken = undefined;
-          db.users[stagedIdx].verificationTokenExpiresAt = undefined;
+          db.users[stagedIdx].verificationToken = pending.verificationToken;
           db.users[stagedIdx].recoveryCodes = [];
           db.pendingRegistrations.splice(pendingIndex, 1);
           await saveDbAsync(db);
@@ -83,8 +121,8 @@ export async function POST(request: Request) {
           passwordHash: pending.passwordHash,
           passwordSalt: pending.passwordSalt,
           emailVerified: true,
-          verificationToken: undefined,
-          verificationTokenExpiresAt: undefined,
+          verificationToken: pending.verificationToken,
+          verificationTokenExpiresAt: pending.expiresAt,
           failedLoginAttempts: 0,
           lockedUntil: null,
           isActive: true,
@@ -121,60 +159,47 @@ export async function POST(request: Request) {
       }
     }
 
-    // If userIndex is still -1, check if an account was recently verified (Idempotent for React Strict Mode / double clicks)
-    if (userIndex === -1) {
-      const recentAudit = (db.auditLogs || []).find(
-        (a) =>
-          (a.action === 'EMAIL_VERIFIED' ||
-            a.action === 'EMAIL_VERIFIED_LINK' ||
-            a.action === 'PATIENT_REGISTERED_VERIFIED') &&
-          new Date(a.timestamp).getTime() > Date.now() - 3600000 // Last 60 minutes
+    // 3. Fallback: Check if token exists in mailLog (to recognize already-verified patients)
+    const mailRecord = (db.mailLog || []).find(
+      (m: any) => m.link && m.link.includes(token)
+    );
+    if (mailRecord) {
+      const emailTarget = (mailRecord.to || (mailRecord as any).to_email || '').toLowerCase().trim();
+      const existingUser = db.users.find(
+        (u) => u.email?.toLowerCase().trim() === emailTarget && !u.isMerged
       );
-
-      if (recentAudit) {
+      if (existingUser && existingUser.emailVerified) {
         return NextResponse.json({
           success: true,
           alreadyVerified: true,
-          message: 'Akun Anda sudah berhasil diverifikasi dan aktif. Silakan masuk ke akun Anda.',
-          email: recentAudit.actorName,
+          message: 'Akun pasien Anda sudah berstatus aktif dan terverifikasi. Anda dapat langsung masuk ke portal pasien.',
+          email: existingUser.email,
         });
       }
-
-      return NextResponse.json(
-        { error: 'Token verifikasi tidak valid atau akun telah diverifikasi sebelumnya.' },
-        { status: 400 }
-      );
     }
 
-    const user = db.users[userIndex];
-
-    if (user.verificationTokenExpiresAt && new Date(user.verificationTokenExpiresAt) < new Date()) {
-      return NextResponse.json(
-        { error: 'Token verifikasi telah kedaluwarsa. Silakan minta tautan verifikasi baru.' },
-        { status: 400 }
-      );
-    }
-
-    user.emailVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpiresAt = undefined;
-
-    db.users[userIndex] = user;
-    await saveDbAsync(db);
-
-    logAudit(
-      user.name,
-      user.role,
-      'EMAIL_VERIFIED',
-      'patient',
-      `Verifikasi email berhasil untuk ${user.email}`
+    // 4. Fallback: Check recent audit logs (within 24 hours)
+    const recentAudit = (db.auditLogs || []).find(
+      (a) =>
+        (a.action === 'EMAIL_VERIFIED' ||
+          a.action === 'EMAIL_VERIFIED_LINK' ||
+          a.action === 'PATIENT_REGISTERED_VERIFIED') &&
+        new Date(a.timestamp).getTime() > Date.now() - 24 * 3600000
     );
 
-    return NextResponse.json({
-      success: true,
-      message: 'Email Anda berhasil diverifikasi! Sekarang Anda dapat masuk ke akun Anda.',
-      email: user.email,
-    });
+    if (recentAudit) {
+      return NextResponse.json({
+        success: true,
+        alreadyVerified: true,
+        message: 'Akun Anda sudah berhasil diverifikasi dan aktif. Silakan masuk ke akun Anda.',
+        email: recentAudit.actorName,
+      });
+    }
+
+    return NextResponse.json(
+      { error: 'Token verifikasi tidak valid atau telah kedaluwarsa. Silakan masuk atau minta tautan baru.' },
+      { status: 400 }
+    );
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Terjadi kesalahan sistem' }, { status: 500 });
   }
