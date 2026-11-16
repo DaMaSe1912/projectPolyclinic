@@ -231,10 +231,9 @@ export default function HomePage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-mono font-bold px-2 py-0.5 bg-teal-100 text-teal-800 rounded-full">
-                            RUANG {doc.code}
+                          <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200/60">
+                            {doc.room}
                           </span>
-                          <span className="text-xs text-slate-500">{doc.room}</span>
                         </div>
                         <h3 className="font-headline font-bold text-lg text-[#0F172A] mt-1">
                           {doc.name}
