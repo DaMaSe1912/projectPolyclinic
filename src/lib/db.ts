@@ -642,6 +642,9 @@ export async function getDbAsync(): Promise<DatabaseSchema> {
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && now - lastSupabaseFetchTime > SUPABASE_CACHE_TTL_MS) {
     const cloudDb = await loadFromSupabase();
     if (cloudDb && cloudDb.users && cloudDb.users.length > 0) {
+      // Preserve pending registrations so Supabase cloud sync doesn't erase unverified OTP signups
+      const localPending = memoryDb?.pendingRegistrations || getDb().pendingRegistrations || [];
+      cloudDb.pendingRegistrations = localPending;
       memoryDb = cloudDb;
       lastSupabaseFetchTime = now;
       try {

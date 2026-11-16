@@ -52,25 +52,28 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Akun ini sudah terverifikasi. Silakan langsung masuk.' }, { status: 400 });
       }
 
+      const freshOtp = crypto.randomInt(100000, 999999).toString();
       const freshToken = crypto.randomBytes(32).toString('hex');
+      user.recoveryCodes = [freshOtp];
       user.verificationToken = freshToken;
-      user.verificationTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      user.verificationTokenExpiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
       const verifyLink = `${proto}://${host}/verify-email?token=${freshToken}`;
 
       await saveDbAsync(db);
 
       await sendActualEmail({
         to: cleanEmail,
-        subject: 'Tautan Verifikasi Baru - Akun Pasien Poliklinik',
+        subject: 'Kode & Tautan Verifikasi Baru - Akun Pasien Poliklinik',
         title: 'Verifikasi Alamat Email Anda',
-        body: `Halo ${user.name},\n\nSilakan klik tombol di bawah ini untuk mengaktifkan akun pasien Anda di Sistem Poliklinik Umum:`,
+        body: `Halo ${user.name},\n\nBerikut adalah kode verifikasi 6-digit baru Anda atau klik tombol di bawah ini untuk mengaktifkan akun pasien Anda:`,
+        otpCode: freshOtp,
         link: verifyLink,
         buttonText: 'Verifikasi Akun Sekarang',
       });
 
       return NextResponse.json({
         success: true,
-        message: `Tautan verifikasi baru telah dikirimkan ke ${cleanEmail}.`,
+        message: `Kode dan tautan verifikasi baru telah dikirimkan ke ${cleanEmail}. Periksa kotak masuk Gmail Anda.`,
       });
     }
 

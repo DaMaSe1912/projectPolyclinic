@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, AlertTriangle, ArrowRight, Mail } from 'lucide-react';
@@ -14,6 +14,8 @@ function VerifyEmailContent() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [isAlreadyVerified, setIsAlreadyVerified] = useState(false);
+  const hasExecutedRef = useRef(false);
 
   useEffect(() => {
     if (!token) {
@@ -21,6 +23,9 @@ function VerifyEmailContent() {
       setError('Token verifikasi tidak ditemukan pada tautan.');
       return;
     }
+
+    if (hasExecutedRef.current) return;
+    hasExecutedRef.current = true;
 
     const doVerify = async () => {
       try {
@@ -33,6 +38,7 @@ function VerifyEmailContent() {
         if (!res.ok) throw new Error(data.error);
 
         setSuccess(true);
+        if (data.alreadyVerified) setIsAlreadyVerified(true);
         if (data.email) setUserEmail(data.email);
       } catch (err: any) {
         setError(err.message || 'Verifikasi email gagal.');
@@ -61,10 +67,14 @@ function VerifyEmailContent() {
               <CheckCircle2 size={36} />
             </div>
             <h1 className="text-2xl font-bold font-headline text-[#0F172A]">
-              Email Berhasil Diverifikasi!
+              {isAlreadyVerified ? 'Akun Pasien Sudah Aktif' : 'Email Berhasil Diverifikasi!'}
             </h1>
             <p className="text-sm text-[#475569] leading-relaxed">
-              Akun pasien dengan email <strong className="text-[#0F172A]">{userEmail}</strong> telah aktif. Anda sekarang dapat masuk untuk melihat jadwal dan memesan nomor antrean dokter.
+              {isAlreadyVerified
+                ? 'Akun pasien Anda sudah berstatus aktif dan terverifikasi. Anda dapat langsung masuk ke portal pasien.'
+                : userEmail
+                ? <>Akun pasien dengan email <strong className="text-[#0F172A]">{userEmail}</strong> telah aktif. Anda sekarang dapat masuk untuk melihat jadwal dan memesan nomor antrean dokter.</>
+                : 'Akun pasien Anda telah berhasil diaktifkan. Anda sekarang dapat masuk untuk melihat jadwal dan memesan nomor antrean dokter.'}
             </p>
             <div className="pt-4">
               <Link

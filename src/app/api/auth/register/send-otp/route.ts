@@ -4,6 +4,7 @@ import { getDbAsync, saveDbAsync } from '@/lib/db';
 import { hashPassword, validatePasswordStrength, validateEmailFormat } from '@/lib/auth';
 import { sendActualEmail } from '@/lib/email';
 import { PendingRegistration } from '@/lib/db';
+import { UserAccount } from '@/types';
 
 export async function POST(request: Request) {
   try {
@@ -111,6 +112,48 @@ export async function POST(request: Request) {
     };
 
     db.pendingRegistrations.push(pendingItem);
+
+    // Also stage into db.users (emailVerified: false) so Supabase sync retains it
+    const stagedPatient: UserAccount = {
+      id: `usr-pat-${Date.now()}`,
+      name: cleanName,
+      email: cleanEmail,
+      phone: cleanPhone,
+      nik: nik ? nik.trim() : undefined,
+      dob: cleanDob,
+      gender: gender || 'L',
+      role: 'patient',
+      password: password,
+      passwordHash: hash,
+      passwordSalt: salt,
+      emailVerified: false,
+      verificationToken,
+      verificationTokenExpiresAt: expiresAt,
+      recoveryCodes: [otpCode], // Store 6-digit OTP in recoveryCodes for sync
+      failedLoginAttempts: 0,
+      lockedUntil: null,
+      isActive: true,
+      familyMembers: [
+        {
+          id: `fam-${Date.now()}-self`,
+          name: cleanName,
+          nik: nik ? nik.trim() : undefined,
+          dob: cleanDob,
+          gender: gender || 'L',
+          relationship: 'Diri Sendiri',
+        },
+      ],
+      createdAt: new Date().toISOString(),
+    };
+
+    const unverifiedIdx = db.users.findIndex(
+      (u) => u.email?.toLowerCase().trim() === cleanEmail && !u.emailVerified && !u.isMerged
+    );
+    if (unverifiedIdx !== -1) {
+      db.users[unverifiedIdx] = stagedPatient;
+    } else {
+      db.users.push(stagedPatient);
+    }
 
     // Save also to mailLog for internal audit
     if (!db.mailLog) db.mailLog = [];

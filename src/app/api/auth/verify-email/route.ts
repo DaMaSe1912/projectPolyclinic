@@ -23,6 +23,8 @@ export async function POST(request: Request) {
     }
 
     const db = await getDbAsync();
+
+    // Check user directly by verificationToken in db.users
     let userIndex = db.users.findIndex((u) => u.verificationToken === token && !u.isMerged);
 
     // If not found in db.users, check if it's from a pending registration
@@ -39,6 +41,34 @@ export async function POST(request: Request) {
           );
         }
 
+        // Check if an unverified staged user already exists with this email
+        const stagedIdx = db.users.findIndex(
+          (u) => u.email?.toLowerCase().trim() === pending.email.toLowerCase() && !u.isMerged
+        );
+
+        if (stagedIdx !== -1) {
+          db.users[stagedIdx].emailVerified = true;
+          db.users[stagedIdx].verificationToken = undefined;
+          db.users[stagedIdx].verificationTokenExpiresAt = undefined;
+          db.users[stagedIdx].recoveryCodes = [];
+          db.pendingRegistrations.splice(pendingIndex, 1);
+          await saveDbAsync(db);
+
+          logAudit(
+            db.users[stagedIdx].name,
+            'patient',
+            'EMAIL_VERIFIED_LINK',
+            'patient',
+            `Verifikasi email tautan berhasil untuk ${db.users[stagedIdx].email}`
+          );
+
+          return NextResponse.json({
+            success: true,
+            message: 'Email berhasil diverifikasi! Akun pasien Anda telah aktif.',
+            email: db.users[stagedIdx].email,
+          });
+        }
+
         const newPatientId = `usr-pat-${Date.now()}`;
         const newPatient: any = {
           id: newPatientId,
@@ -53,8 +83,8 @@ export async function POST(request: Request) {
           passwordHash: pending.passwordHash,
           passwordSalt: pending.passwordSalt,
           emailVerified: true,
-          verificationToken: null,
-          verificationTokenExpiresAt: null,
+          verificationToken: undefined,
+          verificationTokenExpiresAt: undefined,
           failedLoginAttempts: 0,
           lockedUntil: null,
           isActive: true,
@@ -91,7 +121,25 @@ export async function POST(request: Request) {
       }
     }
 
+    // If userIndex is still -1, check if an account was recently verified (Idempotent for React Strict Mode / double clicks)
     if (userIndex === -1) {
+      const recentAudit = (db.auditLogs || []).find(
+        (a) =>
+          (a.action === 'EMAIL_VERIFIED' ||
+            a.action === 'EMAIL_VERIFIED_LINK' ||
+            a.action === 'PATIENT_REGISTERED_VERIFIED') &&
+          new Date(a.timestamp).getTime() > Date.now() - 3600000 // Last 60 minutes
+      );
+
+      if (recentAudit) {
+        return NextResponse.json({
+          success: true,
+          alreadyVerified: true,
+          message: 'Akun Anda sudah berhasil diverifikasi dan aktif. Silakan masuk ke akun Anda.',
+          email: recentAudit.actorName,
+        });
+      }
+
       return NextResponse.json(
         { error: 'Token verifikasi tidak valid atau akun telah diverifikasi sebelumnya.' },
         { status: 400 }

@@ -186,6 +186,7 @@ export default function LoginPage() {
         body: JSON.stringify({
           email: regEmail.trim(),
           otp: regOtp.trim(),
+          otpCode: regOtp.trim(),
         }),
       });
 
