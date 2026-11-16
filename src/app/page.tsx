@@ -231,7 +231,7 @@ export default function HomePage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200/60">
+                          <span className="text-xs font-medium text-slate-500">
                             {doc.room}
                           </span>
                         </div>
