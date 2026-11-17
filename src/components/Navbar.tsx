@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import SehatUtamaLogo from '@/components/SehatUtamaLogo';
 import {
   LogOut,
   Monitor,
@@ -49,9 +50,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo & Clinic Branding (Fixed on the far left edge) */}
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-            <div className="w-10 h-10 rounded-2xl bg-[#0D9488] text-white flex items-center justify-center font-headline font-bold text-lg shadow-sm group-hover:scale-105 transition-all">
-              <span className="text-teal-100">✦</span>V
-            </div>
+            <SehatUtamaLogo className="w-10 h-10 group-hover:scale-105 transition-all" />
             <div>
               <div className="font-headline font-extrabold text-[13px] sm:text-[16px] text-[#0F172A] leading-tight group-hover:text-teal-700 transition-colors">
                 Klinik Pratama Sehat Utama
@@ -161,7 +160,7 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => logout()}
                   title="Keluar Akun (Sign Out)"
-                  className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 text-xs font-semibold transition-colors shadow-sm"
+                  className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition-colors shadow-sm"
                 >
                   <LogOut size={14} />
                   <span>Keluar</span>
@@ -314,7 +313,7 @@ export const Navbar: React.FC = () => {
                     setMobileMenuOpen(false);
                     logout();
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-red-50 text-red-600 font-semibold text-sm hover:bg-red-100 transition-colors shadow-sm"
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm transition-colors shadow-sm"
                 >
                   <LogOut size={16} />
                   <span>Keluar dari Akun</span>

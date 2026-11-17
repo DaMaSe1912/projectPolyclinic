@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import SehatUtamaLogo from '@/components/SehatUtamaLogo';
 import {
   User,
   Lock,
@@ -280,8 +281,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-[#0D9488] text-white items-center justify-center font-headline font-bold text-xl mb-3 shadow-md shadow-teal-700/10">
-            <span className="text-white">✦</span>V
+          <div className="inline-block mb-3">
+            <SehatUtamaLogo className="w-12 h-12 shadow-md shadow-teal-700/10" />
           </div>
           <h1 className="text-2xl font-headline font-extrabold text-[#0F172A]">
             Portal Pasien Poliklinik

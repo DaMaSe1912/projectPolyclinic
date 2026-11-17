@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Doctor, QueueItem } from '@/types';
+import SehatUtamaLogo from '@/components/SehatUtamaLogo';
 import {
   Wifi,
   WifiOff,
@@ -159,15 +160,10 @@ export default function WaitingRoomTvPage() {
         }`}
       >
         <div className="flex items-center gap-4">
-          <div
-            className={`w-14 h-14 rounded-xl flex items-center justify-center font-headline font-bold text-2xl shadow-lg border ${
-              isDarkMode
-                ? 'bg-slate-900 border-slate-700 text-[#0D9488]'
-                : 'bg-teal-50 border-teal-200 text-[#0D9488]'
-            }`}
-          >
-            ✦V
-          </div>
+          <SehatUtamaLogo
+            className="w-14 h-14"
+            isDark={isDarkMode}
+          />
           <div>
             <h1
               className={`font-headline font-bold text-2xl tracking-wide uppercase ${
