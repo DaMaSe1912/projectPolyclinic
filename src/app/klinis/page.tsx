@@ -100,7 +100,7 @@ export default function ClinicalPage() {
 
   // Play audio chime when calling
   const playCallChime = (queueNum: string) => {
-    if (!isAudioEnabled) return;
+    if (isDoctor || !isAudioEnabled) return;
     try {
       // Synthesize clean audio speech announcement in Indonesian
       if ('speechSynthesis' in window) {
@@ -263,16 +263,18 @@ export default function ClinicalPage() {
             ))}
           </select>
 
-          <Button
-            variant={isAudioEnabled ? 'sage' : 'secondary'}
-            size="md"
-            onClick={() => setIsAudioEnabled(!isAudioEnabled)}
-            className="gap-1.5 min-h-[44px]"
-            title="Suara Panggilan Otomatis"
-          >
-            <Volume2 size={16} />
-            {isAudioEnabled ? 'Suara Aktif' : 'Mute'}
-          </Button>
+          {!isDoctor && (
+            <Button
+              variant={isAudioEnabled ? 'sage' : 'secondary'}
+              size="md"
+              onClick={() => setIsAudioEnabled(!isAudioEnabled)}
+              className="gap-1.5 min-h-[44px]"
+              title="Suara Panggilan Otomatis"
+            >
+              <Volume2 size={16} />
+              {isAudioEnabled ? 'Suara Aktif' : 'Mute'}
+            </Button>
+          )}
 
           <Button
             variant={currentDoctor?.isAvailable ? 'destructive' : 'primary'}
