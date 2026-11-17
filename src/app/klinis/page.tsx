@@ -231,76 +231,115 @@ export default function ClinicalPage() {
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 font-body">
       {/* Clinical Station Bar */}
-      <div className="bg-white border border-[#E2E8F0] rounded-[12px] p-6 shadow-sm mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-[#059669] uppercase tracking-wider flex items-center gap-1">
-              <Stethoscope size={14} /> Tablet / PC Ruang Praktik
-            </span>
-            <Chip variant={currentDoctor?.isAvailable ? 'success' : 'error'} className="text-[10px]">
-              {currentDoctor?.isAvailable ? 'DOKTER AKTIF' : 'DOKTER TIDAK TERSEDIA'}
-            </Chip>
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm mb-6">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+          {/* Identitas Dokter & Lokasi Praktik */}
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 text-teal-700 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+              <Stethoscope size={24} />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  Tablet / PC Ruang Praktik
+                </span>
+                <span className="text-slate-300">•</span>
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+                    currentDoctor?.isAvailable
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-rose-50 text-rose-700 border-rose-200'
+                  }`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      currentDoctor?.isAvailable ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'
+                    }`}
+                  />
+                  {currentDoctor?.isAvailable ? 'DOKTER AKTIF' : 'DOKTER TIDAK TERSEDIA'}
+                </span>
+              </div>
+
+              <h1 className="text-2xl font-headline font-bold text-[#0F172A] leading-tight">
+                {currentDoctor?.name || 'Dokter Poliklinik Umum'}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-y-1 gap-x-2 text-xs text-slate-500 mt-1.5">
+                <span className="font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                  {currentDoctor?.room}
+                </span>
+                <span>•</span>
+                <span>
+                  Shift: <strong className="text-slate-700 font-semibold">{currentDoctor?.shiftHours}</strong>
+                </span>
+                <span>•</span>
+                <span className="text-teal-700 font-medium">{currentDoctor?.specialty}</span>
+              </div>
+            </div>
           </div>
-          <h1 className="text-2xl font-headline font-bold text-[#0F172A] mt-1">
-            {currentDoctor?.name || 'Dokter Poliklinik Umum'}
-          </h1>
-          <p className="text-xs text-[#64748B]">
-            {currentDoctor?.room} • Shift: {currentDoctor?.shiftHours} • {currentDoctor?.specialty}
-          </p>
-        </div>
 
-        {/* Doctor Switcher & Sound Toggle */}
-        <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={selectedDoctorId}
-            onChange={(e) => setSelectedDoctorId(e.target.value)}
-            className="h-[44px] px-3 bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-xs font-semibold text-[#0F172A]"
-          >
-            {doctors.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name} ({d.code}) {!d.isAvailable ? '• BERHALANGAN' : d.isOnDuty ? '• Sedang Bertugas' : ''}
-              </option>
-            ))}
-          </select>
+          {/* Panel Kontrol & Aksi Dokter */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 pt-4 xl:pt-0 border-t xl:border-t-0 border-slate-100">
+            {/* Switcher Dokter / Shift */}
+            <div className="flex flex-col gap-1 min-w-[220px]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Pilih Jadwal / Shift
+              </span>
+              <select
+                value={selectedDoctorId}
+                onChange={(e) => setSelectedDoctorId(e.target.value)}
+                className="h-10 px-3 bg-slate-50 hover:bg-slate-100/80 border border-slate-300/80 rounded-xl text-xs font-semibold text-[#0F172A] transition-colors cursor-pointer shadow-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+              >
+                {doctors.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name} ({d.code}) {!d.isAvailable ? '• BERHALANGAN' : d.isOnDuty ? '• Sedang Bertugas' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {!isDoctor && (
-            <Button
-              variant={isAudioEnabled ? 'sage' : 'secondary'}
-              size="md"
-              onClick={() => setIsAudioEnabled(!isAudioEnabled)}
-              className="gap-1.5 min-h-[44px]"
-              title="Suara Panggilan Otomatis"
-            >
-              <Volume2 size={16} />
-              {isAudioEnabled ? 'Suara Aktif' : 'Mute'}
-            </Button>
-          )}
+            {/* Grup Tombol Aksi */}
+            <div className="flex items-center gap-2">
+              {!isDoctor && (
+                <Button
+                  variant={isAudioEnabled ? 'sage' : 'secondary'}
+                  size="md"
+                  onClick={() => setIsAudioEnabled(!isAudioEnabled)}
+                  className="h-10 px-3.5 gap-1.5 text-xs font-bold rounded-xl shadow-xs"
+                  title="Suara Panggilan Otomatis"
+                >
+                  <Volume2 size={16} />
+                  {isAudioEnabled ? 'Suara Aktif' : 'Mute'}
+                </Button>
+              )}
 
-          <Button
-            variant={currentDoctor?.isAvailable ? 'destructive' : 'primary'}
-            size="md"
-            onClick={handleToggleDoctorAvailability}
-            className="min-h-[44px] text-xs font-semibold"
-          >
-            {currentDoctor?.isAvailable ? 'Tandai Berhalangan' : 'Tandai Tersedia'}
-          </Button>
+              <Button
+                variant={currentDoctor?.isAvailable ? 'destructive' : 'primary'}
+                size="md"
+                onClick={handleToggleDoctorAvailability}
+                className="h-10 px-4 text-xs font-bold rounded-xl shadow-xs shrink-0"
+              >
+                {currentDoctor?.isAvailable ? 'Tandai Berhalangan' : 'Tandai Tersedia'}
+              </Button>
 
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => {
-              if (currentActiveVisit) {
-                setRefPatientName(currentActiveVisit.patientName);
-                setRefPatientNik(currentActiveVisit.patientNik || '');
-                setRefPatientPhone(currentActiveVisit.patientPhone);
-              }
-              setIsCreateReferralOpen(true);
-            }}
-            className="gap-1.5 min-h-[44px]"
-          >
-            <Plus size={16} />
-            Buat Rujukan RS
-          </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => {
+                  if (currentActiveVisit) {
+                    setRefPatientName(currentActiveVisit.patientName);
+                    setRefPatientNik(currentActiveVisit.patientNik || '');
+                    setRefPatientPhone(currentActiveVisit.patientPhone);
+                  }
+                  setIsCreateReferralOpen(true);
+                }}
+                className="h-10 px-4 gap-1.5 text-xs font-bold bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-xl shadow-xs shrink-0"
+              >
+                <Plus size={15} className="text-teal-600" />
+                Buat Rujukan RS
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
